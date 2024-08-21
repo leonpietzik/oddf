@@ -26,6 +26,8 @@ add_library(verilog
 	entities/stimulus.cpp
 )
 
+target_link_libraries(verilog PRIVATE oddf)
+
 # target_include_directories(verilog PUBLIC include)
 
 target_compile_features(verilog PUBLIC cxx_std_17)

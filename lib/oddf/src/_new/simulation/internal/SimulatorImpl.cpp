@@ -113,6 +113,17 @@ void SimulatorImpl::TranslateDesign(design::backend::IDesign const &design)
 
 		block.MapConnections(blockMapping);
 	}
+
+	//
+	// Refine blocks
+	//
+
+	/*
+		 Blocks created in a previous step may be converted to new blocks, that better support certain combinations of 
+		 input and output types. For example, a sum taking an integer and a double as inputs may be converted to a
+		 block that sums doubles preceded by a type-conversion block for the integer input. Another example is where 
+		 operations on busses are individualised.
+	*/
 }
 
 } // namespace internal

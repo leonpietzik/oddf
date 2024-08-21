@@ -1,0 +1,74 @@
+
+oddf_core library
+
+	design
+		IDesign
+			GetBlocksCollection()   // Consumers (simulators and generators) use this to traverse the design
+
+	design::blocks (and modules)
+		[all the public block API goes here]
+
+	design::blocks::backend
+		DesignBlockClass // Distinguishes different types of design blocks, such as adders, multipliers and so on.
+		IDesignBlock // Interface for querying block properties by consumers of the design
+			GetBlockClass() // Returns the block's DesignBlockClass
+			GetInputsList()
+			GetOutputsList()
+		IDesignBlockInput
+		IDesignBlockOutput
+		DesignBlockBase // Base class of all design blocks. Derives from IDesignBlock. Maybe we can use ideas from https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern for an automatic implementation of the IDesignBlock::GetBlockClass() interface function?
+
+	simulator
+		ISimulator
+			void Run();
+			void *GetSimulatorObjectInterface(uri, iid); // Throws if uri does not exist or the object does not expose the requested interface
+			T &GetSimulatorObjectInterface<T>(uri); // Interfaces must have static IID member to support this function
+
+	simulator::access
+		[ interfaces for the required simulator objects go here as well ]
+		ResultsAccess // <-- This is what used to be the debug-logger
+		ProbeAccess
+		SignalAccess
+		SourceAccess
+		SinkAccess
+		MemoryAccess
+
+	utility
+		Enumerator<referenceT>
+			GetCurrent()
+			MoveNext()
+			Reset()
+
+		CollectionView<referenceT>
+			GetSize()
+			GetEnumerator()
+
+		ListView<referenceT> // derives from CollectionView
+			operator[]
+
+		MakeCollectionView
+		MakeListView
+
+		Uri
+		Iid
+		Exceptions
+			// do we want different exception types for different error conditions?
+		Messages
+			// With support for sections, paragraphs and tables.
+
+oddf_std_simulator
+
+	simulator::std
+		Simulator (derives from simulator::ISimulator)
+	simulator::std::backend
+		SimulatorBlockBase
+		ISimulatorBlockMapping
+		SimulatorBlockInput
+		SimulatorBlockOutput
+		SimulatorObjectBase
+			GetInterface(iid)
+		SimulatorImpl
+	simulator::std::backend::blocks (all block implementations are part of the backend, there is no direct public interface)
+		[ all simulator block implementations go here ]
+		[ all simulator object implementations go here ]
+

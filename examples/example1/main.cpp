@@ -32,6 +32,27 @@
 
 namespace b = dfx::blocks;
 
+template<typename T = void>
+class ProbeValue {
+
+private:
+
+	oddf::Simulator &m_simulator;
+
+public:
+
+	ProbeValue(oddf::Simulator &simulator, std::string const &) :
+		m_simulator(simulator)
+	{
+	}
+
+	template<typename S = T>
+	S get()
+	{
+		return {};
+	}
+};
+
 int main()
 {
 	using dfx::dynfix;
@@ -74,7 +95,7 @@ int main()
 
 #endif
 
-	b::Terminate(b::Delay(b::Delay(b::Constant(true))));
+	b::Probe(b::Delay(b::Delay(b::Constant(true))));
 
 	/*
 	    dfx::Simulator simulator(design);
@@ -85,6 +106,20 @@ int main()
 	oddf::Simulator simulator2;
 
 	simulator2.TranslateDesign(design);
+
+	auto probeValue = ProbeValue<bool>(simulator2, "test");
+
+	std::cout << probeValue.get() << "\n";
+	//	simulator2.Run(1);
+
+	std::cout << probeValue.get<bool>() << "\n";
+	// simulator2.Run(1);
+
+	std::cout << probeValue.get<bool>() << "\n";
+	// simulator2.Run(1);
+
+	std::cout << probeValue.get<bool>() << "\n";
+	// simulator2.Run(1);
 
 	return 0;
 }
