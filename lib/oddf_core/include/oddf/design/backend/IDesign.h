@@ -24,24 +24,24 @@
 
 */
 
-#include "ContainerViewFactory.h"
-
 #pragma once
 
+#include <oddf/design/blocks/backend/IDesignBlock.h>
+#include <oddf/utility/CollectionView.h>
+
 namespace oddf {
-namespace utility {
+namespace design {
+namespace backend {
 
-template<typename targetT = void, typename containerT>
-inline auto CreateCollectionView(containerT const &container)
-{
-	return ContainerViewFactory<containerT, targetT>::CreateCollectionView(container);
-}
+class IDesign {
 
-template<typename targetT = void, typename containerT>
-inline auto CreateListView(containerT const &container)
-{
-	return ContainerViewFactory<containerT, targetT>::CreateListView(container);
-}
+public:
 
-} // namespace utility
+	virtual ~IDesign() { }
+
+	virtual utility::CollectionView<blocks::backend::IDesignBlock const &> GetBlockCollection() const = 0;
+};
+
+} // namespace backend
+} // namespace design
 } // namespace oddf

@@ -39,7 +39,7 @@ Simulator::~Simulator()
 {
 }
 
-bool Simulator::RegisterSimulatorBlockFactory(design::backend::DesignBlockClass const &designBlockClass,
+bool Simulator::RegisterSimulatorBlockFactory(design::blocks::backend::DesignBlockClass const &designBlockClass,
 	std::unique_ptr<simulation::backend::SimulatorBlockFactoryBase> &&simulatorBlockFactory)
 {
 	return m_impl->RegisterSimulatorBlockFactory(designBlockClass, std::move(simulatorBlockFactory));

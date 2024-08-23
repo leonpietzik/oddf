@@ -26,7 +26,7 @@
 
 #pragma once
 
-#include "../../design/backend/IDesignBlock.h"
+#include <oddf/design/blocks/backend/IDesignBlock.h>
 
 namespace oddf {
 namespace simulation {
@@ -40,7 +40,7 @@ public:
 
 	virtual ~IBlockMapping() { }
 
-	virtual SimulatorBlockBase *DesignBlockToSimulatorBlock(design::backend::IDesignBlock const &designBlock) const = 0;
+	virtual SimulatorBlockBase *DesignBlockToSimulatorBlock(design::blocks::backend::IDesignBlock const &designBlock) const = 0;
 };
 
 } // namespace backend

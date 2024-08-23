@@ -52,7 +52,7 @@ public:
 	Simulator();
 	~Simulator();
 
-	bool RegisterSimulatorBlockFactory(design::backend::DesignBlockClass const &designBlockClass,
+	bool RegisterSimulatorBlockFactory(design::blocks::backend::DesignBlockClass const &designBlockClass,
 		std::unique_ptr<simulation::backend::SimulatorBlockFactoryBase> &&simulatorBlockFactory);
 
 	void TranslateDesign(design::backend::IDesign const &design);

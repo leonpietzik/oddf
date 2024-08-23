@@ -42,7 +42,7 @@ SimulatorImpl::~SimulatorImpl()
 {
 }
 
-bool SimulatorImpl::RegisterSimulatorBlockFactory(design::backend::DesignBlockClass const &designBlockClass,
+bool SimulatorImpl::RegisterSimulatorBlockFactory(design::blocks::backend::DesignBlockClass const &designBlockClass,
 	std::unique_ptr<backend::SimulatorBlockFactoryBase> &&simulatorBlockFactory)
 {
 	m_simulatorBlockFactories[designBlockClass] = std::move(simulatorBlockFactory);
@@ -53,17 +53,17 @@ void SimulatorImpl::TranslateDesign(design::backend::IDesign const &design)
 {
 	class BlockMapping : public backend::IBlockMapping {
 
-		std::unordered_map<design::backend::IDesignBlock const *, backend::SimulatorBlockBase *> m_blockMapping;
+		std::unordered_map<design::blocks::backend::IDesignBlock const *, backend::SimulatorBlockBase *> m_blockMapping;
 
 	public:
 
-		void AddBlockMapping(design::backend::IDesignBlock const &fromDesignBlock, backend::SimulatorBlockBase &toSimulatorBlock)
+		void AddBlockMapping(design::blocks::backend::IDesignBlock const &fromDesignBlock, backend::SimulatorBlockBase &toSimulatorBlock)
 		{
 			assert(m_blockMapping.find(&fromDesignBlock) == m_blockMapping.end());
 			m_blockMapping[&fromDesignBlock] = &toSimulatorBlock;
 		}
 
-		virtual backend::SimulatorBlockBase *DesignBlockToSimulatorBlock(design::backend::IDesignBlock const &designBlock) const override
+		virtual backend::SimulatorBlockBase *DesignBlockToSimulatorBlock(design::blocks::backend::IDesignBlock const &designBlock) const override
 		{
 			auto designBlockIt = m_blockMapping.find(&designBlock);
 
@@ -82,9 +82,12 @@ void SimulatorImpl::TranslateDesign(design::backend::IDesign const &design)
 	// Map blocks
 	//
 
-	m_blocks.reserve(designBlocks.size());
+	m_blocks.reserve(designBlocks.GetSize());
+	auto designBlocksEnumerator = designBlocks.GetEnumerator();
 
-	for (auto const &designBlock : designBlocks) {
+	for (designBlocksEnumerator.Reset(); designBlocksEnumerator.MoveNext(); ) {
+
+		auto const &designBlock = designBlocksEnumerator.GetCurrent();
 
 		auto blockClass = designBlock.GetClass();
 

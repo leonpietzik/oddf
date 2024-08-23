@@ -69,3 +69,5 @@ target_include_directories(oddf PUBLIC include)
 target_compile_features(oddf PUBLIC cxx_std_17)
 
 target_precompile_headers(oddf PRIVATE src/global.h)
+
+target_link_libraries(oddf PUBLIC oddf_core)

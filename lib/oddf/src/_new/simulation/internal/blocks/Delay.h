@@ -37,7 +37,7 @@ class DelaySimulatorBlock : public backend::SimulatorBlockBase {
 
 public:
 
-	DelaySimulatorBlock(design::backend::IDesignBlock const &designBlock);
+	DelaySimulatorBlock(design::blocks::backend::IDesignBlock const &designBlock);
 };
 
 } // namespace blocks

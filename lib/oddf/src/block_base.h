@@ -27,7 +27,7 @@
 
 #pragma once
 
-#include <oddf/design/backend/IDesignBlock.h>
+#include <oddf/design/blocks/backend/IDesignBlock.h>
 
 namespace dfx {
 
@@ -64,7 +64,7 @@ public:
 // BlockBase
 //
 
-class BlockBase : public oddf::design::backend::IDesignBlock {
+class BlockBase : public oddf::design::blocks::backend::IDesignBlock {
 
 public:
 
@@ -165,13 +165,13 @@ public:
 		return GetFullName();
 	}
 
-	virtual oddf::design::backend::DesignBlockClass GetClass() const override
+	virtual oddf::design::blocks::backend::DesignBlockClass GetClass() const override
 	{
 		return GetClassName();
 	}
 
-	virtual oddf::utility::ListView<oddf::design::backend::IBlockInput> GetInputsList() const override;
-	virtual oddf::utility::ListView<oddf::design::backend::IBlockOutput> GetOutputsList() const override;
+	virtual oddf::utility::ListView<oddf::design::blocks::backend::IBlockInput const &> GetInputsList() const override;
+	virtual oddf::utility::ListView<oddf::design::blocks::backend::IBlockOutput const &> GetOutputsList() const override;
 };
 
 } // namespace backend

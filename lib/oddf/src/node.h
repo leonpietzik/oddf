@@ -34,8 +34,6 @@
 #include "types.h"
 
 #include <oddf/design/backend/IDesign.h>
-#include <oddf/design/backend/IBlockInput.h>
-#include <oddf/design/backend/IBlockOutput.h>
 
 #if defined(_MSC_VER) && _MSC_VER < 1900
 #define NOEXCEPT
@@ -192,7 +190,7 @@ public:
 	// IDesign implementation
 	//
 
-	virtual oddf::utility::CollectionView<oddf::design::backend::IDesignBlock> GetBlockCollection() const override;
+	virtual oddf::utility::CollectionView<oddf::design::blocks::backend::IDesignBlock const &> GetBlockCollection() const override;
 };
 
 namespace backend {
@@ -201,7 +199,7 @@ namespace backend {
 // backend::OutputPin<T> definition
 //
 
-class OutputPinBase : public oddf::design::backend::IBlockOutput {
+class OutputPinBase : public oddf::design::blocks::backend::IBlockOutput {
 
 protected:
 
@@ -240,7 +238,7 @@ public:
 		return owner;
 	}
 
-	virtual oddf::design::backend::IDesignBlock const &GetOwningBlock() const override
+	virtual oddf::design::blocks::backend::IDesignBlock const &GetOwningBlock() const override
 	{
 		assert(GetOwner());
 		return *GetOwner();
@@ -290,7 +288,7 @@ public:
 // backend::InputPin<T> definition
 //
 
-class InputPinBase : public oddf::design::backend::IBlockInput {
+class InputPinBase : public oddf::design::blocks::backend::IBlockInput {
 
 protected:
 
@@ -356,7 +354,7 @@ public:
 			return nullptr;
 	}
 
-	virtual oddf::design::backend::IBlockOutput &GetDriver() const override
+	virtual oddf::design::blocks::backend::IBlockOutput const &GetDriver() const override
 	{
 		assert(driver);
 		return *driver;

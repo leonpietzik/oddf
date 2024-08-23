@@ -27,7 +27,7 @@
 #pragma once
 
 #include <oddf/design/backend/IDesign.h>
-#include <oddf/design/backend/IDesignBlock.h>
+#include <oddf/design/blocks/backend/IDesignBlock.h>
 #include <oddf/simulation/backend/SimulatorBlockFactoryBase.h>
 
 #include <map>
@@ -52,7 +52,7 @@ private:
 
 	std::vector<std::unique_ptr<simulation::backend::SimulatorBlockBase>> m_blocks;
 
-	std::map<design::backend::DesignBlockClass, std::unique_ptr<simulation::backend::SimulatorBlockFactoryBase>> m_simulatorBlockFactories;
+	std::map<design::blocks::backend::DesignBlockClass, std::unique_ptr<simulation::backend::SimulatorBlockFactoryBase>> m_simulatorBlockFactories;
 
 	void RegisterDefaultBlockFactories();
 
@@ -61,7 +61,7 @@ public:
 	SimulatorImpl();
 	~SimulatorImpl();
 
-	bool RegisterSimulatorBlockFactory(design::backend::DesignBlockClass const &designBlockClass,
+	bool RegisterSimulatorBlockFactory(design::blocks::backend::DesignBlockClass const &designBlockClass,
 		std::unique_ptr<simulation::backend::SimulatorBlockFactoryBase> &&simulatorBlockFactory);
 
 	void TranslateDesign(design::backend::IDesign const &design);

@@ -31,7 +31,7 @@ namespace simulation {
 namespace internal {
 namespace blocks {
 
-DelaySimulatorBlock::DelaySimulatorBlock(design::backend::IDesignBlock const &designBlock) :
+DelaySimulatorBlock::DelaySimulatorBlock(design::blocks::backend::IDesignBlock const &designBlock) :
 	SimulatorBlockBase(designBlock)
 {
 }

@@ -26,7 +26,7 @@
 
 #pragma once
 
-#include <oddf/design/backend/IDesignBlock.h>
+#include <oddf/design/blocks/backend/IDesignBlock.h>
 
 #include "BlockInput.h"
 #include "BlockOutput.h"
@@ -42,14 +42,14 @@ class SimulatorBlockBase {
 
 private:
 
-	design::backend::IDesignBlock const *m_designBlockReference;
+	design::blocks::backend::IDesignBlock const *m_designBlockReference;
 
 	std::vector<BlockInput> m_inputs;
 	std::vector<BlockOutput> m_outputs;
 
 public:
 
-	SimulatorBlockBase(design::backend::IDesignBlock const &designBlock);
+	SimulatorBlockBase(design::blocks::backend::IDesignBlock const &designBlock);
 
 	void MapConnections(IBlockMapping const &blockMapping);
 

@@ -26,24 +26,41 @@
 
 #pragma once
 
-#include <memory>
-
 namespace oddf {
-namespace utility {
+namespace design {
+namespace blocks {
+namespace backend {
 
-template<typename T>
-class IIteratorImplementation {
+class DesignBlockClass {
+
+private:
+
+	std::string m_className;
 
 public:
 
-	virtual ~IIteratorImplementation() { }
+	DesignBlockClass(std::string const &className) :
+		m_className(className) { }
 
-	virtual std::unique_ptr<IIteratorImplementation<T>> Clone() const = 0;
+	friend bool operator<(DesignBlockClass const &lhs, DesignBlockClass const &rhs)
+	{
+		return lhs.m_className < rhs.m_className;
+	}
 
-	virtual T const &Dereference() const = 0;
-	virtual void Increment() = 0;
-	virtual bool Equals(IIteratorImplementation<T> const &other) const = 0;
+	friend bool operator==(DesignBlockClass const &lhs, DesignBlockClass const &rhs)
+	{
+		return lhs.m_className == rhs.m_className;
+	}
+
+	friend bool operator!=(DesignBlockClass const &lhs, DesignBlockClass const &rhs)
+	{
+		return lhs.m_className != rhs.m_className;
+	}
+
+	std::string ToString() const { return m_className; };
 };
 
-} // namespace utility
+} // namespace backend
+} // namespace blocks
+} // namespace design
 } // namespace oddf

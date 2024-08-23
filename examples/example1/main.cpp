@@ -27,7 +27,6 @@
 #include "../../lib/oddf/src/dfx.h"
 
 #include <oddf/Simulator.h>
-#include <oddf/utility/ContainerViews.h>
 #include <set>
 
 namespace b = dfx::blocks;

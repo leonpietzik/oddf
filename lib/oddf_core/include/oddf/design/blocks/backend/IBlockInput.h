@@ -26,37 +26,24 @@
 
 #pragma once
 
-#include "IIteratorImplementation.h"
-
 namespace oddf {
-namespace utility {
+namespace design {
+namespace blocks {
+namespace backend {
 
-template<typename T>
-class Iterator {
+class IBlockOutput;
 
-	std::unique_ptr<IIteratorImplementation<T>> m_implementation;
+class IBlockInput {
 
 public:
 
-	Iterator(std::unique_ptr<IIteratorImplementation<T>> &&implementation) :
-		m_implementation(std::move(implementation)) { }
+	virtual ~IBlockInput() { }
 
-	Iterator(Iterator<T> const &other) :
-		m_implementation(other.m_implementation->Clone()) { }
-
-	T const &operator*() const { return m_implementation->Dereference(); }
-
-	Iterator<T> &operator++()
-	{
-		m_implementation->Increment();
-		return *this;
-	}
-
-	void operator++(int) { m_implementation->Increment(); }
-
-	bool operator==(Iterator<T> const &other) const { return m_implementation->Equals(*other.m_implementation); }
-	bool operator!=(Iterator<T> const &other) const { return !m_implementation->Equals(*other.m_implementation); }
+	virtual bool IsConnected() const = 0;
+	virtual IBlockOutput const &GetDriver() const = 0;
 };
 
-} // namespace utility
+} // namespace backend
+} // namespace blocks
+} // namespace design
 } // namespace oddf

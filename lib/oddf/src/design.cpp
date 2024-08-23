@@ -33,8 +33,6 @@
 
 #include "blocks/constant.h"
 
-#include <oddf/utility/ContainerViews.h>
-
 namespace dfx {
 
 using backend::BlockBase;
@@ -101,9 +99,9 @@ void Design::Report(std::basic_ostream<char> &os) const
 	os << endl;
 }
 
-oddf::utility::CollectionView<oddf::design::backend::IDesignBlock> Design::GetBlockCollection() const
+oddf::utility::CollectionView<oddf::design::blocks::backend::IDesignBlock const &> Design::GetBlockCollection() const
 {
-	return oddf::utility::CreateCollectionView<oddf::design::backend::IDesignBlock>(blocks);
+	return oddf::utility::MakeCollectionView<oddf::design::blocks::backend::IDesignBlock const &>(blocks);
 }
 
 } // namespace dfx

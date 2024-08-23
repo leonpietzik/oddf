@@ -26,27 +26,33 @@
 
 #pragma once
 
+#include <oddf/utility/ListView.h>
+
+#include "DesignBlockClass.h"
+#include "IBlockInput.h"
+#include "IBlockOutput.h"
+
+#include <string>
+
 namespace oddf {
 namespace design {
+namespace blocks {
 namespace backend {
 
-class IDesignBlock;
-
-class IBlockOutput {
-
-protected:
-
-	IBlockOutput() = default;
-	virtual ~IBlockOutput() { }
+class IDesignBlock {
 
 public:
 
-	IBlockOutput(IBlockOutput const &) = delete;
+	virtual ~IDesignBlock() { }
 
-	virtual IDesignBlock const &GetOwningBlock() const = 0;
-	virtual size_t GetIndex() const = 0;
+	virtual std::string GetBlockPath() const = 0;
+	virtual DesignBlockClass GetClass() const = 0;
+
+	virtual utility::ListView<IBlockInput const &> GetInputsList() const = 0;
+	virtual utility::ListView<IBlockOutput const &> GetOutputsList() const = 0;
 };
 
 } // namespace backend
+} // namespace blocks
 } // namespace design
 } // namespace oddf

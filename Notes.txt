@@ -1,7 +1,7 @@
 
 oddf_core library
 
-	design
+	design::backend
 		IDesign
 			GetBlocksCollection()   // Consumers (simulators and generators) use this to traverse the design
 

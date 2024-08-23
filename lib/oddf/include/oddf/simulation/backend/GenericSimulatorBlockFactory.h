@@ -40,7 +40,7 @@ class GenericSimulatorBlockFactory : public SimulatorBlockFactoryBase {
 
 public:
 
-	virtual std::unique_ptr<SimulatorBlockBase> CreateFromDesignBlock(design::backend::IDesignBlock const &designBlock) const override
+	virtual std::unique_ptr<SimulatorBlockBase> CreateFromDesignBlock(design::blocks::backend::IDesignBlock const &designBlock) const override
 	{
 		return std::make_unique<blockFactoryT>(designBlock);
 	}

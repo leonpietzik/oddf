@@ -35,7 +35,7 @@ namespace internal {
 
 void SimulatorImpl::RegisterDefaultBlockFactories()
 {
-	using design::backend::DesignBlockClass;
+	using design::blocks::backend::DesignBlockClass;
 
 	RegisterSimulatorBlockFactory(DesignBlockClass("delay"), std::make_unique<backend::GenericSimulatorBlockFactory<blocks::DelaySimulatorBlock>>());
 }

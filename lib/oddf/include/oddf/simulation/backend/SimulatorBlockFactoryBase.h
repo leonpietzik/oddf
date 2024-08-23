@@ -40,7 +40,7 @@ public:
 
 	virtual ~SimulatorBlockFactoryBase() { }
 
-	virtual std::unique_ptr<SimulatorBlockBase> CreateFromDesignBlock(design::backend::IDesignBlock const &designBlock) const = 0;
+	virtual std::unique_ptr<SimulatorBlockBase> CreateFromDesignBlock(design::blocks::backend::IDesignBlock const &designBlock) const = 0;
 };
 
 } // namespace backend

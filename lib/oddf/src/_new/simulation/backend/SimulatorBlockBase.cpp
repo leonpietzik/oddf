@@ -30,17 +30,17 @@ namespace oddf {
 namespace simulation {
 namespace backend {
 
-SimulatorBlockBase::SimulatorBlockBase(design::backend::IDesignBlock const &designBlock) :
+SimulatorBlockBase::SimulatorBlockBase(design::blocks::backend::IDesignBlock const &designBlock) :
 	m_designBlockReference(&designBlock),
 	m_inputs(),
 	m_outputs()
 {
-	auto numberOfInputs = designBlock.GetInputsList().size();
+	auto numberOfInputs = designBlock.GetInputsList().GetSize();
 	m_inputs.reserve(numberOfInputs);
 	for (size_t i = 0; i < numberOfInputs; ++i)
 		m_inputs.emplace_back(this, i);
 
-	auto numberOfOutputs = designBlock.GetOutputsList().size();
+	auto numberOfOutputs = designBlock.GetOutputsList().GetSize();
 	m_outputs.reserve(numberOfOutputs);
 	for (size_t i = 0; i < numberOfOutputs; ++i)
 		m_outputs.emplace_back(this, i);
@@ -50,11 +50,12 @@ void SimulatorBlockBase::MapConnections(IBlockMapping const &blockMapping)
 {
 	assert(m_designBlockReference);
 
-	auto designInputIt = m_designBlockReference->GetInputsList().begin();
+	auto designInputEnumerator = m_designBlockReference->GetInputsList().GetEnumerator();
+	designInputEnumerator.Reset();
 
 	for (auto &simInput : m_inputs) {
 
-		auto &designInput = *designInputIt;
+		auto &designInput = designInputEnumerator.GetCurrent();
 
 		if (designInput.IsConnected()) {
 
@@ -74,7 +75,7 @@ void SimulatorBlockBase::MapConnections(IBlockMapping const &blockMapping)
 			}
 		}
 
-		++designInputIt;
+		designInputEnumerator.MoveNext();
 	}
 }
 

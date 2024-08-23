@@ -24,20 +24,26 @@
 
 */
 
-#include "ICollectionViewImplementation.h"
-
 #pragma once
 
 namespace oddf {
-namespace utility {
+namespace design {
+namespace blocks {
+namespace backend {
 
-template<typename T>
-class IListViewImplementation : public ICollectionViewImplementation<T> {
+class IDesignBlock;
+
+class IBlockOutput {
 
 public:
 
-	virtual T const &at(size_t pos) const = 0;
+	virtual ~IBlockOutput() { }
+
+	virtual IDesignBlock const &GetOwningBlock() const = 0;
+	virtual size_t GetIndex() const = 0;
 };
 
-} // namespace utility
+} // namespace backend
+} // namespace blocks
+} // namespace design
 } // namespace oddf
