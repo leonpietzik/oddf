@@ -35,7 +35,7 @@ namespace oddf {
 namespace testing {
 namespace utility {
 
-void CollectionView()
+void Test_CollectionView()
 {
 	TestCollectionViewForStdContainer<std::vector>();
 	TestCollectionViewForStdContainer<std::deque>();

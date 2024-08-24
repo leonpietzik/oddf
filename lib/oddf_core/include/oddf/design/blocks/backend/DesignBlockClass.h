@@ -26,16 +26,17 @@
 
 #pragma once
 
-namespace oddf {
-namespace design {
-namespace blocks {
-namespace backend {
+#include <string>
+
+namespace oddf::design::blocks::backend {
 
 class DesignBlockClass {
 
 private:
 
 	std::string m_className;
+
+	friend struct std::hash<DesignBlockClass>;
 
 public:
 
@@ -60,7 +61,13 @@ public:
 	std::string ToString() const { return m_className; };
 };
 
-} // namespace backend
-} // namespace blocks
-} // namespace design
-} // namespace oddf
+} // namespace oddf::design::blocks::backend
+
+template<>
+struct std::hash<oddf::design::blocks::backend::DesignBlockClass> {
+
+	std::size_t operator()(const oddf::design::blocks::backend::DesignBlockClass &c) const noexcept
+	{
+		return std::hash<std::string>()(c.m_className);
+	}
+};

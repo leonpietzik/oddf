@@ -37,7 +37,7 @@ namespace oddf {
 namespace testing {
 namespace utility {
 
-void ListView();
+void Test_ListView();
 
 template<template<typename> class containerTemplate>
 inline void TestListViewForStdContainer()

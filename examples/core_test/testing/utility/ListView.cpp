@@ -33,7 +33,7 @@ namespace oddf {
 namespace testing {
 namespace utility {
 
-void ListView()
+void Test_ListView()
 {
 	TestListViewForStdContainer<std::vector>();
 	TestListViewForStdContainer<std::deque>();

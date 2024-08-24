@@ -37,7 +37,7 @@ namespace oddf {
 namespace testing {
 namespace utility {
 
-void CollectionView();
+void Test_CollectionView();
 
 template<template<typename> class containerTemplate>
 inline void TestCollectionViewForStdContainer()

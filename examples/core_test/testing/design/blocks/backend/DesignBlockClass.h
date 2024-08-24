@@ -24,19 +24,17 @@
 
 */
 
-#include "testing/utility/CollectionView.h"
-#include "testing/utility/ListView.h"
+#pragma once
 
-#include "testing/design/blocks/backend/DesignBlockClass.h"
+#include <oddf/utility/CollectionView.h>
 
-int main()
-{
-	using namespace oddf::testing;
+#include <iostream>
+#include <memory>
+#include <cassert>
+#include <type_traits>
 
-	utility::Test_ListView();
-	utility::Test_CollectionView();
+namespace oddf::testing::design::blocks::backend {
 
-	design::blocks::backend::Test_DesignBlockClass();
-	
-	return 0;
-}
+void Test_DesignBlockClass();
+
+} // namespace oddf::testing::design::blocks::backend
