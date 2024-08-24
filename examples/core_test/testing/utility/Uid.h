@@ -28,6 +28,6 @@
 
 namespace oddf::testing::utility {
 
-void Test_Uid();
+bool Test_Uid();
 
 } // namespace oddf::testing::utility

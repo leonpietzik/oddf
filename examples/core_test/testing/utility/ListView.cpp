@@ -20,7 +20,7 @@
 
 /*
 
-    <no description> \
+    <no description>
 
 */
 
@@ -31,10 +31,10 @@
 
 namespace oddf::testing::utility {
 
-void Test_ListView()
+bool Test_ListView()
 {
-	TestListViewForStdContainer<std::vector>();
-	TestListViewForStdContainer<std::deque>();
+	return TestListViewForStdContainer<std::vector>()
+		&& TestListViewForStdContainer<std::deque>();
 }
 
 } // namespace oddf::testing::utility

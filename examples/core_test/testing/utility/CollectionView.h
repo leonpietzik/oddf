@@ -30,17 +30,16 @@
 
 #include <iostream>
 #include <memory>
-#include <cassert>
 #include <type_traits>
 
 namespace oddf {
 namespace testing {
 namespace utility {
 
-void Test_CollectionView();
+bool Test_CollectionView();
 
 template<template<typename> class containerTemplate>
-inline void TestCollectionViewForStdContainer()
+inline bool TestCollectionViewForStdContainer()
 {
 	struct Base {
 
@@ -110,9 +109,14 @@ inline void TestCollectionViewForStdContainer()
 	// Confirm the element type returned by the Enumerator
 	static_assert(std::is_same_v<decltype(enumeratorToReference.GetCurrent()), Derived &>);
 
-	assert(collectionView.GetSize() == 5);
-	assert(collectionViewToConstBasePointer.GetSize() == 5);
-	assert(collectionViewToReference.GetSize() == 5);
+	if (collectionView.GetSize() != 5)
+		return false;
+
+	if (collectionViewToConstBasePointer.GetSize() != 5)
+		return false;
+
+	if (collectionViewToReference.GetSize() != 5)
+		return false;
 
 	enumerator.Reset();
 	enumeratorToConstBasePointer.Reset();
@@ -126,13 +130,23 @@ inline void TestCollectionViewForStdContainer()
 		enumeratorToReference.MoveNext();
 		++i;
 
-		assert(enumerator.GetCurrent()->GetValue() == enumeratorToConstBasePointer.GetCurrent()->GetValue());
-		assert(enumerator.GetCurrent()->GetValue() == enumeratorToReference.GetCurrent().GetValue());
+		if (enumerator.GetCurrent()->GetValue() != enumeratorToConstBasePointer.GetCurrent()->GetValue())
+			return false;
+
+		if (enumerator.GetCurrent()->GetValue() != enumeratorToReference.GetCurrent().GetValue())
+			return false;
 	}
 
-	assert(enumeratorToConstBasePointer.MoveNext() == false);
-	assert(enumeratorToReference.MoveNext() == false);
-	assert(i == collectionView.GetSize());
+	if (enumeratorToConstBasePointer.MoveNext() != false)
+		return false;
+
+	if (enumeratorToReference.MoveNext() != false)
+		return false;
+
+	if (i != collectionView.GetSize())
+		return false;
+
+	return true;
 }
 
 } // namespace utility

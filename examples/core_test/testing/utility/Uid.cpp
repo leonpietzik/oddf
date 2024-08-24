@@ -27,11 +27,10 @@
 #include <oddf/utility/Uid.h>
 
 #include <iostream>
-#include <cassert>
 
 namespace oddf::testing::utility {
 
-void Test_Uid()
+bool Test_Uid()
 {
 	constexpr auto uid1 = oddf::utility::Uid(0x5ece6339, 0x1045, 0x46ec, 0x8f, 0x68, 0x94, 0x2f, 0xe6, 0x55, 0xaf, 0x56);
 
@@ -41,8 +40,16 @@ void Test_Uid()
 	static_assert(uid1 == uid2);
 	static_assert(uid1 != uid3);
 
-	assert(uid2.ToString() == "{5ece6339-1045-46ec-8f68-942fe655af56}");
-	assert(uid3.ToString() == "{231f9c8e-760f-4caf-8a1e-77f27c66860f}");
+	if (uid2.ToString() != "{5ece6339-1045-46ec-8f68-942fe655af56}")
+		return false;
+
+	if (!(uid2.ToString() == "{5ece6339-1045-46ec-8f68-942fe655af56}"))
+		return false;
+
+	if (uid3.ToString() != "{231f9c8e-760f-4caf-8a1e-77f27c66860f}")
+		return false;
+
+	return true;
 }
 
 } // namespace oddf::testing::utility

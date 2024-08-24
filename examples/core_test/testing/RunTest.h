@@ -24,25 +24,30 @@
 
 */
 
-#include "testing/RunTest.h"
+#pragma once
 
-#include "testing/utility/CollectionView.h"
-#include "testing/utility/ListView.h"
-#include "testing/utility/Uid.h"
+#include <iostream>
 
-#include "testing/design/blocks/backend/DesignBlockClass.h"
+namespace oddf::testing {
 
-#include <oddf/utility/Uid.h>
-
-int main()
+template<typename Fn>
+void RunTest(std::string const &testName, Fn testFunction)
 {
-	using namespace oddf::testing;
+	bool success = false;
 
-	RunTest("utility::ListView", utility::Test_ListView);
-	RunTest("utility::CollectionView", utility::Test_CollectionView);
-	RunTest("utility::Uid", utility::Test_Uid);
+	try {
 
-	RunTest("design::blocks::backend::DesignBlockClass", design::blocks::backend::Test_DesignBlockClass);
+		success = testFunction();
+	}
+	catch (...) {
+	}
 
-	return 0;
+	if (success)
+		std::cout << " ok   : ";
+	else
+		std::cout << "FAIL  : ";
+
+	std::cout << testName << "\n";
 }
+
+} // namespace oddf::testing

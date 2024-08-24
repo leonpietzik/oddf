@@ -30,15 +30,14 @@
 
 #include <iostream>
 #include <memory>
-#include <cassert>
 #include <type_traits>
 
 namespace oddf::testing::utility {
 
-void Test_ListView();
+bool Test_ListView();
 
 template<template<typename> class containerTemplate>
-inline void TestListViewForStdContainer()
+inline bool TestListViewForStdContainer()
 {
 	struct Base {
 
@@ -114,21 +113,32 @@ inline void TestListViewForStdContainer()
 	static_assert(std::is_same_v<decltype(listViewToReference[0]), Derived &>);
 	static_assert(std::is_same_v<decltype(enumeratorToReference.GetCurrent()), Derived &>);
 
-	assert(collectionView.GetSize() == 5);
-	assert(listViewToConstBaseReference.GetSize() == 5);
-	assert(listViewToReference.GetSize() == 5);
+	if (collectionView.GetSize() != 5)
+		return false;
+
+	if (listViewToConstBaseReference.GetSize() != 5)
+		return false;
+
+	if (listViewToReference.GetSize() != 5)
+		return false;
 
 	size_t i = 0;
 	enumerator.Reset();
 
 	while (enumerator.MoveNext()) {
 
-		assert(enumerator.GetCurrent()->GetValue() == listViewToConstBaseReference[i]->GetValue());
-		assert(enumerator.GetCurrent()->GetValue() == listViewToReference[i].GetValue());
+		if (enumerator.GetCurrent()->GetValue() != listViewToConstBaseReference[i]->GetValue())
+			return false;
+
+		if (enumerator.GetCurrent()->GetValue() != listViewToReference[i].GetValue())
+			return false;
 		++i;
 	}
 
-	assert(i == collectionView.GetSize());
+	if (i != collectionView.GetSize())
+		return false;
+
+	return true;
 }
 
 } // namespace oddf::testing::utility
