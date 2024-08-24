@@ -20,21 +20,14 @@
 
 /*
 
-    <no description> \
+    <no description>
 
 */
 
-#include "ListView.h"
-
-#include <vector>
-#include <deque>
+#pragma once
 
 namespace oddf::testing::utility {
 
-void Test_ListView()
-{
-	TestListViewForStdContainer<std::vector>();
-	TestListViewForStdContainer<std::deque>();
-}
+void Test_Uid();
 
 } // namespace oddf::testing::utility

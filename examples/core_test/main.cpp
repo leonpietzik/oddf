@@ -26,8 +26,11 @@
 
 #include "testing/utility/CollectionView.h"
 #include "testing/utility/ListView.h"
+#include "testing/utility/Uid.h"
 
 #include "testing/design/blocks/backend/DesignBlockClass.h"
+
+#include <oddf/utility/Uid.h>
 
 int main()
 {
@@ -35,8 +38,9 @@ int main()
 
 	utility::Test_ListView();
 	utility::Test_CollectionView();
+	utility::Test_Uid();
 
 	design::blocks::backend::Test_DesignBlockClass();
-	
+
 	return 0;
 }

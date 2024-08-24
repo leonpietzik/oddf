@@ -33,9 +33,7 @@
 #include <cassert>
 #include <type_traits>
 
-namespace oddf {
-namespace testing {
-namespace utility {
+namespace oddf::testing::utility {
 
 void Test_ListView();
 
@@ -133,6 +131,4 @@ inline void TestListViewForStdContainer()
 	assert(i == collectionView.GetSize());
 }
 
-} // namespace utility
-} // namespace testing
-} // namespace oddf
+} // namespace oddf::testing::utility
