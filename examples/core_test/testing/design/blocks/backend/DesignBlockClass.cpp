@@ -24,8 +24,6 @@
 
 */
 
-#pragma once
-
 #include <oddf/design/blocks/backend/DesignBlockClass.h>
 
 #include <cassert>

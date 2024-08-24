@@ -111,7 +111,7 @@ class negate_block : public abstract_unary_operator_block<T> {
 
 public:
 
-	negate_block<T>() : abstract_unary_operator_block<T>("negate") {}
+	negate_block() : abstract_unary_operator_block<T>("negate") {}
 
 private:
 
