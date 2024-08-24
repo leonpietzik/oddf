@@ -38,18 +38,18 @@ class StdEnumeratorImplementation : public AbstractEnumeratorImplementation<refe
 
 private:
 
-	iteratorT m_Begin, m_End, m_Current;
-	bool m_BeforeBegin;
+	iteratorT m_begin, m_end, m_current;
+	bool m_beforeBegin;
 
 public:
 
 	StdEnumeratorImplementation(iteratorT begin, iteratorT end) :
-		m_Begin(begin), m_End(end), m_Current(end), m_BeforeBegin(false)
+		m_begin(begin), m_end(end), m_current(end), m_beforeBegin(false)
 	{
 	}
 
 	StdEnumeratorImplementation(StdEnumeratorImplementation<referenceT, iteratorT> const &other) :
-		m_Begin(other.m_Begin), m_End(other.m_End), m_Current(other.m_Current), m_BeforeBegin(other.m_BeforeBegin)
+		m_begin(other.m_begin), m_end(other.m_end), m_current(other.m_current), m_beforeBegin(other.m_beforeBegin)
 	{
 	}
 
@@ -60,26 +60,26 @@ public:
 
 	virtual referenceT GetCurrent() const override
 	{
-		return StdContainerElementTypeCast<referenceT>(*m_Current);
+		return StdContainerElementTypeCast<referenceT>(*m_current);
 	}
 
 	virtual bool MoveNext() override
 	{
-		if (m_Current == m_End)
+		if (m_current == m_end)
 			return false;
 
-		if (m_BeforeBegin)
-			m_BeforeBegin = false;
+		if (m_beforeBegin)
+			m_beforeBegin = false;
 		else
-			++m_Current;
+			++m_current;
 
-		return m_Current != m_End;
+		return m_current != m_end;
 	}
 
 	virtual void Reset() override
 	{
-		m_BeforeBegin = true;
-		m_Current = m_Begin;
+		m_beforeBegin = true;
+		m_current = m_begin;
 	}
 };
 

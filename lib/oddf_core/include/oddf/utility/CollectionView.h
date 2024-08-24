@@ -38,28 +38,28 @@ class CollectionView {
 
 protected:
 
-	std::unique_ptr<backend::AbstractContainerViewImplementation<referenceT>> m_Implementation;
+	std::unique_ptr<backend::AbstractContainerViewImplementation<referenceT>> m_implementation;
 
 public:
 
 	CollectionView(std::unique_ptr<backend::AbstractContainerViewImplementation<referenceT>> &&implementation) :
-		m_Implementation(std::move(implementation))
+		m_implementation(std::move(implementation))
 	{
 	}
 
 	CollectionView(CollectionView<referenceT> const &other) :
-		m_Implementation(other.m_Implementation->Clone())
+		m_implementation(other.m_implementation->Clone())
 	{
 	}
 
 	Enumerator<referenceT> GetEnumerator() const
 	{
-		return m_Implementation->GetEnumerator();
+		return m_implementation->GetEnumerator();
 	}
 
 	size_t GetSize() const
 	{
-		return m_Implementation->GetSize();
+		return m_implementation->GetSize();
 	}
 };
 

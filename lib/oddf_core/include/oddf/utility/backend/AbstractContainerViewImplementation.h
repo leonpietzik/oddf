@@ -43,9 +43,7 @@ public:
 	virtual size_t GetSize() const = 0;
 	virtual referenceT operator[](size_t index) const = 0;
 
-	virtual ~AbstractContainerViewImplementation()
-	{
-	}
+	virtual ~AbstractContainerViewImplementation() { }
 };
 
 } // namespace backend

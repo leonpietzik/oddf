@@ -1,4 +1,18 @@
 
+Naming conventions
+------------------
+
+ClassName
+Field: m_fieldName
+Method: MethodName
+
+
+Variable: smallCapital
+
+
+Class hierarchy
+--------------
+
 oddf_core library
 
 	design::backend

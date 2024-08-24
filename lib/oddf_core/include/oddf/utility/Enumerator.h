@@ -34,33 +34,33 @@ namespace utility {
 template<typename referenceT>
 class Enumerator {
 
-	std::unique_ptr<backend::AbstractEnumeratorImplementation<referenceT>> m_Implementation;
+	std::unique_ptr<backend::AbstractEnumeratorImplementation<referenceT>> m_implementation;
 
 public:
 
 	Enumerator(std::unique_ptr<backend::AbstractEnumeratorImplementation<referenceT>> &&implementation) :
-		m_Implementation(std::move(implementation))
+		m_implementation(std::move(implementation))
 	{
 	}
 
 	Enumerator(Enumerator<referenceT> const &other) :
-		m_Implementation(other.m_Implementation->Clone())
+		m_implementation(other.m_implementation->Clone())
 	{
 	}
 
 	referenceT GetCurrent() const
 	{
-		return m_Implementation->GetCurrent();
+		return m_implementation->GetCurrent();
 	}
 
 	bool MoveNext()
 	{
-		return m_Implementation->MoveNext();
+		return m_implementation->MoveNext();
 	}
 
 	void Reset()
 	{
-		m_Implementation->Reset();
+		m_implementation->Reset();
 	}
 };
 

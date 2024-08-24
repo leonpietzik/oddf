@@ -42,13 +42,13 @@ public:
 	}
 
 	ListView(ListView<referenceT> const &other) :
-		CollectionView<referenceT>(other.m_Implementation->Clone())
+		CollectionView<referenceT>(other.m_implementation->Clone())
 	{
 	}
 
 	referenceT operator[](size_t index) const
 	{
-		return this->m_Implementation->operator[](index);
+		return this->m_implementation->operator[](index);
 	}
 };
 

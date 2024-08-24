@@ -43,37 +43,37 @@ class StdContainerViewImplementation : public AbstractContainerViewImplementatio
 
 private:
 
-	containerT &m_Container;
+	containerT &m_container;
 
 public:
 
 	StdContainerViewImplementation(containerT &container) :
-		m_Container(container)
+		m_container(container)
 	{
 	}
 
 	virtual std::unique_ptr<AbstractContainerViewImplementation<referenceT>> Clone() const
 	{
-		return std::make_unique<StdContainerViewImplementation<referenceT, containerT>>(m_Container);
+		return std::make_unique<StdContainerViewImplementation<referenceT, containerT>>(m_container);
 	}
 
 	virtual Enumerator<referenceT> GetEnumerator() const
 	{
-		using iteratorType = decltype(std::begin(m_Container));
+		using iteratorType = decltype(std::begin(m_container));
 
-		return Enumerator<referenceT>(std::make_unique<StdEnumeratorImplementation<referenceT, iteratorType>>(std::begin(m_Container), std::end(m_Container)));
+		return Enumerator<referenceT>(std::make_unique<StdEnumeratorImplementation<referenceT, iteratorType>>(std::begin(m_container), std::end(m_container)));
 	}
 
 	virtual size_t GetSize() const
 	{
-		return std::size(m_Container);
+		return std::size(m_container);
 	}
 
 	virtual referenceT operator[](size_t index) const
 	{
 		if constexpr (StdContainerIndexable<containerT>) {
 
-			return StdContainerElementTypeCast<referenceT>(m_Container[index]);
+			return StdContainerElementTypeCast<referenceT>(m_container[index]);
 		}
 		else {
 

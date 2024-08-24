@@ -43,9 +43,7 @@ public:
 	virtual bool MoveNext() = 0;
 	virtual void Reset() = 0;
 
-	virtual ~AbstractEnumeratorImplementation()
-	{
-	}
+	virtual ~AbstractEnumeratorImplementation() { }
 };
 
 } // namespace backend
