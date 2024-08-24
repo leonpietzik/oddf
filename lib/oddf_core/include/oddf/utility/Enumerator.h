@@ -28,8 +28,7 @@
 
 #include "backend/AbstractEnumeratorImplementation.h"
 
-namespace oddf {
-namespace utility {
+namespace oddf::utility {
 
 template<typename referenceT>
 class Enumerator {
@@ -64,5 +63,4 @@ public:
 	}
 };
 
-} // namespace utility
-} // namespace oddf
+} // namespace oddf::utility

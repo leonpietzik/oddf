@@ -25,7 +25,7 @@ oddf_core library
 	design::blocks::backend
 		DesignBlockClass // Distinguishes different types of design blocks, such as adders, multipliers and so on.
 		IDesignBlock // Interface for querying block properties by consumers of the design
-			GetBlockClass() // Returns the block's DesignBlockClass
+			GetClass() // Returns the block's DesignBlockClass
 			GetInputsList()
 			GetOutputsList()
 		IDesignBlockInput
@@ -35,7 +35,7 @@ oddf_core library
 	simulator
 		ISimulator
 			void Run();
-			void *GetSimulatorObjectInterface(uri, iid); // Throws if uri does not exist or the object does not expose the requested interface
+			void *GetSimulatorObjectInterface(uri, uid); // Throws if uri does not exist or the object does not expose the requested interface
 			T &GetSimulatorObjectInterface<T>(uri); // Interfaces must have static IID member to support this function
 
 	simulator::access
@@ -63,8 +63,8 @@ oddf_core library
 		MakeCollectionView
 		MakeListView
 
-		Uri
-		Iid
+		ResourcePath // Path to a "resource" (a block, a class object, a hierarchy level)
+		Uid // Unique Identifier (uses two uint64 internally)
 		Exceptions
 			// do we want different exception types for different error conditions?
 		Messages

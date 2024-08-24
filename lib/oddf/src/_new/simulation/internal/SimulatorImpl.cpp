@@ -85,7 +85,7 @@ void SimulatorImpl::TranslateDesign(design::backend::IDesign const &design)
 	m_blocks.reserve(designBlocks.GetSize());
 	auto designBlocksEnumerator = designBlocks.GetEnumerator();
 
-	for (designBlocksEnumerator.Reset(); designBlocksEnumerator.MoveNext(); ) {
+	for (designBlocksEnumerator.Reset(); designBlocksEnumerator.MoveNext();) {
 
 		auto const &designBlock = designBlocksEnumerator.GetCurrent();
 
@@ -100,7 +100,7 @@ void SimulatorImpl::TranslateDesign(design::backend::IDesign const &design)
 		else {
 
 			std::cout << "WARNING: do not know how to handle design block '"
-					  << designBlock.GetBlockPath()
+					  << designBlock.GetPath().ToString()
 					  << "' of class '" << blockClass.ToString() << "'.\n";
 		}
 	}
@@ -118,66 +118,28 @@ void SimulatorImpl::TranslateDesign(design::backend::IDesign const &design)
 	}
 
 	//
-	// Refine blocks
+	// Refine blocks / ElaborateBlocks -- for all blocks that implement the IElaborate interface (which is passed an IElaborationContext)
 	//
 
 	/*
-		 Blocks created in a previous step may be converted to new blocks, that better support certain combinations of 
-		 input and output types. For example, a sum taking an integer and a double as inputs may be converted to a
-		 block that sums doubles preceded by a type-conversion block for the integer input. Another example is where 
-		 operations on busses are individualised.
+	     Blocks created in a previous step may be converted to new blocks, that better support certain combinations of
+	     input and output types. For example, a sum taking an integer and a double as inputs may be converted to a
+	     block that sums doubles preceded by a type-conversion block for the integer input. Another example is where
+	     operations on busses are individualised.
+	*/
+
+	/*
+
+	BuildComponents
+	AllocateNets
+	    - Speicher für outputs von Blöcken
+	    - Speicher für interne knoten wiederverwenden können?
+	    - Was ist mit Speicher für delay, memory
+	GenerateCode
+
 	*/
 }
 
 } // namespace internal
 } // namespace simulation
 } // namespace oddf
-
-#if 0
-
-
-
-
-	/*	temp::BlockEnumerator blocks(design);
-
-
-	    while (blocks.MoveNext()) {
-
-	        auto const &currentDesignBlock = blocks.GetCurrent();
-
-	        auto designBlockClass = currentDesignBlock.GetClass();
-
-	        auto found = simulatorBlockFactories.find(designBlockClass);
-
-	        if (found != simulatorBlockFactories.end()) {
-	        }
-	        else {
-
-	            std::cout << "The simulator has no handler for block with class '" << designBlockClass.ToString() << "'.\n";
-	        }
-
-
-	        // ----> need a factories for the different design block classes
-	        //m_blockMapping[&currentDesignBlock] = m_blocks.emplace_back(new SimulatorBlockBase(currentDesignBlock)).get();
-	    }
-	*/
-
-	/*
-
-	MapBlocks
-	MapConnections
-
-	ElaborateBlocks -- for all blocks that implement the IElaborate interface (which is passed an IElaborationContext)
-
-	All blocks that implement ... HIER GEHTS WEITER
-
-	BuildComponents
-	AllocateNets
-	GenerateCode
-
-	*/
-}
-
-} // namespace oddf
-
-#endif

@@ -28,8 +28,7 @@
 
 #include "CollectionView.h"
 
-namespace oddf {
-namespace utility {
+namespace oddf::utility {
 
 template<typename referenceT>
 class ListView : public CollectionView<referenceT> {
@@ -65,5 +64,4 @@ auto MakeListView(containerT &container)
 	return ListView<referenceT>(std::make_unique<backend::StdContainerViewImplementation<referenceT, containerT>>(container));
 }
 
-} // namespace utility
-} // namespace oddf
+} // namespace oddf::utility

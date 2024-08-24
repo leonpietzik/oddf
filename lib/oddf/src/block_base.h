@@ -160,9 +160,9 @@ public:
 	// IDesignBlock interface implementation
 	//
 
-	virtual std::string GetBlockPath() const override
+	virtual oddf::utility::ResourcePath GetPath() const override
 	{
-		return GetFullName();
+		return { GetFullName() };
 	}
 
 	virtual oddf::design::blocks::backend::DesignBlockClass GetClass() const override

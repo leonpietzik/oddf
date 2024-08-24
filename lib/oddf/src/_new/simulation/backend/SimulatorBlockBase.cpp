@@ -71,7 +71,7 @@ void SimulatorBlockBase::MapConnections(IBlockMapping const &blockMapping)
 			}
 			else {
 
-				std::cout << "Block '" << m_designBlockReference->GetBlockPath() << "': driving block '" << designDrivingBlock.GetBlockPath() << "' not found\n";
+				std::cout << "Block '" << m_designBlockReference->GetPath().ToString() << "': driving block '" << designDrivingBlock.GetPath().ToString() << "' not found\n";
 			}
 		}
 

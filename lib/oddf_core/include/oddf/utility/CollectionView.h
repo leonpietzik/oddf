@@ -30,8 +30,7 @@
 
 #include <utility>
 
-namespace oddf {
-namespace utility {
+namespace oddf::utility {
 
 template<typename referenceT>
 class CollectionView {
@@ -76,5 +75,4 @@ auto MakeCollectionView(containerT &container)
 	return CollectionView<referenceT>(std::make_unique<backend::StdContainerViewImplementation<referenceT, containerT>>(container));
 }
 
-} // namespace utility
-} // namespace oddf
+} // namespace oddf::utility
