@@ -35,12 +35,12 @@ namespace oddf {
 namespace testing {
 namespace utility {
 
-bool Test_CollectionView()
+void Test_CollectionView()
 {
-	return TestCollectionViewForStdContainer<std::vector>()
-		&& TestCollectionViewForStdContainer<std::deque>()
-		&& TestCollectionViewForStdContainer<std::list>()
-		&& TestCollectionViewForStdContainer<std::set>();
+	TestCollectionViewForStdContainer<std::vector>();
+	TestCollectionViewForStdContainer<std::deque>();
+	TestCollectionViewForStdContainer<std::list>();
+	TestCollectionViewForStdContainer<std::set>();
 }
 
 } // namespace utility

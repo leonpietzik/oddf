@@ -31,10 +31,10 @@
 
 namespace oddf::testing::utility {
 
-bool Test_ListView()
+void Test_ListView()
 {
-	return TestListViewForStdContainer<std::vector>()
-		&& TestListViewForStdContainer<std::deque>();
+	TestListViewForStdContainer<std::vector>();
+	TestListViewForStdContainer<std::deque>();
 }
 
 } // namespace oddf::testing::utility

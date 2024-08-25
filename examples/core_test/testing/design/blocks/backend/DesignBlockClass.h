@@ -35,6 +35,6 @@
 
 namespace oddf::testing::design::blocks::backend {
 
-bool Test_DesignBlockClass();
+void Test_DesignBlockClass();
 
 } // namespace oddf::testing::design::blocks::backend

@@ -27,29 +27,14 @@
 #pragma once
 
 #include <iostream>
-#include <string>
-#include <functional>
+#include <stdexcept>
 
 namespace oddf::testing {
 
-inline void RunTest(std::string const &testName, std::function<void()> testFunction)
+inline void Verify(bool condition)
 {
-	bool success = false;
-
-	try {
-
-		testFunction();
-		success = true;
-	}
-	catch (...) {
-	}
-
-	if (success)
-		std::cout << " ok   : ";
-	else
-		std::cout << "FAIL  : ";
-
-	std::cout << testName << "\n";
+	if (!condition)
+		throw std::runtime_error("Verify(): test condition failed.");
 }
 
 } // namespace oddf::testing

@@ -28,6 +28,8 @@
 
 #include <oddf/utility/CollectionView.h>
 
+#include "../Verify.h"
+
 #include <iostream>
 #include <memory>
 #include <type_traits>
@@ -36,10 +38,10 @@ namespace oddf {
 namespace testing {
 namespace utility {
 
-bool Test_CollectionView();
+void Test_CollectionView();
 
 template<template<typename> class containerTemplate>
-inline bool TestCollectionViewForStdContainer()
+inline void TestCollectionViewForStdContainer()
 {
 	struct Base {
 
@@ -109,14 +111,9 @@ inline bool TestCollectionViewForStdContainer()
 	// Confirm the element type returned by the Enumerator
 	static_assert(std::is_same_v<decltype(enumeratorToReference.GetCurrent()), Derived &>);
 
-	if (collectionView.GetSize() != 5)
-		return false;
-
-	if (collectionViewToConstBasePointer.GetSize() != 5)
-		return false;
-
-	if (collectionViewToReference.GetSize() != 5)
-		return false;
+	Verify(collectionView.GetSize() == 5);
+	Verify(collectionViewToConstBasePointer.GetSize() == 5);
+	Verify(collectionViewToReference.GetSize() == 5);
 
 	enumerator.Reset();
 	enumeratorToConstBasePointer.Reset();
@@ -130,23 +127,13 @@ inline bool TestCollectionViewForStdContainer()
 		enumeratorToReference.MoveNext();
 		++i;
 
-		if (enumerator.GetCurrent()->GetValue() != enumeratorToConstBasePointer.GetCurrent()->GetValue())
-			return false;
-
-		if (enumerator.GetCurrent()->GetValue() != enumeratorToReference.GetCurrent().GetValue())
-			return false;
+		Verify(enumerator.GetCurrent()->GetValue() == enumeratorToConstBasePointer.GetCurrent()->GetValue());
+		Verify(enumerator.GetCurrent()->GetValue() == enumeratorToReference.GetCurrent().GetValue());
 	}
 
-	if (enumeratorToConstBasePointer.MoveNext() != false)
-		return false;
-
-	if (enumeratorToReference.MoveNext() != false)
-		return false;
-
-	if (i != collectionView.GetSize())
-		return false;
-
-	return true;
+	Verify(enumeratorToConstBasePointer.MoveNext() == false);
+	Verify(enumeratorToReference.MoveNext() == false);
+	Verify(i == collectionView.GetSize());
 }
 
 } // namespace utility

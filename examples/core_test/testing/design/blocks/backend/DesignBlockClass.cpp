@@ -26,13 +26,15 @@
 
 #include <oddf/design/blocks/backend/DesignBlockClass.h>
 
+#include "../../../Verify.h"
+
 #include <set>
 #include <unordered_set>
 #include <type_traits>
 
 namespace oddf::testing::design::blocks::backend {
 
-bool Test_DesignBlockClass()
+void Test_DesignBlockClass()
 {
 	using oddf::design::blocks::backend::DesignBlockClass;
 
@@ -42,8 +44,7 @@ bool Test_DesignBlockClass()
 	DesignBlockClass blockClass("TestClass");
 
 	// Must have a method ToString() that returns a string representation of the class
-	if (blockClass.ToString() != "TestClass")
-		return false;
+	Verify(blockClass.ToString() == "TestClass");
 
 	// Class DesignBlockClass must be usable in ordered and unordered containers.
 	std::set<DesignBlockClass> set;
@@ -54,8 +55,6 @@ bool Test_DesignBlockClass()
 
 	unordered_set.emplace("Class1");
 	unordered_set.emplace(blockClass);
-
-	return true;
 }
 
 } // namespace oddf::testing::design::blocks::backend
