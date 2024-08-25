@@ -29,9 +29,7 @@
 #include <oddf/design/blocks/backend/IDesignBlock.h>
 #include <oddf/utility/CollectionView.h>
 
-namespace oddf {
-namespace design {
-namespace backend {
+namespace oddf::design::backend {
 
 class IDesign {
 
@@ -42,6 +40,4 @@ public:
 	virtual utility::CollectionView<blocks::backend::IDesignBlock const &> GetBlockCollection() const = 0;
 };
 
-} // namespace backend
-} // namespace design
-} // namespace oddf
+} // namespace oddf::design::backend

@@ -26,34 +26,8 @@
 
 #pragma once
 
-#include <oddf/utility/ListView.h>
-#include <oddf/ResourcePath.h>
+namespace oddf::testing {
 
-#include "DesignBlockClass.h"
-#include "IBlockInput.h"
-#include "IBlockOutput.h"
+void Test_Uid();
 
-#include <string>
-
-namespace oddf {
-namespace design {
-namespace blocks {
-namespace backend {
-
-class IDesignBlock {
-
-public:
-
-	virtual ~IDesignBlock() { }
-
-	virtual ResourcePath GetPath() const = 0;
-	virtual DesignBlockClass GetClass() const = 0;
-
-	virtual utility::ListView<IBlockInput const &> GetInputsList() const = 0;
-	virtual utility::ListView<IBlockOutput const &> GetOutputsList() const = 0;
-};
-
-} // namespace backend
-} // namespace blocks
-} // namespace design
-} // namespace oddf
+} // namespace oddf::testing

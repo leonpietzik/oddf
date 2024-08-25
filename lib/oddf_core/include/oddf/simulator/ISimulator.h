@@ -24,25 +24,28 @@
 
 */
 
-#include <oddf/utility/Uid.h>
+#pragma once
 
-#include <cinttypes>
-#include <iostream>
+#include <oddf/ResourcePath.h>
+#include <oddf/Uid.h>
 
-namespace oddf::utility {
+namespace oddf::simulator {
 
-std::string Uid::ToString() const
-{
-	std::string uidString;
+class ISimulator {
 
-	uidString.resize(38);
+public:
 
-	std::snprintf(uidString.data(), uidString.capacity() + 1, "{%08" PRIx32 "-%04" PRIx16 "-%04" PRIx16 "-%02" PRIx8 "%02" PRIx8 "-%02" PRIx8 "%02" PRIx8 "%02" PRIx8 "%02" PRIx8 "%02" PRIx8 "%02" PRIx8 "}",
-		std::get<0>(m_data),
-		std::get<1>(m_data), std::get<2>(m_data),
-		std::get<3>(m_data), std::get<4>(m_data), std::get<5>(m_data), std::get<6>(m_data), std::get<7>(m_data), std::get<8>(m_data), std::get<9>(m_data), std::get<10>(m_data));
+	virtual ~ISimulator() { }
 
-	return uidString;
-}
+	virtual void Run(int cycles) = 0;
 
-} // namespace oddf::utility
+	virtual void *GetSimulatorObjectInterface(ResourcePath const &path, Uid const &iid) const = 0;
+
+	template<typename T>
+	T &GetSimulatorObjectInterface(ResourcePath const &path) const
+	{
+		return *static_cast<T *>(GetSimulatorObjectInterface(path, T::IID));
+	}
+};
+
+} // namespace oddf::simulator

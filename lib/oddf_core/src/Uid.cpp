@@ -24,10 +24,25 @@
 
 */
 
-#pragma once
+#include <oddf/Uid.h>
 
-namespace oddf::testing::utility {
+#include <cinttypes>
+#include <iostream>
 
-void Test_Uid();
+namespace oddf {
 
-} // namespace oddf::testing::utility
+std::string Uid::ToString() const
+{
+	std::string uidString;
+
+	uidString.resize(38);
+
+	std::snprintf(uidString.data(), uidString.capacity() + 1, "{%08" PRIx32 "-%04" PRIx16 "-%04" PRIx16 "-%02" PRIx8 "%02" PRIx8 "-%02" PRIx8 "%02" PRIx8 "%02" PRIx8 "%02" PRIx8 "%02" PRIx8 "%02" PRIx8 "}",
+		std::get<0>(m_data),
+		std::get<1>(m_data), std::get<2>(m_data),
+		std::get<3>(m_data), std::get<4>(m_data), std::get<5>(m_data), std::get<6>(m_data), std::get<7>(m_data), std::get<8>(m_data), std::get<9>(m_data), std::get<10>(m_data));
+
+	return uidString;
+}
+
+} // namespace oddf

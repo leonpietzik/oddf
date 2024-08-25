@@ -24,17 +24,55 @@
 
 */
 
-#pragma once
+#include <exception>
+#include <string>
+#include <cstdint>
 
-#include <iostream>
-#include <stdexcept>
+namespace oddf {
 
-namespace oddf::testing {
+enum class ExceptionCode : std::uint32_t {
 
-inline void Verify(bool condition)
-{
-	if (!condition)
-		throw std::runtime_error("Verify(): test condition failed.");
-}
+	Generic = 0x00000001,
 
-} // namespace oddf::testing
+	ResourceNotFound = 0x00000002,
+	InterfaceNotFound = 0x00000003
+};
+
+class Exception : public std::exception {
+
+private:
+
+	ExceptionCode m_code;
+	std::string m_message;
+
+public:
+
+	Exception(std::string const &message) :
+		m_code(ExceptionCode::Generic),
+		m_message(message)
+	{
+	}
+
+	Exception(ExceptionCode code) :
+		m_code(code),
+		m_message("<no message>")
+	{
+	}
+
+	virtual char const *what() const noexcept override
+	{
+		return m_message.c_str();
+	}
+
+	char const *GetMessage() const noexcept
+	{
+		return m_message.c_str();
+	}
+
+	ExceptionCode GetCode() const noexcept
+	{
+		return m_code;
+	}
+};
+
+} // namespace oddf

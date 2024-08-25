@@ -26,7 +26,7 @@
 
 #include <oddf/design/blocks/backend/DesignBlockClass.h>
 
-#include "../../../Verify.h"
+#include "../../../Expect.h"
 
 #include <set>
 #include <unordered_set>
@@ -44,7 +44,7 @@ void Test_DesignBlockClass()
 	DesignBlockClass blockClass("TestClass");
 
 	// Must have a method ToString() that returns a string representation of the class
-	Verify(blockClass.ToString() == "TestClass");
+	Expect(blockClass.ToString() == "TestClass");
 
 	// Class DesignBlockClass must be usable in ordered and unordered containers.
 	std::set<DesignBlockClass> set;

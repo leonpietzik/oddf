@@ -30,7 +30,7 @@
 #include <tuple>
 #include <string>
 
-namespace oddf::utility {
+namespace oddf {
 
 class Uid {
 
@@ -69,4 +69,4 @@ public:
 	std::string ToString() const;
 };
 
-} // namespace oddf::utility
+} // namespace oddf

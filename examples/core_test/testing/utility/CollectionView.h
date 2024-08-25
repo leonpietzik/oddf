@@ -28,7 +28,7 @@
 
 #include <oddf/utility/CollectionView.h>
 
-#include "../Verify.h"
+#include "../Expect.h"
 
 #include <iostream>
 #include <memory>
@@ -111,9 +111,9 @@ inline void TestCollectionViewForStdContainer()
 	// Confirm the element type returned by the Enumerator
 	static_assert(std::is_same_v<decltype(enumeratorToReference.GetCurrent()), Derived &>);
 
-	Verify(collectionView.GetSize() == 5);
-	Verify(collectionViewToConstBasePointer.GetSize() == 5);
-	Verify(collectionViewToReference.GetSize() == 5);
+	Expect(collectionView.GetSize() == 5);
+	Expect(collectionViewToConstBasePointer.GetSize() == 5);
+	Expect(collectionViewToReference.GetSize() == 5);
 
 	enumerator.Reset();
 	enumeratorToConstBasePointer.Reset();
@@ -127,13 +127,13 @@ inline void TestCollectionViewForStdContainer()
 		enumeratorToReference.MoveNext();
 		++i;
 
-		Verify(enumerator.GetCurrent()->GetValue() == enumeratorToConstBasePointer.GetCurrent()->GetValue());
-		Verify(enumerator.GetCurrent()->GetValue() == enumeratorToReference.GetCurrent().GetValue());
+		Expect(enumerator.GetCurrent()->GetValue() == enumeratorToConstBasePointer.GetCurrent()->GetValue());
+		Expect(enumerator.GetCurrent()->GetValue() == enumeratorToReference.GetCurrent().GetValue());
 	}
 
-	Verify(enumeratorToConstBasePointer.MoveNext() == false);
-	Verify(enumeratorToReference.MoveNext() == false);
-	Verify(i == collectionView.GetSize());
+	Expect(enumeratorToConstBasePointer.MoveNext() == false);
+	Expect(enumeratorToReference.MoveNext() == false);
+	Expect(i == collectionView.GetSize());
 }
 
 } // namespace utility

@@ -26,18 +26,8 @@
 
 #pragma once
 
-#include <string>
+namespace oddf::testing::simulator {
 
-namespace oddf::utility {
+void Test_ISimulator();
 
-class ResourcePath : public std::string {
-
-public:
-
-	std::string ToString() const
-	{
-		return *this;
-	}
-};
-
-} // namespace oddf::utility
+} // namespace oddf::testing::simulator

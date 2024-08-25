@@ -24,27 +24,27 @@
 
 */
 
-#include <oddf/utility/Uid.h>
+#include <oddf/Uid.h>
 
-#include "../Verify.h"
+#include "Expect.h"
 
 #include <iostream>
 
-namespace oddf::testing::utility {
+namespace oddf::testing {
 
 void Test_Uid()
 {
-	constexpr auto uid1 = oddf::utility::Uid(0x5ece6339, 0x1045, 0x46ec, 0x8f, 0x68, 0x94, 0x2f, 0xe6, 0x55, 0xaf, 0x56);
+	constexpr auto uid1 = Uid(0x5ece6339, 0x1045, 0x46ec, 0x8f, 0x68, 0x94, 0x2f, 0xe6, 0x55, 0xaf, 0x56);
 
 	constexpr auto uid2 = uid1;
-	constexpr auto uid3 = oddf::utility::Uid(0x231f9c8e, 0x760f, 0x4caf, 0x8a, 0x1e, 0x77, 0xf2, 0x7c, 0x66, 0x86, 0x0f);
+	constexpr auto uid3 = Uid(0x231f9c8e, 0x760f, 0x4caf, 0x8a, 0x1e, 0x77, 0xf2, 0x7c, 0x66, 0x86, 0x0f);
 
 	static_assert(uid1 == uid2);
 	static_assert(uid1 != uid3);
 
-	Verify(uid2.ToString() == "{5ece6339-1045-46ec-8f68-942fe655af56}");
-	Verify(!(uid2.ToString() != "{5ece6339-1045-46ec-8f68-942fe655af56}"));
-	Verify(uid3.ToString() == "{231f9c8e-760f-4caf-8a1e-77f27c66860f}");
+	Expect(uid2.ToString() == "{5ece6339-1045-46ec-8f68-942fe655af56}");
+	Expect(!(uid2.ToString() != "{5ece6339-1045-46ec-8f68-942fe655af56}"));
+	Expect(uid3.ToString() == "{231f9c8e-760f-4caf-8a1e-77f27c66860f}");
 }
 
-} // namespace oddf::testing::utility
+} // namespace oddf::testing

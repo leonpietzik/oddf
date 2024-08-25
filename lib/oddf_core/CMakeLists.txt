@@ -1,5 +1,5 @@
 add_library(oddf_core
-	src/utility/Uid.cpp
+	src/Uid.cpp
 )
 
 target_include_directories(oddf_core PUBLIC include)

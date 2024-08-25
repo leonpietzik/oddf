@@ -26,34 +26,27 @@
 
 #pragma once
 
-#include <oddf/utility/ListView.h>
-#include <oddf/ResourcePath.h>
-
-#include "DesignBlockClass.h"
-#include "IBlockInput.h"
-#include "IBlockOutput.h"
-
 #include <string>
+#include <utility>
 
 namespace oddf {
-namespace design {
-namespace blocks {
-namespace backend {
 
-class IDesignBlock {
+class ResourcePath : public std::string {
 
 public:
 
-	virtual ~IDesignBlock() { }
+	using std::string::string;
 
-	virtual ResourcePath GetPath() const = 0;
-	virtual DesignBlockClass GetClass() const = 0;
+	ResourcePath(std::string const &str) :
+		std::string(str) { }
 
-	virtual utility::ListView<IBlockInput const &> GetInputsList() const = 0;
-	virtual utility::ListView<IBlockOutput const &> GetOutputsList() const = 0;
+	ResourcePath(std::string &&str) :
+		std::string(std::move(str)) { }
+
+	std::string ToString() const
+	{
+		return *this;
+	}
 };
 
-} // namespace backend
-} // namespace blocks
-} // namespace design
 } // namespace oddf

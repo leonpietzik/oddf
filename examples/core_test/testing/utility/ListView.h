@@ -28,7 +28,7 @@
 
 #include <oddf/utility/ListView.h>
 
-#include "../Verify.h"
+#include "../Expect.h"
 
 #include <iostream>
 #include <memory>
@@ -115,22 +115,22 @@ inline void TestListViewForStdContainer()
 	static_assert(std::is_same_v<decltype(listViewToReference[0]), Derived &>);
 	static_assert(std::is_same_v<decltype(enumeratorToReference.GetCurrent()), Derived &>);
 
-	Verify(collectionView.GetSize() == 5);
-	Verify(listViewToConstBaseReference.GetSize() == 5);
-	Verify(listViewToReference.GetSize() == 5);
+	Expect(collectionView.GetSize() == 5);
+	Expect(listViewToConstBaseReference.GetSize() == 5);
+	Expect(listViewToReference.GetSize() == 5);
 
 	size_t i = 0;
 	enumerator.Reset();
 
 	while (enumerator.MoveNext()) {
 
-		Verify(enumerator.GetCurrent()->GetValue() == listViewToConstBaseReference[i]->GetValue());
-		Verify(enumerator.GetCurrent()->GetValue() == listViewToReference[i].GetValue());
+		Expect(enumerator.GetCurrent()->GetValue() == listViewToConstBaseReference[i]->GetValue());
+		Expect(enumerator.GetCurrent()->GetValue() == listViewToReference[i].GetValue());
 
 		++i;
 	}
 
-	Verify(i == collectionView.GetSize());
+	Expect(i == collectionView.GetSize());
 }
 
 } // namespace oddf::testing::utility

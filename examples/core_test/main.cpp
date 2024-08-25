@@ -26,23 +26,27 @@
 
 #include "testing/RunTest.h"
 
+#include "testing/Uid.h"
+
 #include "testing/utility/CollectionView.h"
 #include "testing/utility/ListView.h"
-#include "testing/utility/Uid.h"
 
 #include "testing/design/blocks/backend/DesignBlockClass.h"
 
-#include <oddf/utility/Uid.h>
+#include "testing/simulator/ISimulator.h"
 
 int main()
 {
 	using namespace oddf::testing;
 
+	RunTest("Uid", Test_Uid);
+
 	RunTest("utility::ListView", utility::Test_ListView);
 	RunTest("utility::CollectionView", utility::Test_CollectionView);
-	RunTest("utility::Uid", utility::Test_Uid);
 
 	RunTest("design::blocks::backend::DesignBlockClass", design::blocks::backend::Test_DesignBlockClass);
+
+	RunTest("simulator::ISimulator", simulator::Test_ISimulator);
 
 	return 0;
 }
