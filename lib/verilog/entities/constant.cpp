@@ -2,17 +2,17 @@
 
 	ODDF - Open Digital Design Framework
 	Copyright Advantest Corporation
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
-	
+
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -62,9 +62,9 @@ void Constant::WriteCode(std::ofstream &f, dfx::generator::Instance &, dfx::gene
 				entity.properties.GetIntArray("Constant", i, constantData);
 				f << "assign " << GetNodeExpression(&output) << " = " << width << "'b";
 
-				for (int i = width - 1; i >= 0; --i) {
-					f << std::to_string((constantData[i / 32] >> (i & 0x1F)) & 0x1);
-					if (fraction != 0 && i == fraction) f << "_";
+				for (int j = width - 1; j >= 0; --j) {
+					f << std::to_string((constantData[j / 32] >> (j & 0x1F)) & 0x1);
+					if (fraction != 0 && j == fraction) f << "_";
 				}
 
 				f << "; // ";
@@ -74,15 +74,15 @@ void Constant::WriteCode(std::ofstream &f, dfx::generator::Instance &, dfx::gene
 				if (output.type.IsSigned() && (constantData[dynfix::MAX_FIELDS - 1] < 0)) {
 
 					value = 1.0;
-					for (int i = 0; i < dynfix::MAX_FIELDS; ++i)
-						value += ~(unsigned)constantData[i] * std::pow(2.0, i * 32);
+					for (int j = 0; j < dynfix::MAX_FIELDS; ++j)
+						value += ~(unsigned)constantData[j] * std::pow(2.0, j * 32);
 
 					value = -value;
 				}
 				else {
 
-					for (int i = 0; i < dynfix::MAX_FIELDS; ++i)
-						value += (unsigned)constantData[i] * std::pow(2.0, i * 32);
+					for (int j = 0; j < dynfix::MAX_FIELDS; ++j)
+						value += (unsigned)constantData[j] * std::pow(2.0, j * 32);
 				}
 
 				value *= std::pow(2.0, -output.type.GetFraction());
