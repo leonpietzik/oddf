@@ -24,7 +24,7 @@
 
 */
 
-#include "../SimulatorImpl.h"
+#include "../SimulatorCore.h"
 
 #include <unordered_map>
 #include <cassert>
@@ -55,7 +55,7 @@ public:
 	}
 };
 
-std::unique_ptr<IBlockMapping const> SimulatorImpl::MapBlocks(design::IDesign const &design)
+std::unique_ptr<IBlockMapping const> SimulatorCore::MapBlocks(design::IDesign const &design)
 {
 	auto pBlockMapping = std::make_unique<BlockMapping>();
 

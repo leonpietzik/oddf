@@ -38,7 +38,7 @@ namespace oddf::simulator::common {
 
 namespace backend {
 
-class SimulatorImpl;
+class SimulatorCore;
 
 } // namespace backend
 
@@ -46,7 +46,7 @@ class Simulator : public ISimulator {
 
 private:
 
-	std::unique_ptr<backend::SimulatorImpl> m_impl;
+	std::unique_ptr<backend::SimulatorCore> m_core;
 
 public:
 

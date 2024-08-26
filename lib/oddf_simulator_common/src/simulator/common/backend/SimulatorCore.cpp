@@ -24,11 +24,16 @@
 
 */
 
-#include "../SimulatorImpl.h"
+#include "SimulatorCore.h"
 
 namespace oddf::simulator::common::backend {
 
-void SimulatorImpl::EnsureValid()
+SimulatorCore::SimulatorCore()
+{
+	RegisterDefaultBlockFactories();
+}
+
+SimulatorCore::~SimulatorCore()
 {
 }
 

@@ -83,7 +83,7 @@ oddf_simulator_std
 		SimulatorBlockOutput
 		SimulatorObjectBase
 			GetInterface(iid)
-		SimulatorImpl
+		SimulatorCore
 	simulator::std::backend::blocks (all block implementations are part of the backend, there is no direct public interface)
 		[ all simulator block implementations go here ]
 		[ all simulator object implementations go here ]

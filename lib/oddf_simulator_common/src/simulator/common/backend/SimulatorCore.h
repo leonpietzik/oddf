@@ -40,7 +40,7 @@
 
 namespace oddf::simulator::common::backend {
 
-class SimulatorImpl : public simulator::backend::ISimulatorAccess {
+class SimulatorCore : public simulator::backend::ISimulatorAccess {
 
 private:
 
@@ -55,8 +55,8 @@ private:
 
 public:
 
-	SimulatorImpl();
-	~SimulatorImpl();
+	SimulatorCore();
+	~SimulatorCore();
 
 	bool RegisterSimulatorBlockFactory(design::blocks::backend::DesignBlockClass const &designBlockClass,
 		std::unique_ptr<ISimulatorBlockFactory> &&simulatorBlockFactory);

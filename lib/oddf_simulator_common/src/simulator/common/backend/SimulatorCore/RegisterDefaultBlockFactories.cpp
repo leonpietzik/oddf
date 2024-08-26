@@ -24,7 +24,7 @@
 
 */
 
-#include "../SimulatorImpl.h"
+#include "../SimulatorCore.h"
 
 #include "../GenericSimulatorBlockFactory.h"
 
@@ -32,7 +32,7 @@
 
 namespace oddf::simulator::common::backend {
 
-void SimulatorImpl::RegisterDefaultBlockFactories()
+void SimulatorCore::RegisterDefaultBlockFactories()
 {
 	using design::blocks::backend::DesignBlockClass;
 

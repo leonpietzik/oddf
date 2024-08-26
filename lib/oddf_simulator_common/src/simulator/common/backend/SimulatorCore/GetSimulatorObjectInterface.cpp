@@ -24,19 +24,15 @@
 
 */
 
-#include "../SimulatorImpl.h"
+#include "../SimulatorCore.h"
 
-#include <cassert>
+#include <oddf/Exception.h>
 
 namespace oddf::simulator::common::backend {
 
-void SimulatorImpl::MapConnections(IBlockMapping const &blockMapping)
+void *SimulatorCore::GetSimulatorObjectInterface(ResourcePath const & /*path*/, Uid const & /*iid*/)
 {
-	for (auto &pBlock : m_blocks) {
-
-		assert(pBlock);
-		pBlock->MapConnections(blockMapping);
-	}
+	throw Exception(ExceptionCode::ResourceNotFound);
 }
 
 } // namespace oddf::simulator::common::backend

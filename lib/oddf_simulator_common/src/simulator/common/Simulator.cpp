@@ -24,14 +24,14 @@
 
 */
 
-#include "backend/SimulatorImpl.h"
+#include "backend/SimulatorCore.h"
 
 #include <oddf/simulator/common/Simulator.h>
 
 namespace oddf::simulator::common {
 
 Simulator::Simulator() :
-	m_impl(new backend::SimulatorImpl)
+	m_core(new backend::SimulatorCore)
 {
 }
 
@@ -42,17 +42,17 @@ Simulator::~Simulator()
 bool Simulator::RegisterSimulatorBlockFactory(design::blocks::backend::DesignBlockClass const &designBlockClass,
 	std::unique_ptr<backend::ISimulatorBlockFactory> &&simulatorBlockFactory)
 {
-	return m_impl->RegisterSimulatorBlockFactory(designBlockClass, std::move(simulatorBlockFactory));
+	return m_core->RegisterSimulatorBlockFactory(designBlockClass, std::move(simulatorBlockFactory));
 }
 
 void Simulator::TranslateDesign(design::IDesign const &design)
 {
-	m_impl->TranslateDesign(design);
+	m_core->TranslateDesign(design);
 }
 
 simulator::backend::ISimulatorAccess &Simulator::GetSimulatorAccess()
 {
-	return *m_impl;
+	return *m_core;
 }
 
 } // namespace oddf::simulator::common

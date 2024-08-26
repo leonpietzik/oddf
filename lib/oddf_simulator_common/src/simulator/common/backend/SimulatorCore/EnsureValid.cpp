@@ -24,15 +24,12 @@
 
 */
 
-#include "../SimulatorImpl.h"
+#include "../SimulatorCore.h"
 
 namespace oddf::simulator::common::backend {
 
-bool SimulatorImpl::RegisterSimulatorBlockFactory(design::blocks::backend::DesignBlockClass const &designBlockClass,
-	std::unique_ptr<ISimulatorBlockFactory> &&simulatorBlockFactory)
+void SimulatorCore::EnsureValid()
 {
-	m_simulatorBlockFactories[designBlockClass] = std::move(simulatorBlockFactory);
-	return true;
 }
 
 } // namespace oddf::simulator::common::backend

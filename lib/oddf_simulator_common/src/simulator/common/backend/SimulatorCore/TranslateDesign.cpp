@@ -24,11 +24,11 @@
 
 */
 
-#include "../SimulatorImpl.h"
+#include "../SimulatorCore.h"
 
 namespace oddf::simulator::common::backend {
 
-void SimulatorImpl::TranslateDesign(design::IDesign const &design)
+void SimulatorCore::TranslateDesign(design::IDesign const &design)
 {
 	auto blockMapping = MapBlocks(design);
 	MapConnections(*blockMapping);
