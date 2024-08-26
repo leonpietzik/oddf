@@ -1,17 +1,17 @@
 add_library(oddf_simulator_common
-	src/simulator/common/Simulator.cpp
-	src/simulator/common/backend/blocks/DelaySimulatorBlock.cpp
-	src/simulator/common/backend/SimulatorCore/EnsureValid.cpp
-	src/simulator/common/backend/SimulatorCore/GetSimulatorObjectInterface.cpp
-	src/simulator/common/backend/SimulatorCore/MapBlocks.cpp
-	src/simulator/common/backend/SimulatorCore/MapConnections.cpp
-	src/simulator/common/backend/SimulatorCore/RegisterDefaultBlockFactories.cpp
-	src/simulator/common/backend/SimulatorCore/RegisterSimulatorBlockFactory.cpp
-	src/simulator/common/backend/SimulatorCore/TranslateDesign.cpp
-	src/simulator/common/backend/SimulatorBlockBase.cpp
-	src/simulator/common/backend/SimulatorBlockInput.cpp
-	src/simulator/common/backend/SimulatorBlockOutput.cpp
-	src/simulator/common/backend/SimulatorCore.cpp
+	src/oddf/simulator/common/Simulator.cpp
+	src/oddf/simulator/common/backend/blocks/DelaySimulatorBlock.cpp
+	src/oddf/simulator/common/backend/SimulatorCore/EnsureValid.cpp
+	src/oddf/simulator/common/backend/SimulatorCore/GetSimulatorObjectInterface.cpp
+	src/oddf/simulator/common/backend/SimulatorCore/MapBlocks.cpp
+	src/oddf/simulator/common/backend/SimulatorCore/MapConnections.cpp
+	src/oddf/simulator/common/backend/SimulatorCore/RegisterDefaultBlockFactories.cpp
+	src/oddf/simulator/common/backend/SimulatorCore/RegisterSimulatorBlockFactory.cpp
+	src/oddf/simulator/common/backend/SimulatorCore/TranslateDesign.cpp
+	src/oddf/simulator/common/backend/SimulatorBlockBase.cpp
+	src/oddf/simulator/common/backend/SimulatorBlockInput.cpp
+	src/oddf/simulator/common/backend/SimulatorBlockOutput.cpp
+	src/oddf/simulator/common/backend/SimulatorCore.cpp
 )
 
 target_include_directories(oddf_simulator_common PUBLIC include)

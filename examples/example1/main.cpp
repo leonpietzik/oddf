@@ -26,7 +26,7 @@
 
 #include "../../lib/oddf/src/dfx.h"
 
-#include <oddf/simulator/Common.h>
+#include <oddf/SimulatorCommon.h>
 
 namespace b = dfx::blocks;
 
