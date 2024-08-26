@@ -24,31 +24,33 @@
 
 */
 
-#include "testing/RunTest.h"
+#pragma once
 
-#include "testing/Uid.h"
+#include <oddf/design/blocks/backend/IDesignBlock.h>
 
-#include "testing/utility/CollectionView.h"
-#include "testing/utility/ListView.h"
+#include "SimulatorBlockInput.h"
+#include "SimulatorBlockOutput.h"
 
-#include "testing/design/blocks/backend/DesignBlockClass.h"
+#include <vector>
 
-#include "testing/simulator/backend/ISimulatorAccess.h"
+namespace oddf::simulator::common::backend {
 
-#include <oddf/simulator/common/Simulator.h>
+class SimulatorBlockBase {
 
-int main()
-{
-	using namespace oddf::testing;
+private:
 
-	RunTest("Uid", Test_Uid);
+	design::blocks::backend::IDesignBlock const *m_designBlockReference;
 
-	RunTest("utility::ListView", utility::Test_ListView);
-	RunTest("utility::CollectionView", utility::Test_CollectionView);
+	std::vector<SimulatorBlockInput> m_inputs;
+	std::vector<SimulatorBlockOutput> m_outputs;
 
-	RunTest("design::blocks::backend::DesignBlockClass", design::blocks::backend::Test_DesignBlockClass);
+public:
 
-	RunTest("simulator::backend::ISimulatorAccess", simulator::backend::Test_ISimulatorAccess);
+	SimulatorBlockBase(design::blocks::backend::IDesignBlock const &designBlock);
 
-	return 0;
-}
+	void MapConnections(class IBlockMapping const &blockMapping);
+
+	virtual ~SimulatorBlockBase() { }
+};
+
+} // namespace oddf::simulator::common::backend

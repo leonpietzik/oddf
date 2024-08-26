@@ -26,17 +26,39 @@
 
 #pragma once
 
-#include "backend/ISimulatorAccess.h"
+#include "backend/ISimulatorBlockFactory.h"
 
-namespace oddf::simulator {
+#include <oddf/design/IDesign.h>
+#include <oddf/simulator/ISimulator.h>
+#include <oddf/design/blocks/backend/DesignBlockClass.h>
 
-class ISimulator {
+#include <memory>
+
+namespace oddf::simulator::common {
+
+namespace backend {
+
+class SimulatorImpl;
+
+} // namespace backend
+
+class Simulator : public ISimulator {
+
+private:
+
+	std::unique_ptr<backend::SimulatorImpl> m_impl;
 
 public:
 
-	virtual ~ISimulator() { }
+	Simulator();
+	~Simulator();
 
-	virtual backend::ISimulatorAccess &GetSimulatorAccess() = 0;
+	bool RegisterSimulatorBlockFactory(design::blocks::backend::DesignBlockClass const &designBlockClass,
+		std::unique_ptr<backend::ISimulatorBlockFactory> &&simulatorBlockFactory);
+
+	void TranslateDesign(design::IDesign const &design);
+
+	virtual simulator::backend::ISimulatorAccess &GetSimulatorAccess() override;
 };
 
-} // namespace oddf::simulator
+} // namespace oddf::simulator::common

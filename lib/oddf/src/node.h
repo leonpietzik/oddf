@@ -33,7 +33,7 @@
 #include "messages.h"
 #include "types.h"
 
-#include <oddf/design/backend/IDesign.h>
+#include <oddf/design/IDesign.h>
 
 #if defined(_MSC_VER) && _MSC_VER < 1900
 #define NOEXCEPT
@@ -154,7 +154,7 @@ public:
 // design definition
 //
 
-class Design : public oddf::design::backend::IDesign {
+class Design : public oddf::design::IDesign {
 
 private:
 

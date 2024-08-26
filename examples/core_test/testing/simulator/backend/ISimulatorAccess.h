@@ -24,31 +24,10 @@
 
 */
 
-#include "testing/RunTest.h"
+#pragma once
 
-#include "testing/Uid.h"
+namespace oddf::testing::simulator::backend {
 
-#include "testing/utility/CollectionView.h"
-#include "testing/utility/ListView.h"
+void Test_ISimulatorAccess();
 
-#include "testing/design/blocks/backend/DesignBlockClass.h"
-
-#include "testing/simulator/backend/ISimulatorAccess.h"
-
-#include <oddf/simulator/common/Simulator.h>
-
-int main()
-{
-	using namespace oddf::testing;
-
-	RunTest("Uid", Test_Uid);
-
-	RunTest("utility::ListView", utility::Test_ListView);
-	RunTest("utility::CollectionView", utility::Test_CollectionView);
-
-	RunTest("design::blocks::backend::DesignBlockClass", design::blocks::backend::Test_DesignBlockClass);
-
-	RunTest("simulator::backend::ISimulatorAccess", simulator::backend::Test_ISimulatorAccess);
-
-	return 0;
-}
+} // namespace oddf::testing::simulator::backend

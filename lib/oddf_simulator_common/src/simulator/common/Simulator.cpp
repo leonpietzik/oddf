@@ -24,31 +24,35 @@
 
 */
 
-#include "testing/RunTest.h"
-
-#include "testing/Uid.h"
-
-#include "testing/utility/CollectionView.h"
-#include "testing/utility/ListView.h"
-
-#include "testing/design/blocks/backend/DesignBlockClass.h"
-
-#include "testing/simulator/backend/ISimulatorAccess.h"
+#include "backend/SimulatorImpl.h"
 
 #include <oddf/simulator/common/Simulator.h>
 
-int main()
+namespace oddf::simulator::common {
+
+Simulator::Simulator() :
+	m_impl(new backend::SimulatorImpl)
 {
-	using namespace oddf::testing;
-
-	RunTest("Uid", Test_Uid);
-
-	RunTest("utility::ListView", utility::Test_ListView);
-	RunTest("utility::CollectionView", utility::Test_CollectionView);
-
-	RunTest("design::blocks::backend::DesignBlockClass", design::blocks::backend::Test_DesignBlockClass);
-
-	RunTest("simulator::backend::ISimulatorAccess", simulator::backend::Test_ISimulatorAccess);
-
-	return 0;
 }
+
+Simulator::~Simulator()
+{
+}
+
+bool Simulator::RegisterSimulatorBlockFactory(design::blocks::backend::DesignBlockClass const &designBlockClass,
+	std::unique_ptr<backend::ISimulatorBlockFactory> &&simulatorBlockFactory)
+{
+	return m_impl->RegisterSimulatorBlockFactory(designBlockClass, std::move(simulatorBlockFactory));
+}
+
+void Simulator::TranslateDesign(design::IDesign const &design)
+{
+	m_impl->TranslateDesign(design);
+}
+
+simulator::backend::ISimulatorAccess &Simulator::GetSimulatorAccess()
+{
+	return *m_impl;
+}
+
+} // namespace oddf::simulator::common

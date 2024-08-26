@@ -24,31 +24,28 @@
 
 */
 
-#include "testing/RunTest.h"
+#pragma once
 
-#include "testing/Uid.h"
+#include <list>
 
-#include "testing/utility/CollectionView.h"
-#include "testing/utility/ListView.h"
+namespace oddf::simulator::common::backend {
 
-#include "testing/design/blocks/backend/DesignBlockClass.h"
+class SimulatorBlockInput;
+class SimulatorBlockBase;
 
-#include "testing/simulator/backend/ISimulatorAccess.h"
+class SimulatorBlockOutput {
 
-#include <oddf/simulator/common/Simulator.h>
+private:
 
-int main()
-{
-	using namespace oddf::testing;
+	friend SimulatorBlockInput;
 
-	RunTest("Uid", Test_Uid);
+	SimulatorBlockBase const *m_owningBlock;
+	std::list<SimulatorBlockInput *> m_targets;
+	size_t m_index;
 
-	RunTest("utility::ListView", utility::Test_ListView);
-	RunTest("utility::CollectionView", utility::Test_CollectionView);
+public:
 
-	RunTest("design::blocks::backend::DesignBlockClass", design::blocks::backend::Test_DesignBlockClass);
+	SimulatorBlockOutput(SimulatorBlockBase const *owningBlock, size_t index);
+};
 
-	RunTest("simulator::backend::ISimulatorAccess", simulator::backend::Test_ISimulatorAccess);
-
-	return 0;
-}
+} // namespace oddf::simulator::common::backend

@@ -24,31 +24,30 @@
 
 */
 
-#include "testing/RunTest.h"
+#pragma once
 
-#include "testing/Uid.h"
+namespace oddf::simulator::common::backend {
 
-#include "testing/utility/CollectionView.h"
-#include "testing/utility/ListView.h"
+class SimulatorBlockOutput;
+class SimulatorBlockBase;
 
-#include "testing/design/blocks/backend/DesignBlockClass.h"
+class SimulatorBlockInput {
 
-#include "testing/simulator/backend/ISimulatorAccess.h"
+private:
 
-#include <oddf/simulator/common/Simulator.h>
+	friend SimulatorBlockOutput;
 
-int main()
-{
-	using namespace oddf::testing;
+	SimulatorBlockBase const *m_owningBlock;
+	SimulatorBlockOutput *m_driver;
+	size_t m_index;
 
-	RunTest("Uid", Test_Uid);
+public:
 
-	RunTest("utility::ListView", utility::Test_ListView);
-	RunTest("utility::CollectionView", utility::Test_CollectionView);
+	SimulatorBlockInput(SimulatorBlockBase const *owningBlock, size_t index);
 
-	RunTest("design::blocks::backend::DesignBlockClass", design::blocks::backend::Test_DesignBlockClass);
+	bool IsConnected() const;
+	void ConnectTo(SimulatorBlockOutput &output);
+	void Disconnect();
+};
 
-	RunTest("simulator::backend::ISimulatorAccess", simulator::backend::Test_ISimulatorAccess);
-
-	return 0;
-}
+} // namespace oddf::simulator::common::backend

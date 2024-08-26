@@ -1,11 +1,4 @@
 add_library(oddf
-	src/_new/Simulator.cpp
-	src/_new/simulation/backend/BlockInput.cpp
-	src/_new/simulation/backend/BlockOutput.cpp
-	src/_new/simulation/backend/SimulatorBlockBase.cpp
-	src/_new/simulation/internal/SimulatorImpl.cpp
-	src/_new/simulation/internal/SimulatorImpl/RegisterDefaultBlockFactories.cpp
-	src/_new/simulation/internal/blocks/Delay.cpp
 	src/block_base.cpp
 	src/debug.cpp
 	src/design.cpp
@@ -63,8 +56,6 @@ add_library(oddf
 	src/modules/source.cpp
 	src/modules/throttled_source.cpp
 )
-
-target_include_directories(oddf PUBLIC include)
 
 target_compile_features(oddf PUBLIC cxx_std_17)
 

@@ -3,4 +3,5 @@ add_executable(example1
 )
 
 target_link_libraries(example1 PRIVATE oddf)
+target_link_libraries(example1 PRIVATE oddf_simulator_common)
 #target_link_libraries(example1 PRIVATE verilog)

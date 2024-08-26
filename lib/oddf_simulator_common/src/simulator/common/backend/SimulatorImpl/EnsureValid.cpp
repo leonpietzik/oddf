@@ -24,31 +24,12 @@
 
 */
 
-#include "testing/RunTest.h"
+#include "../SimulatorImpl.h"
 
-#include "testing/Uid.h"
+namespace oddf::simulator::common::backend {
 
-#include "testing/utility/CollectionView.h"
-#include "testing/utility/ListView.h"
-
-#include "testing/design/blocks/backend/DesignBlockClass.h"
-
-#include "testing/simulator/backend/ISimulatorAccess.h"
-
-#include <oddf/simulator/common/Simulator.h>
-
-int main()
+void SimulatorImpl::EnsureValid()
 {
-	using namespace oddf::testing;
-
-	RunTest("Uid", Test_Uid);
-
-	RunTest("utility::ListView", utility::Test_ListView);
-	RunTest("utility::CollectionView", utility::Test_CollectionView);
-
-	RunTest("design::blocks::backend::DesignBlockClass", design::blocks::backend::Test_DesignBlockClass);
-
-	RunTest("simulator::backend::ISimulatorAccess", simulator::backend::Test_ISimulatorAccess);
-
-	return 0;
 }
+
+} // namespace oddf::simulator::common::backend

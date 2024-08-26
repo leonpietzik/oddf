@@ -24,31 +24,28 @@
 
 */
 
-#include "testing/RunTest.h"
+#pragma once
 
-#include "testing/Uid.h"
+#include <oddf/ResourcePath.h>
+#include <oddf/Uid.h>
 
-#include "testing/utility/CollectionView.h"
-#include "testing/utility/ListView.h"
+namespace oddf::simulator::backend {
 
-#include "testing/design/blocks/backend/DesignBlockClass.h"
+class ISimulatorAccess {
 
-#include "testing/simulator/backend/ISimulatorAccess.h"
+public:
 
-#include <oddf/simulator/common/Simulator.h>
+	virtual ~ISimulatorAccess() { }
 
-int main()
-{
-	using namespace oddf::testing;
+	virtual void EnsureValid() = 0;
 
-	RunTest("Uid", Test_Uid);
+	virtual void *GetSimulatorObjectInterface(ResourcePath const &path, Uid const &iid) = 0;
 
-	RunTest("utility::ListView", utility::Test_ListView);
-	RunTest("utility::CollectionView", utility::Test_CollectionView);
+	template<typename T>
+	T &GetSimulatorObjectInterface(ResourcePath const &path)
+	{
+		return *static_cast<T *>(GetSimulatorObjectInterface(path, T::IID));
+	}
+};
 
-	RunTest("design::blocks::backend::DesignBlockClass", design::blocks::backend::Test_DesignBlockClass);
-
-	RunTest("simulator::backend::ISimulatorAccess", simulator::backend::Test_ISimulatorAccess);
-
-	return 0;
-}
+} // namespace oddf::simulator::backend

@@ -24,31 +24,19 @@
 
 */
 
-#include "testing/RunTest.h"
+#include "../SimulatorImpl.h"
 
-#include "testing/Uid.h"
+#include "../GenericSimulatorBlockFactory.h"
 
-#include "testing/utility/CollectionView.h"
-#include "testing/utility/ListView.h"
+#include "../blocks/DelaySimulatorBlock.h"
 
-#include "testing/design/blocks/backend/DesignBlockClass.h"
+namespace oddf::simulator::common::backend {
 
-#include "testing/simulator/backend/ISimulatorAccess.h"
-
-#include <oddf/simulator/common/Simulator.h>
-
-int main()
+void SimulatorImpl::RegisterDefaultBlockFactories()
 {
-	using namespace oddf::testing;
+	using design::blocks::backend::DesignBlockClass;
 
-	RunTest("Uid", Test_Uid);
-
-	RunTest("utility::ListView", utility::Test_ListView);
-	RunTest("utility::CollectionView", utility::Test_CollectionView);
-
-	RunTest("design::blocks::backend::DesignBlockClass", design::blocks::backend::Test_DesignBlockClass);
-
-	RunTest("simulator::backend::ISimulatorAccess", simulator::backend::Test_ISimulatorAccess);
-
-	return 0;
+	RegisterSimulatorBlockFactory(DesignBlockClass("delay"), MakeSimulatorBlockFactory<blocks::DelaySimulatorBlock>());
 }
+
+} // namespace oddf::simulator::common::backend

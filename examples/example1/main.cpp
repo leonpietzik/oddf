@@ -26,8 +26,7 @@
 
 #include "../../lib/oddf/src/dfx.h"
 
-#include <oddf/Simulator.h>
-#include <set>
+#include <oddf/simulator/Common.h>
 
 namespace b = dfx::blocks;
 
@@ -36,12 +35,12 @@ class ProbeValue {
 
 private:
 
-	oddf::Simulator &m_simulator;
+	oddf::simulator::backend::ISimulatorAccess &m_simulator;
 
 public:
 
-	ProbeValue(oddf::Simulator &simulator, std::string const &) :
-		m_simulator(simulator)
+	ProbeValue(oddf::simulator::ISimulator &simulator, std::string const &) :
+		m_simulator(simulator.GetSimulatorAccess())
 	{
 	}
 
@@ -102,23 +101,23 @@ int main()
 	    dfx::debug::Logger.WriteTable(std::cout);
 	*/
 
-	oddf::Simulator simulator2;
+	oddf::simulator::common::Simulator simulator2;
 
 	simulator2.TranslateDesign(design);
 
 	auto probeValue = ProbeValue<bool>(simulator2, "test");
 
 	std::cout << probeValue.get() << "\n";
-	//	simulator2.Run(1);
+	//simulator2.Run(1);
 
 	std::cout << probeValue.get<bool>() << "\n";
-	// simulator2.Run(1);
+	//simulator2.Run(1);
 
 	std::cout << probeValue.get<bool>() << "\n";
-	// simulator2.Run(1);
+	//simulator2.Run(1);
 
 	std::cout << probeValue.get<bool>() << "\n";
-	// simulator2.Run(1);
+	//simulator2.Run(1);
 
 	return 0;
 }

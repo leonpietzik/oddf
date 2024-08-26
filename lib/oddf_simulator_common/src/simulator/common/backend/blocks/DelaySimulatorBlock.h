@@ -24,31 +24,17 @@
 
 */
 
-#include "testing/RunTest.h"
+#pragma once
 
-#include "testing/Uid.h"
+#include <oddf/simulator/common/backend/SimulatorBlockBase.h>
 
-#include "testing/utility/CollectionView.h"
-#include "testing/utility/ListView.h"
+namespace oddf::simulator::common::backend::blocks {
 
-#include "testing/design/blocks/backend/DesignBlockClass.h"
+class DelaySimulatorBlock : public SimulatorBlockBase {
 
-#include "testing/simulator/backend/ISimulatorAccess.h"
+public:
 
-#include <oddf/simulator/common/Simulator.h>
+	DelaySimulatorBlock(design::blocks::backend::IDesignBlock const &designBlock);
+};
 
-int main()
-{
-	using namespace oddf::testing;
-
-	RunTest("Uid", Test_Uid);
-
-	RunTest("utility::ListView", utility::Test_ListView);
-	RunTest("utility::CollectionView", utility::Test_CollectionView);
-
-	RunTest("design::blocks::backend::DesignBlockClass", design::blocks::backend::Test_DesignBlockClass);
-
-	RunTest("simulator::backend::ISimulatorAccess", simulator::backend::Test_ISimulatorAccess);
-
-	return 0;
-}
+} // namespace oddf::simulator::common::backend::blocks

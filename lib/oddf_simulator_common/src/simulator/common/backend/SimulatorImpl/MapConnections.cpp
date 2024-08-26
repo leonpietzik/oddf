@@ -24,31 +24,19 @@
 
 */
 
-#include "testing/RunTest.h"
+#include "../SimulatorImpl.h"
 
-#include "testing/Uid.h"
+#include <cassert>
 
-#include "testing/utility/CollectionView.h"
-#include "testing/utility/ListView.h"
+namespace oddf::simulator::common::backend {
 
-#include "testing/design/blocks/backend/DesignBlockClass.h"
-
-#include "testing/simulator/backend/ISimulatorAccess.h"
-
-#include <oddf/simulator/common/Simulator.h>
-
-int main()
+void SimulatorImpl::MapConnections(IBlockMapping const &blockMapping)
 {
-	using namespace oddf::testing;
+	for (auto &pBlock : m_blocks) {
 
-	RunTest("Uid", Test_Uid);
-
-	RunTest("utility::ListView", utility::Test_ListView);
-	RunTest("utility::CollectionView", utility::Test_CollectionView);
-
-	RunTest("design::blocks::backend::DesignBlockClass", design::blocks::backend::Test_DesignBlockClass);
-
-	RunTest("simulator::backend::ISimulatorAccess", simulator::backend::Test_ISimulatorAccess);
-
-	return 0;
+		assert(pBlock);
+		pBlock->MapConnections(blockMapping);
+	}
 }
+
+} // namespace oddf::simulator::common::backend

@@ -13,6 +13,7 @@ endif()
 
 add_subdirectory(lib/oddf)
 add_subdirectory(lib/oddf_core)
+add_subdirectory(lib/oddf_simulator_common)
 add_subdirectory(lib/verilog)
 
 add_subdirectory(examples)
