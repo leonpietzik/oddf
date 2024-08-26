@@ -1,26 +1,26 @@
 /*
 
-	ODDF - Open Digital Design Framework
-	Copyright Advantest Corporation
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-	
-	You should have received a copy of the GNU General Public License
-	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+    ODDF - Open Digital Design Framework
+    Copyright Advantest Corporation
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
 /*
 
-	Test program that performs various arithmetic functions.
+    Test program that performs various arithmetic functions.
 
 */
 
@@ -38,7 +38,7 @@ using dfx::ufix;
 namespace b = dfx::blocks;
 namespace m = dfx::modules;
 
-template <typename nodeT>
+template<typename nodeT>
 dfx::node<nodeT> FirFilter(dfx::node<nodeT> const &input, std::vector<nodeT> const &coefficients)
 {
 	std::size_t length = coefficients.size();
@@ -99,14 +99,14 @@ dfx::node<double> Sine2(dfx::node<double> const &angle)
 		-2.2948008734778760872766713602519927e-8,
 		5.390281677264039046511075415746811e-10,
 		-1.0426742312330399460677082620686781e-11,
-		1.5139359809711651665461461876581484e-13};
+		1.5139359809711651665461461876581484e-13
+	};
 
 	auto currentCoeff = coefficients.crbegin();
 	dfx::node<double> currentValue = b::Constant(*currentCoeff);
 	++currentCoeff;
 
-	while (currentCoeff != coefficients.crend())
-	{
+	while (currentCoeff != coefficients.crend()) {
 
 		currentValue = angle2 * currentValue + (*currentCoeff);
 		++currentCoeff;
@@ -123,24 +123,21 @@ int main()
 
 	source.Inputs.ReadEnable <<= b::Constant(true);
 
-	source.SetData({0.0, 0.0, 0.5, 1.7, -0.4, -0.9, 0.9, 1.3, -2});
+	source.SetData({ 0.0, 0.0, 0.5, 1.7, -0.4, -0.9, 0.9, 1.3, -2 });
 
-	dfx::debug::Logger.Log("out", FirFilter<double>(source.Outputs.Data, {1.0, 2.0, 3.0, 4.0}));
+	dfx::debug::Logger.Log("out", FirFilter<double>(source.Outputs.Data, { 1.0, 2.0, 3.0, 4.0 }));
 
-	dfx::debug::Logger.Log("out2", FirFilter<dynfix>(b::FloorCast<sfix<60, 50>>(source.Outputs.Data), {1.0, 2.0, 3.0, 4.0}));
+	dfx::debug::Logger.Log("out2", FirFilter<dynfix>(b::FloorCast<sfix<60, 50>>(source.Outputs.Data), { 1.0, 2.0, 3.0, 4.0 }));
 
 	dfx::forward_node<double> angle;
 	angle <<= b::Delay(angle + 0.01);
 
 	dfx::debug::Logger.Log("angle", angle);
-	dfx::debug::Logger.Log("ref", b::Function(angle, [](double x)
-											  { return std::sin(6.2831853071795864769 * x); }));
+	dfx::debug::Logger.Log("ref", b::Function(angle, [](double x) { return std::sin(6.2831853071795864769 * x); }));
 	dfx::debug::Logger.Log("sin", Sine(angle));
-	dfx::debug::Logger.Log("diff", Sine(angle) - b::Function(angle, [](double x)
-															 { return std::sin(6.2831853071795864769 * x); }));
+	dfx::debug::Logger.Log("diff", Sine(angle) - b::Function(angle, [](double x) { return std::sin(6.2831853071795864769 * x); }));
 
-	dfx::debug::Logger.Log("diff2", Sine2(2*angle) - b::Function(angle, [](double x)
-															 { return std::sin(6.2831853071795864769 * x); }));
+	dfx::debug::Logger.Log("diff2", Sine2(2 * angle) - b::Function(angle, [](double x) { return std::sin(6.2831853071795864769 * x); }));
 
 	dfx::Simulator simulator(design);
 
@@ -148,10 +145,13 @@ int main()
 
 	dfx::debug::Logger.WriteTable(std::cout);
 
-	/*	dfx::generator::Generator generator(design, std::cout);
-		VerilogExporter exporter(generator);
+	/*
 
-		exporter.Export(".", std::cout);
+	dfx::generator::Generator generator(design, std::cout);
+	VerilogExporter exporter(generator);
+
+	exporter.Export(".", std::cout);
+
 	*/
 
 	return 0;

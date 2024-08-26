@@ -1,4 +1,4 @@
-add_executable(core_test
+add_executable(test_core
 	main.cpp
 	testing/Uid.cpp
 	testing/utility/CollectionView.cpp
@@ -7,5 +7,5 @@ add_executable(core_test
 	testing/simulator/backend/ISimulatorAccess.cpp
 )
 
-target_link_libraries(core_test PRIVATE oddf_core)
-target_link_libraries(core_test PRIVATE oddf_simulator_common)
+target_link_libraries(test_core PRIVATE oddf_core)
+# target_link_libraries(test_core PRIVATE oddf_simulator_common)

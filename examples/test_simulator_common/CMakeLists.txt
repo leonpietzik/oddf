@@ -1,0 +1,6 @@
+add_executable(test_simulator_common
+	main.cpp
+)
+
+target_link_libraries(test_simulator_common PRIVATE oddf)
+target_link_libraries(test_simulator_common PRIVATE oddf_simulator_common)

@@ -20,7 +20,7 @@
 
 /*
 
-    Example of implementing a counter.
+    <no description>
 
 */
 
@@ -108,16 +108,16 @@ int main()
 	auto probeValue = ProbeValue<bool>(simulator2, "test");
 
 	std::cout << probeValue.get() << "\n";
-	//simulator2.Run(1);
+	// simulator2.Run(1);
 
 	std::cout << probeValue.get<bool>() << "\n";
-	//simulator2.Run(1);
+	// simulator2.Run(1);
 
 	std::cout << probeValue.get<bool>() << "\n";
-	//simulator2.Run(1);
+	// simulator2.Run(1);
 
 	std::cout << probeValue.get<bool>() << "\n";
-	//simulator2.Run(1);
+	// simulator2.Run(1);
 
 	return 0;
 }

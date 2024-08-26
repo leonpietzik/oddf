@@ -35,8 +35,6 @@
 
 #include "testing/simulator/backend/ISimulatorAccess.h"
 
-#include <oddf/simulator/common/Simulator.h>
-
 int main()
 {
 	using namespace oddf::testing;

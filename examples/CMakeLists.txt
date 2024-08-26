@@ -1,5 +1,5 @@
 
-add_subdirectory(example1)
-add_subdirectory(playground)
-add_subdirectory(test)
-add_subdirectory(core_test)
+add_subdirectory(demo_logistic_map)
+add_subdirectory(demo_various)
+add_subdirectory(test_core)
+add_subdirectory(test_simulator_common)
