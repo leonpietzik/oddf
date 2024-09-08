@@ -32,11 +32,11 @@
 
 namespace oddf::simulator::common::backend {
 
-class IBlockMapping {
+class ISimulatorBlockMapping {
 
 public:
 
-	virtual ~IBlockMapping() { }
+	virtual ~ISimulatorBlockMapping() { }
 
 	virtual SimulatorBlockBase *DesignBlockToSimulatorBlock(design::blocks::backend::IDesignBlock const &designBlock) const = 0;
 };

@@ -26,6 +26,8 @@
 
 #pragma once
 
+#include <oddf/utility/CollectionView.h>
+
 #include <list>
 
 namespace oddf::simulator::common::backend {
@@ -39,13 +41,19 @@ private:
 
 	friend SimulatorBlockInput;
 
-	SimulatorBlockBase const *m_owningBlock;
+	SimulatorBlockBase const &m_owningBlock;
 	std::list<SimulatorBlockInput *> m_targets;
 	size_t m_index;
 
 public:
 
-	SimulatorBlockOutput(SimulatorBlockBase const *owningBlock, size_t index);
+	SimulatorBlockOutput(SimulatorBlockBase const &owningBlock, size_t index);
+
+	SimulatorBlockBase const &GetOwningBlock() const;
+	size_t GetIndex() const;
+
+	utility::CollectionView<SimulatorBlockInput const &> GetTargetsCollection() const;
+	utility::CollectionView<SimulatorBlockInput &> GetTargetsCollection();
 };
 
 } // namespace oddf::simulator::common::backend

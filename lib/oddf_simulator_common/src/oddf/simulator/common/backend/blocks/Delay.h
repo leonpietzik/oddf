@@ -26,34 +26,17 @@
 
 #pragma once
 
-namespace oddf::simulator::common::backend {
+#include <oddf/simulator/common/backend/SimulatorBlockBase.h>
 
-class SimulatorBlockOutput;
-class SimulatorBlockBase;
+namespace oddf::simulator::common::backend::blocks {
 
-class SimulatorBlockInput {
-
-private:
-
-	friend SimulatorBlockOutput;
-
-	SimulatorBlockBase const &m_owningBlock;
-	SimulatorBlockOutput *m_driver;
-	size_t m_index;
+class DelayMaster : public SimulatorBlockBase {
 
 public:
 
-	SimulatorBlockInput(SimulatorBlockBase const &owningBlock, size_t index);
+	DelayMaster(design::blocks::backend::IDesignBlock const &designBlock);
 
-	SimulatorBlockBase const &GetOwningBlock() const;
-	size_t GetIndex() const;
-
-	bool IsConnected() const;
-	SimulatorBlockOutput const &GetDriver() const;
-	SimulatorBlockOutput &GetDriver();
-
-	void ConnectTo(SimulatorBlockOutput &output);
-	void Disconnect();
+	virtual std::string DebugString() const override;
 };
 
-} // namespace oddf::simulator::common::backend
+} // namespace oddf::simulator::common::backend::blocks

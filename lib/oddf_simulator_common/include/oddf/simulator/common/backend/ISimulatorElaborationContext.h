@@ -24,13 +24,21 @@
 
 */
 
-#include "DelaySimulatorBlock.h"
+#pragma once
 
-namespace oddf::simulator::common::backend::blocks {
+#include <memory>
 
-DelaySimulatorBlock::DelaySimulatorBlock(design::blocks::backend::IDesignBlock const &designBlock) :
-	SimulatorBlockBase(designBlock)
-{
-}
+namespace oddf::simulator::common::backend {
 
-} // namespace oddf::simulator::common::backend::blocks
+class SimulatorBlockBase;
+
+class ISimulatorElaborationContext {
+
+public:
+
+	virtual ~ISimulatorElaborationContext() { }
+
+	virtual void AddSimulatorBlock(std::unique_ptr<SimulatorBlockBase> &&block) = 0;
+};
+
+} // namespace oddf::simulator::common::backend

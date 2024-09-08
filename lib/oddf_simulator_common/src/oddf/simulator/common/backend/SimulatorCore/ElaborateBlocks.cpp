@@ -26,22 +26,55 @@
 
 #include "../SimulatorCore.h"
 
+#include <vector>
+#include <memory>
 #include <cassert>
 #include <iostream>
 
 namespace oddf::simulator::common::backend {
 
-void SimulatorCore::MapConnections(ISimulatorBlockMapping const &blockMapping)
+namespace {
+
+class ElaborationContext : public ISimulatorElaborationContext {
+
+public:
+
+	std::vector<std::unique_ptr<SimulatorBlockBase>> m_newBlocks;
+
+	void AddSimulatorBlock(std::unique_ptr<SimulatorBlockBase> &&block)
+	{
+		assert(block);
+		m_newBlocks.push_back(std::move(block));
+	}
+};
+
+} // namespace
+
+void SimulatorCore::ElaborateBlocks()
 {
 	std::cout << "\n";
-	std::cout << "-- Mapping connections --\n";
+	std::cout << "-- Elaborating blocks --\n";
 	std::cout << "\n";
 
-	for (auto &pBlock : m_blocks) {
+	size_t current = 0;
+	size_t size = m_blocks.size();
 
-		assert(pBlock);
-		pBlock->MapConnections(blockMapping);
-	}
+	do {
+
+		auto context = ElaborationContext();
+
+		for (; current < size; ++current) {
+
+			assert(m_blocks[current]);
+			m_blocks[current]->Elaborate(context);
+		}
+
+		m_blocks.reserve(size + context.m_newBlocks.size());
+		std::move(std::begin(context.m_newBlocks), std::end(context.m_newBlocks), std::back_inserter(m_blocks));
+
+		size = m_blocks.size();
+
+	} while (current < size);
 }
 
 } // namespace oddf::simulator::common::backend

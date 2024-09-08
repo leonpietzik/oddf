@@ -32,10 +32,29 @@ namespace oddf {
 
 enum class ExceptionCode : std::uint32_t {
 
-	Generic = 0x00000001,
+	// Catastrophic failure.
+	Unexpected = 1,
 
-	ResourceNotFound = 0x00000002,
-	InterfaceNotFound = 0x00000003
+	// The requested function has not been implemented.
+	NotImplemented = 2,
+
+	// One or more arguments are invalid.
+	InvalidArgument = 3,
+
+	// The requested interface does not exist.
+	NoInterface = 4,
+
+	// The requested resource does not exist.
+	NoResource = 5,
+
+	// Unspecified error.
+	Fail = 6,
+
+	// Attempt to access data outside the valid range.
+	Bounds = 7,
+
+	// A method was called at an unexpected time.
+	IllegalMethodCall = 8
 };
 
 class Exception : public std::exception {
@@ -48,7 +67,7 @@ private:
 public:
 
 	Exception(std::string const &message) :
-		m_code(ExceptionCode::Generic),
+		m_code(ExceptionCode::Fail),
 		m_message(message)
 	{
 	}

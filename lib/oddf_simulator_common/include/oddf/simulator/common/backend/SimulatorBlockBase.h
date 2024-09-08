@@ -28,10 +28,15 @@
 
 #include <oddf/design/blocks/backend/IDesignBlock.h>
 
+#include <oddf/simulator/common/backend/ISimulatorElaborationContext.h>
+
 #include "SimulatorBlockInput.h"
 #include "SimulatorBlockOutput.h"
 
+#include <oddf/utility/ListView.h>
+
 #include <vector>
+#include <string>
 
 namespace oddf::simulator::common::backend {
 
@@ -48,7 +53,17 @@ public:
 
 	SimulatorBlockBase(design::blocks::backend::IDesignBlock const &designBlock);
 
-	void MapConnections(class IBlockMapping const &blockMapping);
+	utility::ListView<SimulatorBlockInput const &> GetInputsList() const;
+	utility::ListView<SimulatorBlockInput &> GetInputsList();
+
+	utility::ListView<SimulatorBlockOutput const &> GetOutputsList() const;
+	utility::ListView<SimulatorBlockOutput &> GetOutputsList();
+
+	void MapConnections(class ISimulatorBlockMapping const &blockMapping);
+
+	virtual void Elaborate(ISimulatorElaborationContext &context);
+
+	virtual std::string DebugString() const = 0;
 
 	virtual ~SimulatorBlockBase() { }
 };

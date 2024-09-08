@@ -26,7 +26,7 @@
 
 #include <oddf/simulator/common/backend/SimulatorBlockBase.h>
 
-#include "IBlockMapping.h"
+#include "ISimulatorBlockMapping.h"
 
 #include <cassert>
 #include <iostream>
@@ -41,15 +41,35 @@ SimulatorBlockBase::SimulatorBlockBase(design::blocks::backend::IDesignBlock con
 	auto numberOfInputs = designBlock.GetInputsList().GetSize();
 	m_inputs.reserve(numberOfInputs);
 	for (size_t i = 0; i < numberOfInputs; ++i)
-		m_inputs.emplace_back(this, i);
+		m_inputs.emplace_back(*this, i);
 
 	auto numberOfOutputs = designBlock.GetOutputsList().GetSize();
 	m_outputs.reserve(numberOfOutputs);
 	for (size_t i = 0; i < numberOfOutputs; ++i)
-		m_outputs.emplace_back(this, i);
+		m_outputs.emplace_back(*this, i);
 }
 
-void SimulatorBlockBase::MapConnections(IBlockMapping const &blockMapping)
+utility::ListView<SimulatorBlockInput const &> SimulatorBlockBase::GetInputsList() const
+{
+	return utility::MakeListView<SimulatorBlockInput const &>(m_inputs);
+}
+
+utility::ListView<SimulatorBlockInput &> SimulatorBlockBase::GetInputsList()
+{
+	return utility::MakeListView<SimulatorBlockInput &>(m_inputs);
+}
+
+utility::ListView<SimulatorBlockOutput const &> SimulatorBlockBase::GetOutputsList() const
+{
+	return utility::MakeListView<SimulatorBlockOutput const &>(m_outputs);
+}
+
+utility::ListView<SimulatorBlockOutput &> SimulatorBlockBase::GetOutputsList()
+{
+	return utility::MakeListView<SimulatorBlockOutput &>(m_outputs);
+}
+
+void SimulatorBlockBase::MapConnections(ISimulatorBlockMapping const &blockMapping)
 {
 	assert(m_designBlockReference);
 
@@ -80,6 +100,11 @@ void SimulatorBlockBase::MapConnections(IBlockMapping const &blockMapping)
 
 		designInputEnumerator.MoveNext();
 	}
+}
+
+void SimulatorBlockBase::Elaborate(ISimulatorElaborationContext & /* context */)
+{
+	// Default implementation does nothing.
 }
 
 } // namespace oddf::simulator::common::backend

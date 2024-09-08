@@ -32,7 +32,9 @@
 
 namespace oddf::simulator::common::backend {
 
-class BlockMapping : public IBlockMapping {
+namespace {
+
+class BlockMapping : public ISimulatorBlockMapping {
 
 	std::unordered_map<design::blocks::backend::IDesignBlock const *, SimulatorBlockBase *> m_blockMapping;
 
@@ -55,15 +57,17 @@ public:
 	}
 };
 
-std::unique_ptr<IBlockMapping const> SimulatorCore::MapBlocks(design::IDesign const &design)
+} // namespace
+
+std::unique_ptr<ISimulatorBlockMapping const> SimulatorCore::MapBlocks(design::IDesign const &design)
 {
+	std::cout << "\n";
+	std::cout << "-- Mapping blocks --\n";
+	std::cout << "\n";
+
 	auto pBlockMapping = std::make_unique<BlockMapping>();
 
 	auto designBlocks = design.GetBlockCollection();
-
-	//
-	// Map blocks
-	//
 
 	m_blocks.reserve(designBlocks.GetSize());
 	auto designBlocksEnumerator = designBlocks.GetEnumerator();

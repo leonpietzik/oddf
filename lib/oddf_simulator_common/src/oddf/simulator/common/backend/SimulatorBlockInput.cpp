@@ -25,23 +25,51 @@
 */
 
 #include <oddf/simulator/common/backend/SimulatorBlockBase.h>
+#include <oddf/Exception.h>
 
 #include <algorithm>
 #include <stdexcept>
 
 namespace oddf::simulator::common::backend {
 
-SimulatorBlockInput::SimulatorBlockInput(SimulatorBlockBase const *owningBlock, size_t index) :
+SimulatorBlockInput::SimulatorBlockInput(SimulatorBlockBase const &owningBlock, size_t index) :
 	m_owningBlock(owningBlock),
 	m_driver(nullptr),
 	m_index(index)
 {
 }
 
+SimulatorBlockBase const &SimulatorBlockInput::GetOwningBlock() const
+{
+	return m_owningBlock;
+}
+
+size_t SimulatorBlockInput::GetIndex() const
+{
+	return m_index;
+}
+
 bool SimulatorBlockInput::IsConnected() const
 {
 	return m_driver != nullptr;
 }
+
+SimulatorBlockOutput const &SimulatorBlockInput::GetDriver() const
+{
+	if (!IsConnected())
+		throw Exception(ExceptionCode::IllegalMethodCall);
+
+	return *m_driver;
+}
+
+SimulatorBlockOutput &SimulatorBlockInput::GetDriver()
+{
+	if (!IsConnected())
+		throw Exception(ExceptionCode::IllegalMethodCall);
+
+	return *m_driver;
+}
+
 
 void SimulatorBlockInput::ConnectTo(SimulatorBlockOutput &output)
 {

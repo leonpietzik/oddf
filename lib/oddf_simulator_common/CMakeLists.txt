@@ -1,6 +1,7 @@
 add_library(oddf_simulator_common
 	src/oddf/simulator/common/Simulator.cpp
-	src/oddf/simulator/common/backend/blocks/DelaySimulatorBlock.cpp
+	src/oddf/simulator/common/backend/blocks/Delay/DelayMaster.cpp
+	src/oddf/simulator/common/backend/SimulatorCore/ElaborateBlocks.cpp
 	src/oddf/simulator/common/backend/SimulatorCore/EnsureValid.cpp
 	src/oddf/simulator/common/backend/SimulatorCore/GetSimulatorObjectInterface.cpp
 	src/oddf/simulator/common/backend/SimulatorCore/MapBlocks.cpp

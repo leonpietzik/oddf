@@ -26,7 +26,7 @@
 
 #pragma once
 
-#include "IBlockMapping.h"
+#include "ISimulatorBlockMapping.h"
 
 #include <oddf/simulator/common/backend/ISimulatorBlockFactory.h>
 #include <oddf/simulator/backend/ISimulatorAccess.h>
@@ -50,8 +50,9 @@ private:
 
 	void RegisterDefaultBlockFactories();
 
-	std::unique_ptr<IBlockMapping const> MapBlocks(design::IDesign const &design);
-	void MapConnections(IBlockMapping const &blockMapping);
+	std::unique_ptr<ISimulatorBlockMapping const> MapBlocks(design::IDesign const &design);
+	void MapConnections(ISimulatorBlockMapping const &blockMapping);
+	void ElaborateBlocks();
 
 public:
 

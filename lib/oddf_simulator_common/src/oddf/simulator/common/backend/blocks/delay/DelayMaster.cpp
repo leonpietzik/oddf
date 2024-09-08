@@ -24,17 +24,18 @@
 
 */
 
-#pragma once
-
-#include <oddf/simulator/common/backend/SimulatorBlockBase.h>
+#include "../Delay.h"
 
 namespace oddf::simulator::common::backend::blocks {
 
-class DelaySimulatorBlock : public SimulatorBlockBase {
+DelayMaster::DelayMaster(design::blocks::backend::IDesignBlock const &designBlock) :
+	SimulatorBlockBase(designBlock)
+{
+}
 
-public:
-
-	DelaySimulatorBlock(design::blocks::backend::IDesignBlock const &designBlock);
-};
+std::string DelayMaster::DebugString() const
+{
+	return "DelayMaster";
+}
 
 } // namespace oddf::simulator::common::backend::blocks

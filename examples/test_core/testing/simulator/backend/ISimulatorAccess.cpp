@@ -85,10 +85,10 @@ public:
 			if (iid == ITestObjectInterface::IID)
 				return static_cast<void *>(&m_simulatorObject);
 			else
-				throw Exception(ExceptionCode::InterfaceNotFound);
+				throw Exception(ExceptionCode::NoInterface);
 		}
 		else
-			throw Exception(ExceptionCode::ResourceNotFound);
+			throw Exception(ExceptionCode::NoResource);
 	}
 
 	using oddf::simulator::backend::ISimulatorAccess::GetSimulatorObjectInterface;
@@ -102,11 +102,11 @@ void Test_ISimulatorAccess()
 
 	Expect(interface.ReturnsEleven() == 11);
 
-	ExpectThrows(ExceptionCode::ResourceNotFound, [&]() {
+	ExpectThrows(ExceptionCode::NoResource, [&]() {
 		simulatorAccess.GetSimulatorObjectInterface<ITestObjectInterface>("NonExistingObject");
 	});
 
-	ExpectThrows(ExceptionCode::InterfaceNotFound, [&]() {
+	ExpectThrows(ExceptionCode::NoInterface, [&]() {
 		simulatorAccess.GetSimulatorObjectInterface<IWrongInterface>("ExistingObject");
 	});
 }

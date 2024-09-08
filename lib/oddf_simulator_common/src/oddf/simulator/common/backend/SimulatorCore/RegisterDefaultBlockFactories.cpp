@@ -28,7 +28,7 @@
 
 #include "../GenericSimulatorBlockFactory.h"
 
-#include "../blocks/DelaySimulatorBlock.h"
+#include "../blocks/Delay.h"
 
 namespace oddf::simulator::common::backend {
 
@@ -36,7 +36,7 @@ void SimulatorCore::RegisterDefaultBlockFactories()
 {
 	using design::blocks::backend::DesignBlockClass;
 
-	RegisterSimulatorBlockFactory(DesignBlockClass("delay"), MakeSimulatorBlockFactory<blocks::DelaySimulatorBlock>());
+	RegisterSimulatorBlockFactory(DesignBlockClass("delay"), MakeSimulatorBlockFactory<blocks::DelayMaster>());
 }
 
 } // namespace oddf::simulator::common::backend

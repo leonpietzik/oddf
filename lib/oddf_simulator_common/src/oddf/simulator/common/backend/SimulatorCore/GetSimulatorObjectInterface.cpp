@@ -32,7 +32,7 @@ namespace oddf::simulator::common::backend {
 
 void *SimulatorCore::GetSimulatorObjectInterface(ResourcePath const & /*path*/, Uid const & /*iid*/)
 {
-	throw Exception(ExceptionCode::ResourceNotFound);
+	throw Exception(ExceptionCode::NoResource);
 }
 
 } // namespace oddf::simulator::common::backend

@@ -26,12 +26,76 @@
 
 #include "../SimulatorCore.h"
 
+#include <iostream>
+
 namespace oddf::simulator::common::backend {
 
 void SimulatorCore::TranslateDesign(design::IDesign const &design)
 {
-	auto blockMapping = MapBlocks(design);
-	MapConnections(*blockMapping);
+	std::cout << "\n";
+	std::cout << "--- Translating design ---\n";
+	std::cout << "\n";
+
+	{
+		auto blockMapping = MapBlocks(design);
+
+		MapConnections(*blockMapping);
+	}
+
+	ElaborateBlocks();
+
+	for (auto const &block : m_blocks) {
+		std::cout << "<" << block << ">: " << block->DebugString() << "\n";
+
+		auto inputsList = block->GetInputsList();
+
+		for (size_t i = 0; i < inputsList.GetSize(); ++i) {
+
+			auto const &input = inputsList[i];
+
+			std::cout << "  input[" << i << "]: ";
+
+			if (input.IsConnected()) {
+
+				auto *drivingBlock = &input.GetDriver().GetOwningBlock();
+				std::cout << "driven by <" << drivingBlock << ">: " << drivingBlock->DebugString();
+			}
+			else {
+
+				std::cout << "unconnected";
+			}
+
+			std::cout << "\n";
+		}
+
+		auto outputsList = block->GetOutputsList();
+
+		for (size_t i = 0; i < outputsList.GetSize(); ++i) {
+
+			auto const &output = outputsList[i];
+
+			std::cout << "  output[" << i << "]: ";
+
+			auto targetsCollection = output.GetTargetsCollection();
+
+			if (targetsCollection.GetSize() > 0) {
+
+				std::cout << "driving inputs of";
+				auto targetsEnumerator = targetsCollection.GetEnumerator();
+				targetsEnumerator.Reset();
+				while (targetsEnumerator.MoveNext())
+					std::cout << " <" << &targetsEnumerator.GetCurrent().GetOwningBlock() << ">";
+			}
+			else {
+
+				std::cout << "unconnected";
+			}
+
+			std::cout << "\n";
+		}
+
+		std::cout << "\n";
+	}
 
 	//
 	// Refine blocks / ElaborateBlocks -- for all blocks that implement the IElaborate interface (which is passed an IElaborationContext)

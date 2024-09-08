@@ -28,11 +28,31 @@
 
 namespace oddf::simulator::common::backend {
 
-SimulatorBlockOutput::SimulatorBlockOutput(SimulatorBlockBase const *owningBlock, size_t index) :
+SimulatorBlockOutput::SimulatorBlockOutput(SimulatorBlockBase const &owningBlock, size_t index) :
 	m_owningBlock(owningBlock),
 	m_targets(),
 	m_index(index)
 {
 }
 
-} // namespace backend
+SimulatorBlockBase const &SimulatorBlockOutput::GetOwningBlock() const
+{
+	return m_owningBlock;
+}
+
+size_t SimulatorBlockOutput::GetIndex() const
+{
+	return m_index;
+}
+
+utility::CollectionView<SimulatorBlockInput const &> SimulatorBlockOutput::GetTargetsCollection() const
+{
+	return utility::MakeCollectionView<SimulatorBlockInput const &>(m_targets);
+}
+
+utility::CollectionView<SimulatorBlockInput &> SimulatorBlockOutput::GetTargetsCollection()
+{
+	return utility::MakeCollectionView<SimulatorBlockInput &>(m_targets);
+}
+
+} // namespace oddf::simulator::common::backend
