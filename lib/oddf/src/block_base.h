@@ -170,8 +170,8 @@ public:
 		return GetClassName();
 	}
 
-	virtual oddf::utility::ListView<oddf::design::blocks::backend::IBlockInput const &> GetInputsList() const override;
-	virtual oddf::utility::ListView<oddf::design::blocks::backend::IBlockOutput const &> GetOutputsList() const override;
+	virtual oddf::utility::ListView<oddf::design::blocks::backend::IDesignBlockInput const &> GetInputsList() const override;
+	virtual oddf::utility::ListView<oddf::design::blocks::backend::IDesignBlockOutput const &> GetOutputsList() const override;
 };
 
 } // namespace backend

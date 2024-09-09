@@ -2,17 +2,17 @@
 
 	ODDF - Open Digital Design Framework
 	Copyright Advantest Corporation
-	
+
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 3 of the License, or
 	(at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
-	
+
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -107,7 +107,7 @@ std::vector<OutputPinBase *> const &BlockBase::GetOutputPins() const
 	return outputPins;
 }
 
-std::string BlockBase::GetInputPinName(int index) const 
+std::string BlockBase::GetInputPinName(int index) const
 {
 	if (index >= 0 && index < (int)GetInputPins().size()) {
 
@@ -116,7 +116,7 @@ std::string BlockBase::GetInputPinName(int index) const
 		else
 			return "In" + std::to_string(index);
 	}
-	
+
 	assert(false);
 	return "<ERROR>";
 }
@@ -191,14 +191,14 @@ void BlockBase::SetDirty()
 		component->outdated = true;
 }
 
-oddf::utility::ListView<oddf::design::blocks::backend::IBlockInput const &> BlockBase::GetInputsList() const
+oddf::utility::ListView<oddf::design::blocks::backend::IDesignBlockInput const &> BlockBase::GetInputsList() const
 {
-	return oddf::utility::MakeListView<oddf::design::blocks::backend::IBlockInput const &>(inputPins);
+	return oddf::utility::MakeListView<oddf::design::blocks::backend::IDesignBlockInput const &>(inputPins);
 }
 
-oddf::utility::ListView<oddf::design::blocks::backend::IBlockOutput const &> BlockBase::GetOutputsList() const
+oddf::utility::ListView<oddf::design::blocks::backend::IDesignBlockOutput const &> BlockBase::GetOutputsList() const
 {
-	return oddf::utility::MakeListView<oddf::design::blocks::backend::IBlockOutput const &>(outputPins);
+	return oddf::utility::MakeListView<oddf::design::blocks::backend::IDesignBlockOutput const &>(outputPins);
 }
 
 
@@ -214,7 +214,7 @@ std::size_t BlockBase::GetHash() const
 	hash_combine(hash, className);
 	hash_combine(hash, inputPins.size());
 	hash_combine(hash, outputPins.size());
-	
+
 	std::string temp;
 
 	for (auto *output : outputPins)

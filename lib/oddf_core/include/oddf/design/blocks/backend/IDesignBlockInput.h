@@ -31,16 +31,16 @@ namespace design {
 namespace blocks {
 namespace backend {
 
-class IBlockOutput;
+class IDesignBlockOutput;
 
-class IBlockInput {
+class IDesignBlockInput {
 
 public:
 
-	virtual ~IBlockInput() { }
+	virtual ~IDesignBlockInput() { }
 
 	virtual bool IsConnected() const = 0;
-	virtual IBlockOutput const &GetDriver() const = 0;
+	virtual IDesignBlockOutput const &GetDriver() const = 0;
 };
 
 } // namespace backend

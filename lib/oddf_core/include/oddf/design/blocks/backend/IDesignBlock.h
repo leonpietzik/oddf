@@ -30,8 +30,8 @@
 #include <oddf/ResourcePath.h>
 
 #include "DesignBlockClass.h"
-#include "IBlockInput.h"
-#include "IBlockOutput.h"
+#include "IDesignBlockInput.h"
+#include "IDesignBlockOutput.h"
 
 #include <string>
 
@@ -49,8 +49,8 @@ public:
 	virtual ResourcePath GetPath() const = 0;
 	virtual DesignBlockClass GetClass() const = 0;
 
-	virtual utility::ListView<IBlockInput const &> GetInputsList() const = 0;
-	virtual utility::ListView<IBlockOutput const &> GetOutputsList() const = 0;
+	virtual utility::ListView<IDesignBlockInput const &> GetInputsList() const = 0;
+	virtual utility::ListView<IDesignBlockOutput const &> GetOutputsList() const = 0;
 };
 
 } // namespace backend

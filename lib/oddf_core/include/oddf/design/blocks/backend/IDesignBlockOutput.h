@@ -33,11 +33,11 @@ namespace backend {
 
 class IDesignBlock;
 
-class IBlockOutput {
+class IDesignBlockOutput {
 
 public:
 
-	virtual ~IBlockOutput() { }
+	virtual ~IDesignBlockOutput() { }
 
 	virtual IDesignBlock const &GetOwningBlock() const = 0;
 	virtual size_t GetIndex() const = 0;

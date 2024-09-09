@@ -199,7 +199,7 @@ namespace backend {
 // backend::OutputPin<T> definition
 //
 
-class OutputPinBase : public oddf::design::blocks::backend::IBlockOutput {
+class OutputPinBase : public oddf::design::blocks::backend::IDesignBlockOutput {
 
 protected:
 
@@ -288,7 +288,7 @@ public:
 // backend::InputPin<T> definition
 //
 
-class InputPinBase : public oddf::design::blocks::backend::IBlockInput {
+class InputPinBase : public oddf::design::blocks::backend::IDesignBlockInput {
 
 protected:
 
@@ -354,7 +354,7 @@ public:
 			return nullptr;
 	}
 
-	virtual oddf::design::blocks::backend::IBlockOutput const &GetDriver() const override
+	virtual oddf::design::blocks::backend::IDesignBlockOutput const &GetDriver() const override
 	{
 		assert(driver);
 		return *driver;
