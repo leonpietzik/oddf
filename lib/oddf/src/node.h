@@ -34,6 +34,7 @@
 #include "types.h"
 
 #include <oddf/design/IDesign.h>
+#include <oddf/Exception.h>
 
 #if defined(_MSC_VER) && _MSC_VER < 1900
 #define NOEXCEPT
@@ -238,15 +239,19 @@ public:
 		return owner;
 	}
 
+	//
+	// IDesignBlockInput implementation
+	//
+
 	virtual oddf::design::blocks::backend::IDesignBlock const &GetOwningBlock() const override
 	{
-		assert(GetOwner());
-		return *GetOwner();
+		assert(owner);
+		return *owner;
 	}
 
 	virtual size_t GetIndex() const override
 	{
-		assert(GetOwner());
+		assert(owner);
 		return index;
 	}
 };
@@ -339,6 +344,11 @@ public:
 	InputPin(BlockBase *owner, node<T> const &other);
 	virtual ~InputPin();
 
+	InputPin(InputPin<T> const &) = delete;
+	InputPin(InputPin<T> &&) = delete;
+	void operator=(InputPin<T> const &) = delete;
+	void operator=(InputPin<T> &&) = delete;
+
 	void Connect(node<T> const &other);
 
 	T const &GetValue() const
@@ -354,26 +364,39 @@ public:
 			return nullptr;
 	}
 
-	virtual oddf::design::blocks::backend::IDesignBlockOutput const &GetDriver() const override
-	{
-		assert(driver);
-		return *driver;
-	}
-
-	virtual bool IsConnected() const override
-	{
-		return GetDrivingBlock() != nullptr;
-	}
-
 	OutputPinBase const *GetDrivingPin() const override
 	{
 		return driver;
 	}
 
-	InputPin(InputPin<T> const &) = delete;
-	InputPin(InputPin<T> &&) = delete;
-	void operator=(InputPin<T> const &) = delete;
-	void operator=(InputPin<T> &&) = delete;
+	//
+	// IDesignBlockInput implementation
+	//
+
+	virtual oddf::design::blocks::backend::IDesignBlock const &GetOwningBlock() const override
+	{
+		assert(owner);
+		return *owner;
+	}
+
+	virtual size_t GetIndex() const override
+	{
+		assert(owner);
+		return index;
+	}
+
+	virtual bool IsConnected() const override
+	{
+		return driver != nullptr;
+	}
+
+	virtual oddf::design::blocks::backend::IDesignBlockOutput const &GetDriver() const override
+	{
+		if (!driver)
+			throw oddf::Exception(oddf::ExceptionCode::IllegalMethodCall);
+
+		return *driver;
+	}
 };
 
 //

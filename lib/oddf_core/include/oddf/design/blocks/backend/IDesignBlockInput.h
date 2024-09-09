@@ -20,30 +20,41 @@
 
 /*
 
-    <no description>
+    Defines the `IDesignBlockInput` interface, which obtains informationen
+    about an input of a design block, including connectivity information.
 
 */
 
 #pragma once
 
-namespace oddf {
-namespace design {
-namespace blocks {
-namespace backend {
+namespace oddf::design::blocks::backend {
 
+class IDesignBlock;
 class IDesignBlockOutput;
 
+/*
+    Obtains informationen about an input of a design block, including
+    connectivity information.
+*/
 class IDesignBlockInput {
 
 public:
 
 	virtual ~IDesignBlockInput() { }
 
+	// Returns a reference to the owning design block.
+	virtual IDesignBlock const &GetOwningBlock() const = 0;
+
+	// Returns the index of this input in the list of inputs of the owning
+	// design block.
+	virtual size_t GetIndex() const = 0;
+
+	// Returns true if the input is connected to a driving output.
 	virtual bool IsConnected() const = 0;
+
+	// If connected, returns a reference to the output of the design block
+	// driving this input. Throws if this input is unconnected.
 	virtual IDesignBlockOutput const &GetDriver() const = 0;
 };
 
-} // namespace backend
-} // namespace blocks
-} // namespace design
-} // namespace oddf
+} // namespace oddf::design::blocks::backend

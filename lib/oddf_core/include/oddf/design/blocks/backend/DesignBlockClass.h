@@ -20,7 +20,9 @@
 
 /*
 
-    <no description>
+    Defines and implements the `DesignBlockClass` class, which identifies the
+    class of a design block and is used by the ODDF system to distinguish
+    programmatically the various kinds of blocks that make up a design.
 
 */
 
@@ -30,9 +32,24 @@
 
 namespace oddf::design::blocks::backend {
 
+/*
+    Identifies the class of a design block and is used by the ODDF system to
+    distinguish programmatically the various kinds of blocks that make up a
+    design.
+*/
 class DesignBlockClass {
 
 private:
+
+	/*
+	    TODO: the current implementation uses `std::string` to support the
+	    migration from the old ('dfx') design implementation to a modern and,
+	    hopefully, better implementation.
+
+	    Using `std::string` for the purpose of distinguishing design blocks is slow
+	    and memory intensive. A new implementation should be based on pointers to
+	    plain old strings instead.
+	*/
 
 	std::string m_className;
 
@@ -43,26 +60,34 @@ public:
 	DesignBlockClass(std::string const &className) :
 		m_className(className) { }
 
+	// Provided to support the use of `DesignBlockClass` in ordered sets and maps.
 	friend bool operator<(DesignBlockClass const &lhs, DesignBlockClass const &rhs)
 	{
 		return lhs.m_className < rhs.m_className;
 	}
 
+	// Tests for equality.
 	friend bool operator==(DesignBlockClass const &lhs, DesignBlockClass const &rhs)
 	{
 		return lhs.m_className == rhs.m_className;
 	}
 
+	// Tests for inequality.
 	friend bool operator!=(DesignBlockClass const &lhs, DesignBlockClass const &rhs)
 	{
 		return lhs.m_className != rhs.m_className;
 	}
 
+	// Returns a human-readable string representation of the design block class.
 	std::string ToString() const { return m_className; };
 };
 
 } // namespace oddf::design::blocks::backend
 
+/*
+    Specialises std::hash to support the use of `DesignBlockClass` in hashed
+    sets and maps.
+*/
 template<>
 struct std::hash<oddf::design::blocks::backend::DesignBlockClass> {
 

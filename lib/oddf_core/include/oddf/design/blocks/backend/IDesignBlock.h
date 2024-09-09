@@ -20,7 +20,8 @@
 
 /*
 
-    <no description>
+    Defines the `IDesignBlock` interface, which obtains information about a
+    block in an ODDF design.
 
 */
 
@@ -35,25 +36,28 @@
 
 #include <string>
 
-namespace oddf {
-namespace design {
-namespace blocks {
-namespace backend {
+namespace oddf::design::blocks::backend {
 
+/*
+    Obtains information about a block in an ODDF design.
+*/
 class IDesignBlock {
 
 public:
 
 	virtual ~IDesignBlock() { }
 
+	// Gets the `ResourcePath` that identifies the block within the design.
 	virtual ResourcePath GetPath() const = 0;
+
+	// Gets the `DesignBlockClass` of the block.
 	virtual DesignBlockClass GetClass() const = 0;
 
+	// Returns a `ListView` of the inputs of the design block.
 	virtual utility::ListView<IDesignBlockInput const &> GetInputsList() const = 0;
+
+	// Returns a `ListView` of the outputs of the design block.
 	virtual utility::ListView<IDesignBlockOutput const &> GetOutputsList() const = 0;
 };
 
-} // namespace backend
-} // namespace blocks
-} // namespace design
-} // namespace oddf
+} // namespace oddf::design::blocks::backend
