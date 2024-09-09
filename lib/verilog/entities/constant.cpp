@@ -1,26 +1,26 @@
 /*
 
-	ODDF - Open Digital Design Framework
-	Copyright Advantest Corporation
+    ODDF - Open Digital Design Framework
+    Copyright Advantest Corporation
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 3 of the License, or
-	(at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 3 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
 /*
 
-	Verilog code emission for the Constant block.
+    Verilog code emission for the Constant block.
 
 */
 
@@ -47,59 +47,63 @@ void Constant::WriteCode(std::ofstream &f, dfx::generator::Instance &, dfx::gene
 
 		switch (output.type.GetClass()) {
 
-			case TypeDescription::Boolean: {
+		case TypeDescription::Boolean: {
 
-				f << "assign " << GetNodeExpression(&output) << " = 1'b" << entity.properties.GetInt("Constant", i) << ";\n";
-				break;
+			f << "assign " << GetNodeExpression(&output) << " = 1'b" << entity.properties.GetInt("Constant", i) << ";\n";
+			break;
+		}
+
+		case TypeDescription::FixedPoint: {
+
+			int constantData[dynfix::MAX_FIELDS];
+			int width = output.type.GetWordWidth();
+			int fraction = output.type.GetFraction();
+
+			entity.properties.GetIntArray("Constant", i, constantData);
+			f << "assign " << GetNodeExpression(&output) << " = " << width << "'b";
+
+			for (int j = width - 1; j >= 0; --j) {
+				f << std::to_string((constantData[j / 32] >> (j & 0x1F)) & 0x1);
+				if (fraction != 0 && j == fraction)
+					f << "_";
 			}
 
-			case TypeDescription::FixedPoint: {
+			f << "; // ";
 
-				int constantData[dynfix::MAX_FIELDS];
-				int width = output.type.GetWordWidth();
-				int fraction = output.type.GetFraction();
+			// Convert to double representation
+			double value = 0.0;
+			if (output.type.IsSigned() && (constantData[dynfix::MAX_FIELDS - 1] < 0)) {
 
-				entity.properties.GetIntArray("Constant", i, constantData);
-				f << "assign " << GetNodeExpression(&output) << " = " << width << "'b";
+				value = 1.0;
+				for (int j = 0; j < dynfix::MAX_FIELDS; ++j) {
 
-				for (int j = width - 1; j >= 0; --j) {
-					f << std::to_string((constantData[j / 32] >> (j & 0x1F)) & 0x1);
-					if (fraction != 0 && j == fraction) f << "_";
+					unsigned negatedConstantData = ~(unsigned)constantData[j];
+					value += negatedConstantData * std::pow(2.0, j * 32);
 				}
 
-				f << "; // ";
+				value = -value;
+			}
+			else {
 
-				// Convert to double representation
-				double value = 0.0;
-				if (output.type.IsSigned() && (constantData[dynfix::MAX_FIELDS - 1] < 0)) {
-
-					value = 1.0;
-					for (int j = 0; j < dynfix::MAX_FIELDS; ++j)
-						value += ~(unsigned)constantData[j] * std::pow(2.0, j * 32);
-
-					value = -value;
-				}
-				else {
-
-					for (int j = 0; j < dynfix::MAX_FIELDS; ++j)
-						value += (unsigned)constantData[j] * std::pow(2.0, j * 32);
-				}
-
-				value *= std::pow(2.0, -output.type.GetFraction());
-
-				f << output.type.ToString() << " (" << value << ")\n";
-
-				break;
+				for (int j = 0; j < dynfix::MAX_FIELDS; ++j)
+					value += (unsigned)constantData[j] * std::pow(2.0, j * 32);
 			}
 
-			default:
-				dfx::design_info("Block '" + entity.name + "': code generation is not supported for type '" + output.type.ToString() + "'.");
-				f << "// Error: code generation is not supported for type '" + output.type.ToString() + "'.\n\n";
-				return;
+			value *= std::pow(2.0, -output.type.GetFraction());
+
+			f << output.type.ToString() << " (" << value << ")\n";
+
+			break;
+		}
+
+		default:
+			dfx::design_info("Block '" + entity.name + "': code generation is not supported for type '" + output.type.ToString() + "'.");
+			f << "// Error: code generation is not supported for type '" + output.type.ToString() + "'.\n\n";
+			return;
 		}
 	}
 
 	f << "\n";
 }
 
-}
+} // namespace entities

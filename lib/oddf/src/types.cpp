@@ -1,26 +1,26 @@
 /*
 
-	ODDF - Open Digital Design Framework
-	Copyright Advantest Corporation
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-	
-	You should have received a copy of the GNU General Public License
-	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+    ODDF - Open Digital Design Framework
+    Copyright Advantest Corporation
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
 /*
 
-	Implementation of arithmetic operations on fixed-point numbers.
+    Implementation of arithmetic operations on fixed-point numbers.
 
 */
 
@@ -36,16 +36,16 @@ namespace dfx {
 //
 
 dynfix::dynfix() :
-wordWidth(0),
-fraction(0),
-data()
+	wordWidth(0),
+	fraction(0),
+	data()
 {
 }
 
 dynfix::dynfix(bool isSigned, int theWordWidth, int theFraction) :
-wordWidth(isSigned ? -theWordWidth : theWordWidth),
-fraction(theFraction),
-data()
+	wordWidth(isSigned ? -theWordWidth : theWordWidth),
+	fraction(theFraction),
+	data()
 {
 	if (theWordWidth <= 0)
 		throw design_error("dfx::dynfix: The parameter 'theWordWidth' must be at least 1.");
@@ -105,7 +105,7 @@ void dynfix::Construct(std::int64_t value)
 	fraction = 0;
 
 	if (value != 0) {
-	
+
 		while ((value % 2) == 0) {
 
 			--fraction;
@@ -202,28 +202,26 @@ dynfix dynfix::GetMax() const
 	}
 }
 
-
 /*
 
 //Should be faster but it's not in release build.
 
 void dynfix::CopyShiftLeft(dynfix &dest, int amount) const
 {
-	int blockShift = amount / 32;
-	int fineShift = amount % 32
-	std::int32_t mask = ~((-1) << fineShift);
+    int blockShift = amount / 32;
+    int fineShift = amount % 32
+    std::int32_t mask = ~((-1) << fineShift);
 
-	for (int i = 0; i < blockShift; ++i)
-		dest.data[i] = 0;
+    for (int i = 0; i < blockShift; ++i)
+        dest.data[i] = 0;
 
-	dest.data[blockShift] = data[0] << fineShift;
+    dest.data[blockShift] = data[0] << fineShift;
 
-	for (int i = blockShift + 1; i < MAX_FIELDS; ++i)
-		dest.data[i] = (data[i - blockShift] << fineShift) | ((data[i - blockShift - 1] >> (32 - fineShift)) & mask);
+    for (int i = blockShift + 1; i < MAX_FIELDS; ++i)
+        dest.data[i] = (data[i - blockShift] << fineShift) | ((data[i - blockShift - 1] >> (32 - fineShift)) & mask);
 }
 
 */
-
 
 void dynfix::CopyShiftLeft(dynfix &dest, int amount) const
 {
@@ -290,7 +288,6 @@ void dynfix::CopyNot(dynfix &dest) const
 {
 	for (int i = 0; i < MAX_FIELDS; ++i)
 		dest.data[i] = ~data[i];
-
 }
 
 void dynfix::AccumulateShiftLeft(dynfix &accumulator, int amount) const
@@ -343,7 +340,7 @@ void dynfix::CopyShiftRight(dynfix &dest, int amount) const
 	int blockShift = amount / 32;
 	int fineShift = amount % 32;
 
-	std::int32_t extension = IsSigned() && (data[MAX_FIELDS-1] < 0) ? -1 : 0;
+	std::int32_t extension = IsSigned() && (data[MAX_FIELDS - 1] < 0) ? -1 : 0;
 
 	if (amount < MAX_FIELDS * 32) {
 
@@ -524,8 +521,11 @@ dynfix::operator double() const
 	if (IsSigned() && (data[MAX_FIELDS - 1] < 0)) {
 
 		value = 1.0;
-		for (int i = 0; i < MAX_FIELDS; ++i)
-			value += ~(std::uint32_t)data[i] * std::pow(2.0, i * 32);
+		for (int i = 0; i < MAX_FIELDS; ++i) {
+
+			std::uint32_t negatedData = ~(std::uint32_t)data[i];
+			value += negatedData * std::pow(2.0, i * 32);
+		}
 
 		value = -value;
 	}
@@ -546,8 +546,6 @@ dynfix::operator std::int64_t() const
 		throw std::bad_cast();
 }
 
-
-
 //
 // TypeDesc
 //
@@ -555,7 +553,7 @@ dynfix::operator std::int64_t() const
 namespace types {
 
 TypeDescription::TypeDescription() :
-typeInfo(0)
+	typeInfo(0)
 {
 }
 
@@ -579,7 +577,6 @@ TypeDescription::TypeDescription(Class typeClass, bool isSigned, int wordLength,
 	else
 		throw design_error("TypeDescription::TypeDescription(typeClass, isSigned, wordLength, fraction): this constructor is for type class FixedPoint only.");
 }
-
 
 TypeDescription::Class TypeDescription::GetClass() const
 {
@@ -644,31 +641,42 @@ std::string TypeDescription::ToString() const
 {
 	switch (GetClass()) {
 
-		case Unknown: return "<unknown>";
-		case Boolean: return "bool";
-		case Double: return "double";
-		case Int32: return "int32";
-		case Int64: return "int64";
-		case FixedPoint:
-			if (IsSigned())
-				return "sfix<" + std::to_string(GetWordWidth()) + ", " + std::to_string(GetFraction()) + ">";
-			else
-				return "ufix<" + std::to_string(GetWordWidth()) + ", " + std::to_string(GetFraction()) + ">";
+	case Unknown:
+		return "<unknown>";
+
+	case Boolean:
+		return "bool";
+
+	case Double:
+		return "double";
+
+	case Int32:
+		return "int32";
+
+	case Int64:
+		return "int64";
+
+	case FixedPoint:
+
+		if (IsSigned())
+			return "sfix<" + std::to_string(GetWordWidth()) + ", " + std::to_string(GetFraction()) + ">";
+		else
+			return "ufix<" + std::to_string(GetWordWidth()) + ", " + std::to_string(GetFraction()) + ">";
 	}
 
 	assert(false);
 	return "<error>";
 }
 
-bool TypeDescription::operator ==(TypeDescription const &rhs) const
+bool TypeDescription::operator==(TypeDescription const &rhs) const
 {
 	return typeInfo == rhs.typeInfo;
 }
 
-bool TypeDescription::operator !=(TypeDescription const &rhs) const
+bool TypeDescription::operator!=(TypeDescription const &rhs) const
 {
 	return !(*this == rhs);
 }
 
-}
-}
+} // namespace types
+} // namespace dfx
