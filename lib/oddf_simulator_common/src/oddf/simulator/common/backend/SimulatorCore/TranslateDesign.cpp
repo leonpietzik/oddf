@@ -45,7 +45,8 @@ void SimulatorCore::TranslateDesign(design::IDesign const &design)
 	ElaborateBlocks();
 
 	for (auto const &block : m_blocks) {
-		std::cout << "<" << block << ">: " << block->DebugString() << "\n";
+
+		std::cout << "<" << block.get() << ">: " << block->DebugString() << "\n";
 
 		auto inputsList = block->GetInputsList();
 
