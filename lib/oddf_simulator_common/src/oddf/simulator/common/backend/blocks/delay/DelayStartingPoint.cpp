@@ -24,25 +24,18 @@
 
 */
 
-#pragma once
+#include "../Delay.h"
 
-#include "../Enumerator.h"
+namespace oddf::simulator::common::backend::blocks {
 
-namespace oddf::utility::backend {
+DelayStartingPoint::DelayStartingPoint() :
+	SimulatorBlockBase(0, 1)
+{
+}
 
-template<typename referenceT>
-class AbstractContainerViewImplementation {
+std::string DelayStartingPoint::DebugString() const
+{
+	return "DelayStartingPoint";
+}
 
-public:
-
-	virtual std::unique_ptr<AbstractContainerViewImplementation<referenceT>> Clone() const = 0;
-
-	virtual Enumerator<referenceT> GetEnumerator() const = 0;
-	virtual size_t GetSize() const = 0;
-	virtual referenceT GetFirst() const = 0;
-	virtual referenceT operator[](size_t index) const = 0;
-
-	virtual ~AbstractContainerViewImplementation() { }
-};
-
-} // namespace oddf::utility::backend
+} // namespace oddf::simulator::common::backend::blocks

@@ -34,9 +34,7 @@
 #include <stdexcept>
 #include <iterator>
 
-namespace oddf {
-namespace utility {
-namespace backend {
+namespace oddf::utility::backend {
 
 template<typename referenceT, typename containerT>
 class StdContainerViewImplementation : public AbstractContainerViewImplementation<referenceT> {
@@ -69,6 +67,11 @@ public:
 		return std::size(m_container);
 	}
 
+	virtual referenceT GetFirst() const override
+	{
+		return StdContainerElementTypeCast<referenceT>(*std::begin(m_container));
+	}
+
 	virtual referenceT operator[](size_t index) const
 	{
 		if constexpr (StdContainerIndexable<containerT>) {
@@ -83,6 +86,4 @@ public:
 	}
 };
 
-} // namespace backend
-} // namespace utility
-} // namespace oddf
+} // namespace oddf::utility::backend

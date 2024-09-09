@@ -48,6 +48,8 @@ private:
 public:
 
 	SimulatorBlockOutput(SimulatorBlockBase const &owningBlock, size_t index);
+	SimulatorBlockOutput(SimulatorBlockOutput const &) = delete;
+	SimulatorBlockOutput(SimulatorBlockOutput &&);
 
 	SimulatorBlockBase const &GetOwningBlock() const;
 	size_t GetIndex() const;

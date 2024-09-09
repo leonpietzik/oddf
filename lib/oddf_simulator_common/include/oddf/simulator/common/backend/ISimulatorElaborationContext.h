@@ -39,6 +39,15 @@ public:
 	virtual ~ISimulatorElaborationContext() { }
 
 	virtual void AddSimulatorBlock(std::unique_ptr<SimulatorBlockBase> &&block) = 0;
+
+	template<typename T, typename... argsTs>
+	T *AddSimulatorBlock(argsTs &&...args)
+	{
+		auto up = std::make_unique<T>(std::forward<argsTs>(args)...);
+		T *p = up.get();
+		AddSimulatorBlock(std::move(up));
+		return p;
+	}
 };
 
 } // namespace oddf::simulator::common::backend

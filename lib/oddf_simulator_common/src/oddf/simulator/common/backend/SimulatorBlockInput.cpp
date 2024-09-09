@@ -39,6 +39,15 @@ SimulatorBlockInput::SimulatorBlockInput(SimulatorBlockBase const &owningBlock, 
 {
 }
 
+SimulatorBlockInput::SimulatorBlockInput(SimulatorBlockInput &&other) :
+	m_owningBlock(other.m_owningBlock),
+	m_driver(nullptr),
+	m_index(0)
+{
+	// Since the address of an input object must never change, it cannot be moved.
+	throw oddf::Exception(oddf::ExceptionCode::Unexpected);
+}
+
 SimulatorBlockBase const &SimulatorBlockInput::GetOwningBlock() const
 {
 	return m_owningBlock;
@@ -69,7 +78,6 @@ SimulatorBlockOutput &SimulatorBlockInput::GetDriver()
 
 	return *m_driver;
 }
-
 
 void SimulatorBlockInput::ConnectTo(SimulatorBlockOutput &output)
 {

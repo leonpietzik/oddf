@@ -38,4 +38,55 @@ std::string DelayMaster::DebugString() const
 	return "DelayMaster";
 }
 
+void DelayMaster::Elaborate(ISimulatorElaborationContext &context)
+{
+	/*
+
+	Elaboration splits the original delay block ('DelayMaster') up into two
+	separate blocks: a starting point, which acts as the source of the value
+	stored in the flip-flop; and an endpoint, which accepts the value for
+	storage.
+
+	The following code detaches all original connections from the 'DelayMaster'
+	and attaches them to the newly created 'DelayStartingPoint' and
+	'DelayEndpoint' simulator blocks.
+
+	*/
+
+	// TODO: check configuration of the delay block (i.e., number of inputs/outputs, their types etc.)
+
+	//
+	// The new starting point of the delay
+	//
+
+	auto startingPoint = context.AddSimulatorBlock<DelayStartingPoint>();
+
+	auto masterOutputTargets = GetOutputsList().GetFirst().GetTargetsCollection();
+	auto &startingPointOutput = startingPoint->GetOutputsList().GetFirst();
+
+	while (!masterOutputTargets.IsEmpty()) {
+
+		auto &outputTarget = masterOutputTargets.GetFirst();
+		outputTarget.Disconnect();
+		outputTarget.ConnectTo(startingPointOutput);
+	}
+
+	//
+	// The new endpoint of the delay
+	//
+
+	auto endpoint = context.AddSimulatorBlock<DelayEndpoint>();
+
+	auto &masterInput = GetInputsList().GetFirst();
+
+	if (masterInput.IsConnected()) {
+
+		auto &inputDriver = masterInput.GetDriver();
+		auto &endpointInput = endpoint->GetInputsList().GetFirst();
+
+		masterInput.Disconnect();
+		endpointInput.ConnectTo(inputDriver);
+	}
+}
+
 } // namespace oddf::simulator::common::backend::blocks

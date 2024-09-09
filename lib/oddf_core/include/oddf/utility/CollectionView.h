@@ -60,6 +60,16 @@ public:
 	{
 		return m_implementation->GetSize();
 	}
+
+	bool IsEmpty() const
+	{
+		return m_implementation->GetSize() == 0;
+	}
+
+	referenceT GetFirst() const
+	{
+		return this->m_implementation->GetFirst();
+	}
 };
 
 template<

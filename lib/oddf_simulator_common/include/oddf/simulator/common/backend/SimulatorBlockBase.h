@@ -49,9 +49,12 @@ private:
 	std::vector<SimulatorBlockInput> m_inputs;
 	std::vector<SimulatorBlockOutput> m_outputs;
 
+	void PrepareConnections(size_t numberOfInputs, size_t numberOfOutputs);
+
 public:
 
 	SimulatorBlockBase(design::blocks::backend::IDesignBlock const &designBlock);
+	SimulatorBlockBase(size_t numberOfInputs, size_t numberOfOutputs);
 
 	utility::ListView<SimulatorBlockInput const &> GetInputsList() const;
 	utility::ListView<SimulatorBlockInput &> GetInputsList();

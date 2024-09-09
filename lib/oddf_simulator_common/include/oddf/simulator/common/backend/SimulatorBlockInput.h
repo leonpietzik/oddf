@@ -44,6 +44,8 @@ private:
 public:
 
 	SimulatorBlockInput(SimulatorBlockBase const &owningBlock, size_t index);
+	SimulatorBlockInput(SimulatorBlockInput const &) = delete;
+	SimulatorBlockInput(SimulatorBlockInput &&);
 
 	SimulatorBlockBase const &GetOwningBlock() const;
 	size_t GetIndex() const;

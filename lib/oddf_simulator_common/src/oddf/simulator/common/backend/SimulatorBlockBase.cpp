@@ -28,25 +28,39 @@
 
 #include "ISimulatorBlockMapping.h"
 
-#include <cassert>
+#include <oddf/Exception.h>
+
 #include <iostream>
 
 namespace oddf::simulator::common::backend {
+
+void SimulatorBlockBase::PrepareConnections(size_t numberOfInputs, size_t numberOfOutputs)
+{
+	m_inputs.reserve(numberOfInputs);
+	for (size_t i = 0; i < numberOfInputs; ++i)
+		m_inputs.emplace_back(*this, i);
+
+	m_outputs.reserve(numberOfOutputs);
+	for (size_t i = 0; i < numberOfOutputs; ++i)
+		m_outputs.emplace_back(*this, i);
+}
 
 SimulatorBlockBase::SimulatorBlockBase(design::blocks::backend::IDesignBlock const &designBlock) :
 	m_designBlockReference(&designBlock),
 	m_inputs(),
 	m_outputs()
 {
-	auto numberOfInputs = designBlock.GetInputsList().GetSize();
-	m_inputs.reserve(numberOfInputs);
-	for (size_t i = 0; i < numberOfInputs; ++i)
-		m_inputs.emplace_back(*this, i);
+	PrepareConnections(
+		designBlock.GetInputsList().GetSize(),
+		designBlock.GetOutputsList().GetSize());
+}
 
-	auto numberOfOutputs = designBlock.GetOutputsList().GetSize();
-	m_outputs.reserve(numberOfOutputs);
-	for (size_t i = 0; i < numberOfOutputs; ++i)
-		m_outputs.emplace_back(*this, i);
+SimulatorBlockBase::SimulatorBlockBase(size_t numberOfInputs, size_t numberOfOutputs) :
+	m_designBlockReference(nullptr),
+	m_inputs(),
+	m_outputs()
+{
+	PrepareConnections(numberOfInputs, numberOfOutputs);
 }
 
 utility::ListView<SimulatorBlockInput const &> SimulatorBlockBase::GetInputsList() const
@@ -71,7 +85,8 @@ utility::ListView<SimulatorBlockOutput &> SimulatorBlockBase::GetOutputsList()
 
 void SimulatorBlockBase::MapConnections(ISimulatorBlockMapping const &blockMapping)
 {
-	assert(m_designBlockReference);
+	if (!m_designBlockReference)
+		throw oddf::Exception(oddf::ExceptionCode::IllegalMethodCall);
 
 	auto designInputEnumerator = m_designBlockReference->GetInputsList().GetEnumerator();
 	designInputEnumerator.Reset();

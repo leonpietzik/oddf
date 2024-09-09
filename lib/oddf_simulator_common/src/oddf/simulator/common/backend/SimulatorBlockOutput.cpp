@@ -26,6 +26,8 @@
 
 #include <oddf/simulator/common/backend/SimulatorBlockBase.h>
 
+#include <oddf/Exception.h>
+
 namespace oddf::simulator::common::backend {
 
 SimulatorBlockOutput::SimulatorBlockOutput(SimulatorBlockBase const &owningBlock, size_t index) :
@@ -33,6 +35,15 @@ SimulatorBlockOutput::SimulatorBlockOutput(SimulatorBlockBase const &owningBlock
 	m_targets(),
 	m_index(index)
 {
+}
+
+SimulatorBlockOutput::SimulatorBlockOutput(SimulatorBlockOutput &&other) :
+	m_owningBlock(other.m_owningBlock),
+	m_targets(),
+	m_index(0)
+{
+	// Since the address of an output object must never change, it cannot be moved.
+	throw oddf::Exception(oddf::ExceptionCode::Unexpected);
 }
 
 SimulatorBlockBase const &SimulatorBlockOutput::GetOwningBlock() const
