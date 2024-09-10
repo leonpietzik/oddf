@@ -50,19 +50,19 @@ public:
 	{
 	}
 
-	virtual std::unique_ptr<AbstractContainerViewImplementation<referenceT>> Clone() const
+	virtual std::unique_ptr<AbstractContainerViewImplementation<referenceT>> Clone() const override
 	{
 		return std::make_unique<StdContainerViewImplementation<referenceT, containerT>>(m_container);
 	}
 
-	virtual Enumerator<referenceT> GetEnumerator() const
+	virtual Enumerator<referenceT> GetEnumerator() const override
 	{
 		using iteratorType = decltype(std::begin(m_container));
 
 		return Enumerator<referenceT>(std::make_unique<StdEnumeratorImplementation<referenceT, iteratorType>>(std::begin(m_container), std::end(m_container)));
 	}
 
-	virtual size_t GetSize() const
+	virtual size_t GetSize() const override
 	{
 		return std::size(m_container);
 	}
@@ -72,7 +72,7 @@ public:
 		return StdContainerElementTypeCast<referenceT>(*std::begin(m_container));
 	}
 
-	virtual referenceT operator[](size_t index) const
+	virtual referenceT operator[](size_t index) const override
 	{
 		if constexpr (StdContainerIndexable<containerT>) {
 
