@@ -34,13 +34,15 @@ namespace oddf::testing {
 
 void Test_Uid()
 {
-	constexpr auto uid1 = Uid(0x5ece6339, 0x1045, 0x46ec, 0x8f, 0x68, 0x94, 0x2f, 0xe6, 0x55, 0xaf, 0x56);
+	constexpr Uid uid1 = { 0x5ece6339, 0x1045, 0x46ec, 0x8f, 0x68, 0x94, 0x2f, 0xe6, 0x55, 0xaf, 0x56 };
 
 	constexpr auto uid2 = uid1;
 	constexpr auto uid3 = Uid(0x231f9c8e, 0x760f, 0x4caf, 0x8a, 0x1e, 0x77, 0xf2, 0x7c, 0x66, 0x86, 0x0f);
 
 	static_assert(uid1 == uid2);
 	static_assert(uid1 != uid3);
+
+	static_assert(sizeof(uid1) == 128/8);
 
 	Expect(uid2.ToString() == "{5ece6339-1045-46ec-8f68-942fe655af56}");
 	Expect(!(uid2.ToString() != "{5ece6339-1045-46ec-8f68-942fe655af56}"));
