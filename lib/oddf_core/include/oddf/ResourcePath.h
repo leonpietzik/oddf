@@ -20,7 +20,8 @@
 
 /*
 
-    <no description>
+    Provides the `ResourcePath` class, which specifies hierarchical paths
+    to resources within the ODDF system.
 
 */
 
@@ -31,7 +32,15 @@
 
 namespace oddf {
 
+/*
+    Specifies hierarchical paths to resources within the ODDF system.
+*/
 class ResourcePath : public std::string {
+
+	/*
+	    TODO: this is a stub implementation. TO be replaced by something more
+	    elaborate.
+	*/
 
 public:
 
@@ -43,6 +52,7 @@ public:
 	ResourcePath(std::string &&str) :
 		std::string(std::move(str)) { }
 
+	// Returns the resource path as a string.
 	std::string ToString() const
 	{
 		return *this;

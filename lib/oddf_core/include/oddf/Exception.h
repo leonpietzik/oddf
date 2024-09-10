@@ -20,8 +20,8 @@
 
 /*
 
-    <no description>
-
+    Provides the `Exception` class and the `ExceptionCode` enum, which are the
+    preferred way of reporting fatal errors in ODDF.
 */
 
 #include <exception>
@@ -30,33 +30,42 @@
 
 namespace oddf {
 
+/*
+    Exception codes to be used together with the `Exception` class. Although
+    they were inspired by COM error codes (HRESULTs), they have unrelated
+    numerical values and are thus incompatible with COM.
+*/
 enum class ExceptionCode : std::uint32_t {
 
+	// Unspecified error.
+	Fail = 1,
+
 	// Catastrophic failure.
-	Unexpected = 1,
+	Unexpected,
 
 	// The requested function has not been implemented.
-	NotImplemented = 2,
+	NotImplemented,
 
 	// One or more arguments are invalid.
-	InvalidArgument = 3,
-
-	// The requested interface does not exist.
-	NoInterface = 4,
-
-	// The requested resource does not exist.
-	NoResource = 5,
-
-	// Unspecified error.
-	Fail = 6,
-
-	// Attempt to access data outside the valid range.
-	Bounds = 7,
+	InvalidArgument,
 
 	// A method was called at an unexpected time.
-	IllegalMethodCall = 8
+	IllegalMethodCall,
+
+	// Attempt to access data outside the valid range.
+	Bounds,
+
+	// The requested interface does not exist.
+	NoInterface,
+
+	// The requested resource does not exist.
+	NoResource
 };
 
+/*
+    Standard exception class for use by and with the ODDF framework. Can
+    carry an exception code (of type `ExceptionCode`) and/or a message string.
+*/
 class Exception : public std::exception {
 
 private:
@@ -66,28 +75,40 @@ private:
 
 public:
 
+	// Constructs with `ExceptionCode::Fail` and custom message.
 	Exception(std::string const &message) :
 		m_code(ExceptionCode::Fail),
 		m_message(message)
 	{
 	}
 
+	// Constructs with given exception code and empty message.
 	Exception(ExceptionCode code) :
 		m_code(code),
-		m_message("<no message>")
+		m_message()
 	{
 	}
 
+	// Constructs with given exception code and message.
+	Exception(ExceptionCode code, std::string const &message) :
+		m_code(code),
+		m_message(message)
+	{
+	}
+
+	// Returns the message string.
 	virtual char const *what() const noexcept override
 	{
 		return m_message.c_str();
 	}
 
+	// Returns the message string.
 	char const *GetMessage() const noexcept
 	{
 		return m_message.c_str();
 	}
 
+	// Returns the exception code.
 	ExceptionCode GetCode() const noexcept
 	{
 		return m_code;
