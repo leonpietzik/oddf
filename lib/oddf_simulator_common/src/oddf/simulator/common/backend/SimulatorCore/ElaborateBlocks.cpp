@@ -70,26 +70,41 @@ void SimulatorCore::ElaborateBlocks()
 	std::cout << "\n";
 
 	size_t current = 0;
-	size_t size = m_blocks.size();
 
 	do {
 
 		auto context = ElaborationContext();
 
-		for (; current < size; ++current) {
+		while (current < m_blocks.size()) {
 
 			assert(m_blocks[current]);
 
 			context.m_currentBlockUniquePtr = &m_blocks[current];
 			m_blocks[current]->Elaborate(context);
+
+			if (m_blocks[current])
+				++current;
+			else {
+
+				/*
+				    The block has been removed by a call to `RemoveThisBlock()`.
+				    Swap places with the last block of the list, pop the now
+				    empty last block from the list, and continue elaboration
+				    without incrementing `current`.
+				*/
+
+				std::swap(m_blocks[current], m_blocks.back());
+				m_blocks.pop_back();
+			}
 		}
 
-		m_blocks.reserve(size + context.m_newBlocks.size());
+		// Append the newly created blocks at the end of the main list...
+		m_blocks.reserve(m_blocks.size() + context.m_newBlocks.size());
 		std::move(std::begin(context.m_newBlocks), std::end(context.m_newBlocks), std::back_inserter(m_blocks));
 
-		size = m_blocks.size();
+		// ... and continue elaboration with the newly appended blocks.
 
-	} while (current < size);
+	} while (current < m_blocks.size());
 }
 
 } // namespace oddf::simulator::common::backend
