@@ -20,7 +20,12 @@
 
 /*
 
-    <no description>
+    Provides template class `ListView`, a random-access view into a collection
+    of elements, where the type of the underlying container has been erased.
+    Elements are accessed through the type specified by a template parameter.
+    The container itself cannot be modified (i.e., elements cannot be added or
+    deleted); but the elements can if `referenceT` specifies a non-const
+    reference or pointer. Derives from class `CollectionView`.
 
 */
 
@@ -30,31 +35,50 @@
 
 namespace oddf::utility {
 
+/*
+    A random-access view into a collection of elements, where the type of the
+    underlying container has been erased. Elements are accessed through the
+    type specified by template parameter `referenceT`. The container itself
+    cannot be modified (i.e., elements cannot be added or deleted); but the
+    elements can if `referenceT` specifies a non-const reference or pointer.
+    Derives from class `CollectionView`.
+*/
 template<typename referenceT>
 class ListView : public CollectionView<referenceT> {
 
 public:
 
+	// Constructs a `ListView` based on the provided implementation of `AbstractContainerViewImplementation`.
 	ListView(std::unique_ptr<backend::AbstractContainerViewImplementation<referenceT>> &&implementation) :
 		CollectionView<referenceT>(std::move(implementation))
 	{
 	}
 
+	// Constructs a copy of the given `ListView`.
 	ListView(ListView<referenceT> const &other) :
 		CollectionView<referenceT>(other.m_implementation->Clone())
 	{
 	}
 
+	// Accesses element at the given index.
 	referenceT operator[](size_t index) const
 	{
 		return this->m_implementation->operator[](index);
 	}
 };
 
+/*
+    Returns a `ListView` for the given standard library container. The type
+    for element access can be overridden using the first template parameter
+    `referenceTypeSpec`. All standard type conversions based on `static_cast`
+    are permitted. Additionally, elements that are stored as pointers or
+    `unique_ptr` in the original collection can be viewed as normal pointers or
+    references.
+*/
 template<
 	typename referenceTypeSpec = void,
 	typename containerT>
-auto MakeListView(containerT &container)
+inline auto MakeListView(containerT &container)
 {
 	using referenceT = std::conditional_t<
 		std::is_same_v<referenceTypeSpec, void>,

@@ -20,7 +20,7 @@
 
 /*
 
-    <no description>
+    Implements the `Uid` class.
 
 */
 

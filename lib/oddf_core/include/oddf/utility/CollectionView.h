@@ -20,7 +20,12 @@
 
 /*
 
-    <no description>
+    Provides template class `CollectionView`, which is a view into a collection
+    of elements, where the type of the underlying container has been erased.
+    Elements are accessed through the type specified by a template parameter.
+    The container itself cannot be modified (i.e., elements cannot be added or
+    deleted); but the elements can if `referenceT` specifies a non-const
+    reference or pointer.
 
 */
 
@@ -32,6 +37,13 @@
 
 namespace oddf::utility {
 
+/*
+    A view into a collection of elements, where the type of the
+    underlying container has been erased. Elements are accessed through the
+    type specified by template parameter `referenceT`. The container itself
+    cannot be modified (i.e., elements cannot be added or deleted); but the
+    elements can if `referenceT` specifies a non-const reference or pointer.
+*/
 template<typename referenceT>
 class CollectionView {
 
@@ -41,37 +53,51 @@ protected:
 
 public:
 
+	// Constructs a `CollectionView` based on the provided implementation of `AbstractContainerViewImplementation`.
 	CollectionView(std::unique_ptr<backend::AbstractContainerViewImplementation<referenceT>> &&implementation) :
 		m_implementation(std::move(implementation))
 	{
 	}
 
+	// Constructs a copy of the given `CollectionView`.
 	CollectionView(CollectionView<referenceT> const &other) :
 		m_implementation(other.m_implementation->Clone())
 	{
 	}
 
+	// Returns an enumerator for the elements in the collection.
 	Enumerator<referenceT> GetEnumerator() const
 	{
 		return m_implementation->GetEnumerator();
 	}
 
+	// Returns the number of elements in the collection.
 	size_t GetSize() const
 	{
 		return m_implementation->GetSize();
 	}
 
+	// Returns whether the collection is empty.
 	bool IsEmpty() const
 	{
 		return m_implementation->GetSize() == 0;
 	}
 
+	// Returns the first element of the collection.
 	referenceT GetFirst() const
 	{
 		return this->m_implementation->GetFirst();
 	}
 };
 
+/*
+    Returns a `CollectionView` for the given standard library container. The
+    type for element access can be overridden using the first template parameter
+    `referenceTypeSpec`. All standard type conversions based on `static_cast`
+    are permitted. Additionally, elements that are stored as pointers or
+    `unique_ptr` in the original collection can be viewed as normal pointers or
+    references.
+*/
 template<
 	typename referenceTypeSpec = void,
 	typename containerT>
