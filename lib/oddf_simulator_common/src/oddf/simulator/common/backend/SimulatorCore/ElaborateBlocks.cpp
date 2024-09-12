@@ -26,6 +26,8 @@
 
 #include "../SimulatorCore.h"
 
+#include <oddf/Exception.h>
+
 #include <vector>
 #include <memory>
 #include <cassert>
@@ -39,12 +41,23 @@ class ElaborationContext : public ISimulatorElaborationContext {
 
 public:
 
+	std::unique_ptr<SimulatorBlockBase> *m_currentBlockUniquePtr;
+	size_t m_currentBlockIndex;
+
 	std::vector<std::unique_ptr<SimulatorBlockBase>> m_newBlocks;
 
-	void AddSimulatorBlock(std::unique_ptr<SimulatorBlockBase> &&block)
+	void AddSimulatorBlock(std::unique_ptr<SimulatorBlockBase> &&block) override
 	{
 		assert(block);
 		m_newBlocks.push_back(std::move(block));
+	}
+
+	void RemoveThisBlock() override
+	{
+		if ((*m_currentBlockUniquePtr)->HasConnections())
+			throw oddf::Exception(oddf::ExceptionCode::IllegalMethodCall, "ISimulatorElaborationContext::RemoveThisBlock(): block cannot be removed if it has connections to other blocks.");
+
+		m_currentBlockUniquePtr->reset();
 	}
 };
 
@@ -66,6 +79,8 @@ void SimulatorCore::ElaborateBlocks()
 		for (; current < size; ++current) {
 
 			assert(m_blocks[current]);
+
+			context.m_currentBlockUniquePtr = &m_blocks[current];
 			m_blocks[current]->Elaborate(context);
 		}
 

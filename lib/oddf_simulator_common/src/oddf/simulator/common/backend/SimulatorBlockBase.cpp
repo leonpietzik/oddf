@@ -20,7 +20,8 @@
 
 /*
 
-    <no description>
+    Implements `SimulatorBaseClass`, which is the base class to all simulator
+    blocks.
 
 */
 
@@ -34,7 +35,7 @@
 
 namespace oddf::simulator::common::backend {
 
-void SimulatorBlockBase::PrepareConnections(size_t numberOfInputs, size_t numberOfOutputs)
+void SimulatorBlockBase::InitialiseInputsAndOutputs(size_t numberOfInputs, size_t numberOfOutputs)
 {
 	m_inputs.reserve(numberOfInputs);
 	for (size_t i = 0; i < numberOfInputs; ++i)
@@ -50,7 +51,7 @@ SimulatorBlockBase::SimulatorBlockBase(design::blocks::backend::IDesignBlock con
 	m_inputs(),
 	m_outputs()
 {
-	PrepareConnections(
+	InitialiseInputsAndOutputs(
 		designBlock.GetInputsList().GetSize(),
 		designBlock.GetOutputsList().GetSize());
 }
@@ -60,7 +61,7 @@ SimulatorBlockBase::SimulatorBlockBase(size_t numberOfInputs, size_t numberOfOut
 	m_inputs(),
 	m_outputs()
 {
-	PrepareConnections(numberOfInputs, numberOfOutputs);
+	InitialiseInputsAndOutputs(numberOfInputs, numberOfOutputs);
 }
 
 utility::ListView<SimulatorBlockInput const &> SimulatorBlockBase::GetInputsList() const
@@ -81,6 +82,43 @@ utility::ListView<SimulatorBlockOutput const &> SimulatorBlockBase::GetOutputsLi
 utility::ListView<SimulatorBlockOutput &> SimulatorBlockBase::GetOutputsList()
 {
 	return utility::MakeListView<SimulatorBlockOutput &>(m_outputs);
+}
+
+void SimulatorBlockBase::DisconnectAll()
+{
+	// Disconnect all inputs
+	auto inputsEnumerator = GetInputsList().GetEnumerator();
+	for (inputsEnumerator.Reset(); inputsEnumerator.MoveNext();) {
+
+		auto &input = inputsEnumerator.GetCurrent();
+		if (input.IsConnected())
+			input.Disconnect();
+	}
+
+	// Disconnect all outputs
+	auto outputsEnumerator = GetOutputsList().GetEnumerator();
+	for (outputsEnumerator.Reset(); outputsEnumerator.MoveNext();) {
+
+		auto &output = outputsEnumerator.GetCurrent();
+		output.DisconnectAll();
+	}
+}
+
+bool SimulatorBlockBase::HasConnections() const
+{
+	// Check if inputs are connected
+	auto inputsEnumerator = GetInputsList().GetEnumerator();
+	for (inputsEnumerator.Reset(); inputsEnumerator.MoveNext();)
+		if (inputsEnumerator.GetCurrent().IsConnected())
+			return true;
+
+	// Disconnect all outputs
+	auto outputsEnumerator = GetOutputsList().GetEnumerator();
+	for (outputsEnumerator.Reset(); outputsEnumerator.MoveNext();)
+		if (!outputsEnumerator.GetCurrent().GetTargetsCollection().IsEmpty())
+			return true;
+
+	return false;
 }
 
 void SimulatorBlockBase::MapConnections(ISimulatorBlockMapping const &blockMapping)

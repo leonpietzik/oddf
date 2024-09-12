@@ -20,7 +20,8 @@
 
 /*
 
-    <no description>
+    Defines `SimulatorBaseClass`, which is the base class to all simulator
+    blocks.
 
 */
 
@@ -40,32 +41,58 @@
 
 namespace oddf::simulator::common::backend {
 
+/*
+    Base class to all simulator blocks.
+*/
 class SimulatorBlockBase {
 
 private:
 
-	design::blocks::backend::IDesignBlock const *m_designBlockReference;
+	// Pointer to the original design block, if the constructor accepting a design block reference was used. `nullptr` otherwise.
+	design::blocks::backend::IDesignBlock const *const m_designBlockReference;
 
+	// Vector of block inputs. Initialised by `InitialiseInputsAndOutputs()`. Reallocations must not occur afterwards.
 	std::vector<SimulatorBlockInput> m_inputs;
+
+	// Vector of block outputs. Initialised by `InitialiseInputsAndOutputs()`. Reallocations must not occur afterwards.
 	std::vector<SimulatorBlockOutput> m_outputs;
 
-	void PrepareConnections(size_t numberOfInputs, size_t numberOfOutputs);
+	// Initialises members `m_inputs` and `m_outputs`.
+	void InitialiseInputsAndOutputs(size_t numberOfInputs, size_t numberOfOutputs);
 
 public:
 
+	// Constructs the simulator block based on the given design block.
 	SimulatorBlockBase(design::blocks::backend::IDesignBlock const &designBlock);
+
+	// Constructs the simulator block with given numbers of inputs and outputs.
 	SimulatorBlockBase(size_t numberOfInputs, size_t numberOfOutputs);
 
+	// Returns a ListView into the list of inputs of this block.
 	utility::ListView<SimulatorBlockInput const &> GetInputsList() const;
+
+	// Returns a ListView into the list of inputs of this block.
 	utility::ListView<SimulatorBlockInput &> GetInputsList();
 
+	// Returns a ListView into the list of outputs of this block.
 	utility::ListView<SimulatorBlockOutput const &> GetOutputsList() const;
+
+	// Returns a ListView into the list of outputs of this block.
 	utility::ListView<SimulatorBlockOutput &> GetOutputsList();
 
+	// Returns whether the block has connections to other block.
+	bool HasConnections() const;
+
+	// Disconnects all inputs and outputs from all other blocks.
+	void DisconnectAll();
+
+	// Will map the connections to other blocks if the block was created from a design block.
 	void MapConnections(class ISimulatorBlockMapping const &blockMapping);
 
+	// Elaborates the block. Default implementation does nothing.
 	virtual void Elaborate(ISimulatorElaborationContext &context);
 
+	// Returns a short, descriptive string. Used during debugging print outs.
 	virtual std::string DebugString() const = 0;
 
 	virtual ~SimulatorBlockBase() { }

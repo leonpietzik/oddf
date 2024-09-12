@@ -39,6 +39,7 @@ public:
 	virtual ~ISimulatorElaborationContext() { }
 
 	virtual void AddSimulatorBlock(std::unique_ptr<SimulatorBlockBase> &&block) = 0;
+	virtual void RemoveThisBlock() = 0;
 
 	template<typename T, typename... argsTs>
 	T *AddSimulatorBlock(argsTs &&...args)

@@ -51,11 +51,20 @@ public:
 	SimulatorBlockOutput(SimulatorBlockOutput const &) = delete;
 	SimulatorBlockOutput(SimulatorBlockOutput &&);
 
+	// Returns the simulator block that owns this output
 	SimulatorBlockBase const &GetOwningBlock() const;
+
+	// Returns the index of this output within the list of outputs of the owning block.
 	size_t GetIndex() const;
 
+	// Returns a CollectionView into the collection of inputs driven by this block.
 	utility::CollectionView<SimulatorBlockInput const &> GetTargetsCollection() const;
+
+	// Returns a CollectionView into the collection of inputs driven by this block.
 	utility::CollectionView<SimulatorBlockInput &> GetTargetsCollection();
+
+	// Disconnects all targets driven by this output.
+	void DisconnectAll();
 };
 
 } // namespace oddf::simulator::common::backend

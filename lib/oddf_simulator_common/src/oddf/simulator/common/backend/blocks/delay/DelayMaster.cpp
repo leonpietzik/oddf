@@ -87,6 +87,8 @@ void DelayMaster::Elaborate(ISimulatorElaborationContext &context)
 		masterInput.Disconnect();
 		endpointInput.ConnectTo(inputDriver);
 	}
+
+	context.RemoveThisBlock();
 }
 
 } // namespace oddf::simulator::common::backend::blocks

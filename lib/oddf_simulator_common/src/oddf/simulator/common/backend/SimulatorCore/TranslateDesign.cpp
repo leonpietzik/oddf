@@ -46,6 +46,12 @@ void SimulatorCore::TranslateDesign(design::IDesign const &design)
 
 	for (auto const &block : m_blocks) {
 
+		if (!block) {
+
+			std::cout << "[block was removed]\n\n";
+			continue;
+		}
+
 		std::cout << "<" << block.get() << ">: " << block->DebugString() << "\n";
 
 		auto inputsList = block->GetInputsList();

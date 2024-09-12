@@ -42,7 +42,7 @@ SimulatorBlockOutput::SimulatorBlockOutput(SimulatorBlockOutput &&other) :
 	m_targets(),
 	m_index(0)
 {
-	// Since the address of an output object must never change, it cannot be moved.
+	// Since the address of an output object must never change, it must not be moved.
 	throw oddf::Exception(oddf::ExceptionCode::Unexpected);
 }
 
@@ -64,6 +64,14 @@ utility::CollectionView<SimulatorBlockInput const &> SimulatorBlockOutput::GetTa
 utility::CollectionView<SimulatorBlockInput &> SimulatorBlockOutput::GetTargetsCollection()
 {
 	return utility::MakeCollectionView<SimulatorBlockInput &>(m_targets);
+}
+
+void SimulatorBlockOutput::DisconnectAll()
+{
+	auto targets = GetTargetsCollection();
+
+	while (!targets.IsEmpty())
+		targets.GetFirst().Disconnect();
 }
 
 } // namespace oddf::simulator::common::backend
