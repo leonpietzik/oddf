@@ -50,9 +50,17 @@ private:
 
 	void RegisterDefaultBlockFactories();
 
+	// Creates simulator blocks based on the blocks of the given design.
 	std::unique_ptr<ISimulatorBlockMapping const> MapBlocks(design::IDesign const &design);
+
+	// Maps the connectivity from the design to the simulator.
 	void MapConnections(ISimulatorBlockMapping const &blockMapping);
+
+	// Elaborates blocks by allowing existing blocks to add new blocks to the simulator.
 	void ElaborateBlocks();
+
+	// Builds the simulator components. Components are independent lists of simulator operations that can execute in parallel.
+	void BuildComponents();
 
 public:
 

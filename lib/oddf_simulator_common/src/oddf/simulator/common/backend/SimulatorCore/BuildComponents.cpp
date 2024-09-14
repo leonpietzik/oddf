@@ -26,21 +26,20 @@
 
 #include "../SimulatorCore.h"
 
-#include "../GenericSimulatorBlockFactory.h"
+#include <oddf/Exception.h>
 
-#include "../blocks/Constant.h"
-#include "../blocks/Delay.h"
-#include "../blocks/Probe.h"
+#include <vector>
+#include <memory>
+#include <cassert>
+#include <iostream>
 
 namespace oddf::simulator::common::backend {
 
-void SimulatorCore::RegisterDefaultBlockFactories()
+void SimulatorCore::BuildComponents()
 {
-	using design::blocks::backend::DesignBlockClass;
-
-	RegisterSimulatorBlockFactory(DesignBlockClass("constant"), MakeSimulatorBlockFactory<blocks::ConstantMaster>());
-	RegisterSimulatorBlockFactory(DesignBlockClass("delay"), MakeSimulatorBlockFactory<blocks::DelayMaster>());
-	RegisterSimulatorBlockFactory(DesignBlockClass("probe"), MakeSimulatorBlockFactory<blocks::ProbeMaster>());
+	std::cout << "\n";
+	std::cout << "-- Building components --\n";
+	std::cout << "\n";
 }
 
 } // namespace oddf::simulator::common::backend

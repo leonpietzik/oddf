@@ -31,46 +31,18 @@
 namespace oddf::simulator::common::backend::blocks {
 
 //
-// DelayMaster
+// ConstantMaster
 //
 
-class DelayMaster : public SimulatorBlockBase {
+class ConstantMaster : public SimulatorBlockBase {
 
 public:
 
-	DelayMaster(design::blocks::backend::IDesignBlock const &designBlock);
+	ConstantMaster(design::blocks::backend::IDesignBlock const &designBlock);
 
 	virtual std::string DebugString() const override;
 
 	virtual void Elaborate(ISimulatorElaborationContext &context) override;
 };
-
-//
-// DelayStartingPoint
-//
-
-class DelayStartingPoint : public SimulatorBlockBase {
-
-public:
-
-	DelayStartingPoint();
-
-	virtual std::string DebugString() const override;
-};
-
-
-//
-// DelayEndpoint
-//
-
-class DelayEndpoint : public SimulatorBlockBase {
-
-public:
-
-	DelayEndpoint();
-
-	virtual std::string DebugString() const override;
-};
-
 
 } // namespace oddf::simulator::common::backend::blocks

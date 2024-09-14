@@ -20,57 +20,26 @@
 
 /*
 
-    Simulator support for the 'constant' design block.
+    <no description>
 
 */
 
-#pragma once
-
-#include <oddf/simulator/common/backend/SimulatorBlockBase.h>
+#include "../Constant.h"
 
 namespace oddf::simulator::common::backend::blocks {
 
-//
-// DelayMaster
-//
+ConstantMaster::ConstantMaster(design::blocks::backend::IDesignBlock const &designBlock) :
+	SimulatorBlockBase(designBlock)
+{
+}
 
-class DelayMaster : public SimulatorBlockBase {
+std::string ConstantMaster::DebugString() const
+{
+	return "ConstantMaster";
+}
 
-public:
-
-	DelayMaster(design::blocks::backend::IDesignBlock const &designBlock);
-
-	virtual std::string DebugString() const override;
-
-	virtual void Elaborate(ISimulatorElaborationContext &context) override;
-};
-
-//
-// DelayStartingPoint
-//
-
-class DelayStartingPoint : public SimulatorBlockBase {
-
-public:
-
-	DelayStartingPoint();
-
-	virtual std::string DebugString() const override;
-};
-
-
-//
-// DelayEndpoint
-//
-
-class DelayEndpoint : public SimulatorBlockBase {
-
-public:
-
-	DelayEndpoint();
-
-	virtual std::string DebugString() const override;
-};
-
+void ConstantMaster::Elaborate(ISimulatorElaborationContext &)
+{
+}
 
 } // namespace oddf::simulator::common::backend::blocks

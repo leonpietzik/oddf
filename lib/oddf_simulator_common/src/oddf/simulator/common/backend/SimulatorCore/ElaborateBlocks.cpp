@@ -20,7 +20,12 @@
 
 /*
 
-    <no description>
+    Implements simulator block elaboration whereby existing simulator blocks
+    step may create new blocks, for example to better support certain
+    combinations of input and output types. A sum taking an integer and a double
+    as inputs may convert itself to a block that sums doubles preceded by a
+    type-conversion block for the integer input. Another example is where
+    operations on busses are individualised.
 
 */
 
@@ -37,23 +42,34 @@ namespace oddf::simulator::common::backend {
 
 namespace {
 
+/*
+    Implementation of the `ISimulatorElaborationContext` interface, which
+    becomes passed to the `Elaborate()` member function of the simulator blocks
+    during the elaboration phase.
+*/
 class ElaborationContext : public ISimulatorElaborationContext {
 
 public:
 
+	// Pointer to the `unique_ptr` to the simulator block under elaboration. Used by member function `RemoveThisBlock()`.
 	std::unique_ptr<SimulatorBlockBase> *m_currentBlockUniquePtr;
-	size_t m_currentBlockIndex;
 
+	// Vector of blocks created during elaboration. Becomes copied to the simulator block list.
 	std::vector<std::unique_ptr<SimulatorBlockBase>> m_newBlocks;
 
+	// Registers `block` to be moved to the simulator block list.
 	void AddSimulatorBlock(std::unique_ptr<SimulatorBlockBase> &&block) override
 	{
 		assert(block);
 		m_newBlocks.push_back(std::move(block));
 	}
 
+	// Removes the block that is currently under elaboration.
 	void RemoveThisBlock() override
 	{
+		if (!*m_currentBlockUniquePtr)
+			throw oddf::Exception(oddf::ExceptionCode::IllegalMethodCall, "ISimulatorElaborationContext::RemoveThisBlock(): the block has already been removed. Was this function accidently called twice?");
+
 		if ((*m_currentBlockUniquePtr)->HasConnections())
 			throw oddf::Exception(oddf::ExceptionCode::IllegalMethodCall, "ISimulatorElaborationContext::RemoveThisBlock(): block cannot be removed if it has connections to other blocks.");
 

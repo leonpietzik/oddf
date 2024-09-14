@@ -44,6 +44,8 @@ void SimulatorCore::TranslateDesign(design::IDesign const &design)
 
 	ElaborateBlocks();
 
+	BuildComponents();
+
 	for (auto const &block : m_blocks) {
 
 		if (!block) {
@@ -104,24 +106,13 @@ void SimulatorCore::TranslateDesign(design::IDesign const &design)
 		std::cout << "\n";
 	}
 
-	//
-	// Refine blocks / ElaborateBlocks -- for all blocks that implement the IElaborate interface (which is passed an IElaborationContext)
-	//
-
-	/*
-	     Blocks created in a previous step may be converted to new blocks, that better support certain combinations of
-	     input and output types. For example, a sum taking an integer and a double as inputs may be converted to a
-	     block that sums doubles preceded by a type-conversion block for the integer input. Another example is where
-	     operations on busses are individualised.
-	*/
-
 	/*
 
 	BuildComponents
 	AllocateNets
 	    - Speicher für outputs von Blöcken
 	    - Speicher für interne knoten wiederverwenden können?
-	    - Was ist mit Speicher für delay, memory
+	    - Was ist mit Speicher für delay, memory --> landet in ComponentObjects
 	GenerateCode
 
 	*/
