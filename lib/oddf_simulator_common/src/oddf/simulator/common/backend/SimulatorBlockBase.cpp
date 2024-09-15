@@ -27,7 +27,7 @@
 
 #include <oddf/simulator/common/backend/SimulatorBlockBase.h>
 
-#include "ISimulatorBlockMapping.h"
+#include "SimulatorBlockInternals.h"
 
 #include <oddf/Exception.h>
 
@@ -35,53 +35,38 @@
 
 namespace oddf::simulator::common::backend {
 
-void SimulatorBlockBase::InitialiseInputsAndOutputs(size_t numberOfInputs, size_t numberOfOutputs)
-{
-	m_inputs.reserve(numberOfInputs);
-	for (size_t i = 0; i < numberOfInputs; ++i)
-		m_inputs.emplace_back(*this, i);
-
-	m_outputs.reserve(numberOfOutputs);
-	for (size_t i = 0; i < numberOfOutputs; ++i)
-		m_outputs.emplace_back(*this, i);
-}
-
 SimulatorBlockBase::SimulatorBlockBase(design::blocks::backend::IDesignBlock const &designBlock) :
-	m_designBlockReference(&designBlock),
-	m_inputs(),
-	m_outputs()
+	m_internals(new Internals(*this, designBlock))
 {
-	InitialiseInputsAndOutputs(
-		designBlock.GetInputsList().GetSize(),
-		designBlock.GetOutputsList().GetSize());
 }
 
 SimulatorBlockBase::SimulatorBlockBase(size_t numberOfInputs, size_t numberOfOutputs) :
-	m_designBlockReference(nullptr),
-	m_inputs(),
-	m_outputs()
+	m_internals(new Internals(*this, numberOfInputs, numberOfOutputs))
 {
-	InitialiseInputsAndOutputs(numberOfInputs, numberOfOutputs);
+}
+
+SimulatorBlockBase::~SimulatorBlockBase()
+{
 }
 
 utility::ListView<SimulatorBlockInput const &> SimulatorBlockBase::GetInputsList() const
 {
-	return utility::MakeListView<SimulatorBlockInput const &>(m_inputs);
+	return utility::MakeListView<SimulatorBlockInput const &>(m_internals->m_inputs);
 }
 
 utility::ListView<SimulatorBlockInput &> SimulatorBlockBase::GetInputsList()
 {
-	return utility::MakeListView<SimulatorBlockInput &>(m_inputs);
+	return utility::MakeListView<SimulatorBlockInput &>(m_internals->m_inputs);
 }
 
 utility::ListView<SimulatorBlockOutput const &> SimulatorBlockBase::GetOutputsList() const
 {
-	return utility::MakeListView<SimulatorBlockOutput const &>(m_outputs);
+	return utility::MakeListView<SimulatorBlockOutput const &>(m_internals->m_outputs);
 }
 
 utility::ListView<SimulatorBlockOutput &> SimulatorBlockBase::GetOutputsList()
 {
-	return utility::MakeListView<SimulatorBlockOutput &>(m_outputs);
+	return utility::MakeListView<SimulatorBlockOutput &>(m_internals->m_outputs);
 }
 
 void SimulatorBlockBase::DisconnectAll()
@@ -119,40 +104,6 @@ bool SimulatorBlockBase::HasConnections() const
 			return true;
 
 	return false;
-}
-
-void SimulatorBlockBase::MapConnections(ISimulatorBlockMapping const &blockMapping)
-{
-	if (!m_designBlockReference)
-		throw oddf::Exception(oddf::ExceptionCode::IllegalMethodCall);
-
-	auto designInputEnumerator = m_designBlockReference->GetInputsList().GetEnumerator();
-	designInputEnumerator.Reset();
-
-	for (auto &simInput : m_inputs) {
-
-		auto &designInput = designInputEnumerator.GetCurrent();
-
-		if (designInput.IsConnected()) {
-
-			auto &designDriver = designInput.GetDriver();
-			auto &designDrivingBlock = designDriver.GetOwningBlock();
-			auto driverIndex = designDriver.GetIndex();
-
-			auto *simDrivingBlock = blockMapping.DesignBlockToSimulatorBlock(designDrivingBlock);
-			if (simDrivingBlock) {
-
-				auto &simDriver = simDrivingBlock->m_outputs[driverIndex];
-				simInput.ConnectTo(simDriver);
-			}
-			else {
-
-				std::cout << "Block '" << m_designBlockReference->GetPath().ToString() << "': driving block '" << designDrivingBlock.GetPath().ToString() << "' not found\n";
-			}
-		}
-
-		designInputEnumerator.MoveNext();
-	}
 }
 
 void SimulatorBlockBase::Elaborate(ISimulatorElaborationContext & /* context */)

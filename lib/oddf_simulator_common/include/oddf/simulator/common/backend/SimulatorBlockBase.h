@@ -36,7 +36,7 @@
 
 #include <oddf/utility/ListView.h>
 
-#include <vector>
+#include <memory>
 #include <string>
 
 namespace oddf::simulator::common::backend {
@@ -52,17 +52,8 @@ private:
 
 	friend SimulatorCore;
 
-	// Pointer to the original design block, if the constructor accepting a design block reference was used. `nullptr` otherwise.
-	design::blocks::backend::IDesignBlock const *const m_designBlockReference;
-
-	// Vector of block inputs. Initialised by `InitialiseInputsAndOutputs()`. Reallocations must not occur afterwards.
-	std::vector<SimulatorBlockInput> m_inputs;
-
-	// Vector of block outputs. Initialised by `InitialiseInputsAndOutputs()`. Reallocations must not occur afterwards.
-	std::vector<SimulatorBlockOutput> m_outputs;
-
-	// Initialises members `m_inputs` and `m_outputs`.
-	void InitialiseInputsAndOutputs(size_t numberOfInputs, size_t numberOfOutputs);
+	class Internals;
+	std::unique_ptr<Internals> m_internals;
 
 public:
 
@@ -71,6 +62,8 @@ public:
 
 	// Constructs the simulator block with given numbers of inputs and outputs.
 	SimulatorBlockBase(size_t numberOfInputs, size_t numberOfOutputs);
+
+	~SimulatorBlockBase();
 
 	// Returns a ListView into the list of inputs of this block.
 	utility::ListView<SimulatorBlockInput const &> GetInputsList() const;
@@ -90,16 +83,11 @@ public:
 	// Disconnects all inputs and outputs from all other blocks.
 	void DisconnectAll();
 
-	// Will map the connections to other blocks if the block was created from a design block.
-	void MapConnections(class ISimulatorBlockMapping const &blockMapping);
-
 	// Elaborates the block. Default implementation does nothing.
 	virtual void Elaborate(ISimulatorElaborationContext &context);
 
 	// Returns a short, descriptive string. Used during debugging print outs.
 	virtual std::string DebugString() const = 0;
-
-	virtual ~SimulatorBlockBase() { }
 };
 
 } // namespace oddf::simulator::common::backend

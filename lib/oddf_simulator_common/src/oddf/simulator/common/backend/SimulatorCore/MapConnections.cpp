@@ -26,6 +26,8 @@
 
 #include "../SimulatorCore.h"
 
+#include "../SimulatorBlockInternals.h"
+
 #include <cassert>
 #include <iostream>
 
@@ -40,7 +42,7 @@ void SimulatorCore::MapConnections(ISimulatorBlockMapping const &blockMapping)
 	for (auto &pBlock : m_blocks) {
 
 		assert(pBlock);
-		pBlock->MapConnections(blockMapping);
+		pBlock->m_internals->MapConnections(blockMapping);
 	}
 }
 

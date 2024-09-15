@@ -28,8 +28,6 @@
 
 #include <oddf/simulator/common/backend/SimulatorBlockBase.h>
 
-#include <oddf/design/blocks/backend/IDesignBlock.h>
-
 namespace oddf::simulator::common::backend {
 
 class ISimulatorBlockMapping {
