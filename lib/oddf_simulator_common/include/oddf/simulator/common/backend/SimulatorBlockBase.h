@@ -41,12 +41,16 @@
 
 namespace oddf::simulator::common::backend {
 
+class SimulatorCore;
+
 /*
     Base class to all simulator blocks.
 */
 class SimulatorBlockBase {
 
 private:
+
+	friend SimulatorCore;
 
 	// Pointer to the original design block, if the constructor accepting a design block reference was used. `nullptr` otherwise.
 	design::blocks::backend::IDesignBlock const *const m_designBlockReference;

@@ -27,6 +27,7 @@
 #pragma once
 
 #include "ISimulatorBlockMapping.h"
+#include "SimulatorComponent.h"
 
 #include <oddf/simulator/common/backend/ISimulatorBlockFactory.h>
 #include <oddf/simulator/backend/ISimulatorAccess.h>
@@ -44,10 +45,16 @@ class SimulatorCore : public simulator::backend::ISimulatorAccess {
 
 private:
 
+	// All simulator blocks
 	std::vector<std::unique_ptr<SimulatorBlockBase>> m_blocks;
 
+	// Map of all registered simulator block factories. Simulator block factories create simulator blocks from design blocks.
 	std::map<design::blocks::backend::DesignBlockClass, std::unique_ptr<ISimulatorBlockFactory>> m_simulatorBlockFactories;
 
+	// List of all simulator components. Components are independent lists of simulator operations that can execute in parallel.
+	std::vector<SimulatorComponent> m_components;
+
+	// Registers simulator block factories for all standard ODDF design blocks.
 	void RegisterDefaultBlockFactories();
 
 	// Creates simulator blocks based on the blocks of the given design.
@@ -59,7 +66,7 @@ private:
 	// Elaborates blocks by allowing existing blocks to add new blocks to the simulator.
 	void ElaborateBlocks();
 
-	// Builds the simulator components. Components are independent lists of simulator operations that can execute in parallel.
+	// Builds the simulator components.
 	void BuildComponents();
 
 public:

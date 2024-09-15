@@ -17,6 +17,7 @@ add_library(oddf_simulator_common
 	src/oddf/simulator/common/backend/SimulatorBlockBase.cpp
 	src/oddf/simulator/common/backend/SimulatorBlockInput.cpp
 	src/oddf/simulator/common/backend/SimulatorBlockOutput.cpp
+	src/oddf/simulator/common/backend/SimulatorComponent.cpp
 	src/oddf/simulator/common/backend/SimulatorCore.cpp
 )
 

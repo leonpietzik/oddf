@@ -26,39 +26,23 @@
 
 #pragma once
 
+#include <oddf/simulator/common/backend/SimulatorBlockBase.h>
+
+#include <list>
+
 namespace oddf::simulator::common::backend {
 
-class SimulatorCore;
-class SimulatorBlockOutput;
-class SimulatorBlockBase;
-
-class SimulatorBlockInput {
+class SimulatorComponent {
 
 private:
 
-	friend SimulatorCore;
-	friend SimulatorBlockOutput;
-	friend SimulatorBlockBase;
-
-	SimulatorBlockBase const &m_owningBlock;
-	SimulatorBlockOutput *m_driver;
-	size_t m_index;
+	std::list<SimulatorBlockBase *> m_blocks;
 
 public:
 
-	SimulatorBlockInput(SimulatorBlockBase const &owningBlock, size_t index);
-	SimulatorBlockInput(SimulatorBlockInput const &) = delete;
-	SimulatorBlockInput(SimulatorBlockInput &&);
-
-	SimulatorBlockBase const &GetOwningBlock() const;
-	size_t GetIndex() const;
-
-	bool IsConnected() const;
-	SimulatorBlockOutput const &GetDriver() const;
-	SimulatorBlockOutput &GetDriver();
-
-	void ConnectTo(SimulatorBlockOutput &output);
-	void Disconnect();
+	void AddBlock(SimulatorBlockBase &block);
+	void MoveAppendFromOther(SimulatorComponent &other);
+	void MovePrependFromOther(SimulatorComponent &other);
 };
 
 } // namespace oddf::simulator::common::backend
