@@ -33,9 +33,9 @@ ProbeMaster::ProbeMaster(design::blocks::backend::IDesignBlock const &designBloc
 {
 }
 
-std::string ProbeMaster::DebugString() const
+std::string ProbeMaster::GetDesignPathHint() const
 {
-	return "ProbeMaster";
+	return GetDesignBlockReference()->GetPath();
 }
 
 void ProbeMaster::Elaborate(ISimulatorElaborationContext &)

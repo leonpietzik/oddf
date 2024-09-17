@@ -57,6 +57,15 @@ public:
 	// Vector of blocks created during elaboration. Becomes copied to the simulator block list.
 	std::vector<std::unique_ptr<SimulatorBlockBase>> m_newBlocks;
 
+	ElaborationContext() :
+		m_currentBlockUniquePtr(nullptr),
+		m_newBlocks()
+	{
+	}
+
+	ElaborationContext(ElaborationContext const &) = delete;
+	void operator=(ElaborationContext const &) = delete;
+
 	// Registers `block` to be moved to the simulator block list.
 	void AddSimulatorBlock(std::unique_ptr<SimulatorBlockBase> &&block) override
 	{
@@ -121,6 +130,17 @@ void SimulatorCore::ElaborateBlocks()
 		// ... and continue elaboration with the newly appended blocks.
 
 	} while (current < m_blocks.size());
+
+	/*
+
+	TODO
+
+	How do we deal with connectivity changes, e.g, blocks with dangling inputs/outputs.
+	    - If we disconnect the remaining connections this will cause dangling connections with other blocks...
+	    - Maybe connection changes using one of the members of `SimulatorBlockInput` and `SimulatorBlockOutput` should be reported
+	      to the simulator core automatically so that affected blocks can be elaborated again?
+
+	*/
 }
 
 } // namespace oddf::simulator::common::backend

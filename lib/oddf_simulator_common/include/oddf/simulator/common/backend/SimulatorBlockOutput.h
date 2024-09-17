@@ -32,6 +32,7 @@
 
 namespace oddf::simulator::common::backend {
 
+class SimulatorCore;
 class SimulatorBlockInput;
 class SimulatorBlockBase;
 
@@ -39,23 +40,28 @@ class SimulatorBlockOutput {
 
 private:
 
+	friend SimulatorCore;
 	friend SimulatorBlockInput;
+	friend SimulatorBlockBase;
 
-	SimulatorBlockBase const &m_owningBlock;
+	SimulatorBlockBase &m_owningBlock;
 	std::list<SimulatorBlockInput *> m_targets;
 	size_t m_index;
 
 public:
 
-	SimulatorBlockOutput(SimulatorBlockBase const &owningBlock, size_t index);
+	SimulatorBlockOutput(SimulatorBlockBase &owningBlock, size_t index);
 	SimulatorBlockOutput(SimulatorBlockOutput const &) = delete;
 	SimulatorBlockOutput(SimulatorBlockOutput &&);
 
-	// Returns the simulator block that owns this output
-	SimulatorBlockBase const &GetOwningBlock() const;
-
 	// Returns the index of this output within the list of outputs of the owning block.
 	size_t GetIndex() const;
+
+	// Returns the simulator block that owns this output.
+	SimulatorBlockBase const &GetOwningBlock() const;
+
+	// Returns the simulator block that owns this output.
+	SimulatorBlockBase &GetOwningBlock();
 
 	// Returns a CollectionView into the collection of inputs driven by this block.
 	utility::CollectionView<SimulatorBlockInput const &> GetTargetsCollection() const;

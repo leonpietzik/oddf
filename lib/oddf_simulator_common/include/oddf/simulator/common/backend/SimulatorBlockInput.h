@@ -40,24 +40,38 @@ private:
 	friend SimulatorBlockOutput;
 	friend SimulatorBlockBase;
 
-	SimulatorBlockBase const &m_owningBlock;
+	SimulatorBlockBase &m_owningBlock;
 	SimulatorBlockOutput *m_driver;
 	size_t m_index;
 
 public:
 
-	SimulatorBlockInput(SimulatorBlockBase const &owningBlock, size_t index);
+	SimulatorBlockInput(SimulatorBlockBase &owningBlock, size_t index);
 	SimulatorBlockInput(SimulatorBlockInput const &) = delete;
 	SimulatorBlockInput(SimulatorBlockInput &&);
 
-	SimulatorBlockBase const &GetOwningBlock() const;
+	// Returns the index of this output within the list of outputs of the owning block.
 	size_t GetIndex() const;
 
+	// Returns the simulator block that owns this input.
+	SimulatorBlockBase const &GetOwningBlock() const;
+
+	// Returns the simulator block that owns this input.
+	SimulatorBlockBase &GetOwningBlock();
+
+	// Returns whether this inupt is connected to a driving output of another block.
 	bool IsConnected() const;
+
+	// If connected, returns a reference to the output of the driving block. Throws otherwise.
 	SimulatorBlockOutput const &GetDriver() const;
+
+	// If connected, returns a reference to the output of the driving block. Throws otherwise.
 	SimulatorBlockOutput &GetDriver();
 
+	// If not connected, connects this input to the given output. Throws if already connected.
 	void ConnectTo(SimulatorBlockOutput &output);
+
+	// If connected, disconnects the input from the driving output. Throws if unconnected.
 	void Disconnect();
 };
 

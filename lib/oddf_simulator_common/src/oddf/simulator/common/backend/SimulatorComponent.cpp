@@ -25,20 +25,65 @@
 */
 
 #include "SimulatorComponent.h"
+#include "SimulatorBlockInternals.h"
+
+#include <algorithm>
+#include <cassert>
 
 namespace oddf::simulator::common::backend {
 
+SimulatorComponent::SimulatorComponent() :
+	m_blocks()
+{
+}
+
 void SimulatorComponent::AddBlock(SimulatorBlockBase &block)
 {
+	assert(!block.m_internals->m_component);
+	block.m_internals->m_component = this;
 	m_blocks.push_back(&block);
 }
 
-void SimulatorComponent::MoveAppendFromOther(SimulatorComponent &)
+void SimulatorComponent::MoveAppendFromOther(SimulatorComponent &other)
 {
+	for (auto *block : other.m_blocks) {
+
+		assert(block->m_internals->m_component == &other);
+		block->m_internals->m_component = this;
+	}
+
+	m_blocks.splice(m_blocks.end(), other.m_blocks);
+
+	for (auto *block : m_blocks)
+		assert(block->m_internals->m_component == this);
+
+	assert(other.IsEmpty());
 }
 
-void SimulatorComponent::MovePrependFromOther(SimulatorComponent &)
+void SimulatorComponent::MovePrependFromOther(SimulatorComponent &other)
 {
+	for (auto *block : other.m_blocks) {
+
+		assert(block->m_internals->m_component == &other);
+		block->m_internals->m_component = this;
+	}
+
+	m_blocks.splice(m_blocks.begin(), other.m_blocks);
+
+	for (auto *block : m_blocks)
+		assert(block->m_internals->m_component == this);
+
+	assert(other.IsEmpty());
+}
+
+size_t SimulatorComponent::GetSize() const
+{
+	return m_blocks.size();
+}
+
+bool SimulatorComponent::IsEmpty() const
+{
+	return m_blocks.empty();
 }
 
 } // namespace oddf::simulator::common::backend

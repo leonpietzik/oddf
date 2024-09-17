@@ -28,7 +28,10 @@
 
 namespace oddf::simulator::common::backend {
 
-SimulatorCore::SimulatorCore()
+SimulatorCore::SimulatorCore() :
+	m_blocks(),
+	m_simulatorBlockFactories(),
+	m_components()
 {
 	RegisterDefaultBlockFactories();
 }

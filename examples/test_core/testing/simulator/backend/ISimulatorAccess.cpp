@@ -72,7 +72,10 @@ private:
 
 public:
 
-	TestSimulatorAccess() = default;
+	TestSimulatorAccess() :
+		m_simulatorObject()
+	{
+	}
 
 	virtual void EnsureValid() override
 	{

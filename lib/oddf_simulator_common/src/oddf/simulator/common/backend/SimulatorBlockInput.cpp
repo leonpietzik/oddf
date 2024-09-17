@@ -32,7 +32,7 @@
 
 namespace oddf::simulator::common::backend {
 
-SimulatorBlockInput::SimulatorBlockInput(SimulatorBlockBase const &owningBlock, size_t index) :
+SimulatorBlockInput::SimulatorBlockInput(SimulatorBlockBase &owningBlock, size_t index) :
 	m_owningBlock(owningBlock),
 	m_driver(nullptr),
 	m_index(index)
@@ -48,14 +48,19 @@ SimulatorBlockInput::SimulatorBlockInput(SimulatorBlockInput &&other) :
 	throw oddf::Exception(oddf::ExceptionCode::Unexpected);
 }
 
+size_t SimulatorBlockInput::GetIndex() const
+{
+	return m_index;
+}
+
 SimulatorBlockBase const &SimulatorBlockInput::GetOwningBlock() const
 {
 	return m_owningBlock;
 }
 
-size_t SimulatorBlockInput::GetIndex() const
+SimulatorBlockBase &SimulatorBlockInput::GetOwningBlock()
 {
-	return m_index;
+	return m_owningBlock;
 }
 
 bool SimulatorBlockInput::IsConnected() const

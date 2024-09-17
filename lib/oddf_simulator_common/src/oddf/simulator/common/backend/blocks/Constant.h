@@ -40,7 +40,7 @@ public:
 
 	ConstantMaster(design::blocks::backend::IDesignBlock const &designBlock);
 
-	virtual std::string DebugString() const override;
+	virtual std::string GetDesignPathHint() const override;
 
 	virtual void Elaborate(ISimulatorElaborationContext &context) override;
 };

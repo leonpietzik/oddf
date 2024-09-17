@@ -33,7 +33,11 @@
 namespace oddf::simulator::common::backend {
 
 SimulatorBlockBase::Internals::Internals(SimulatorBlockBase &owningBlock, design::blocks::backend::IDesignBlock const &designBlock) :
-	m_designBlockReference(&designBlock)
+	m_component(nullptr),
+	m_visiting(false),
+	m_designBlockReference(&designBlock),
+	m_inputs(),
+	m_outputs()
 {
 	InitialiseInputsAndOutputs(
 		owningBlock,
@@ -42,7 +46,11 @@ SimulatorBlockBase::Internals::Internals(SimulatorBlockBase &owningBlock, design
 }
 
 SimulatorBlockBase::Internals::Internals(SimulatorBlockBase &owningBlock, size_t numberOfInputs, size_t numberOfOutputs) :
-	m_designBlockReference(nullptr)
+	m_component(nullptr),
+	m_visiting(false),
+	m_designBlockReference(nullptr),
+	m_inputs(),
+	m_outputs()
 {
 	InitialiseInputsAndOutputs(owningBlock, numberOfInputs, numberOfOutputs);
 }

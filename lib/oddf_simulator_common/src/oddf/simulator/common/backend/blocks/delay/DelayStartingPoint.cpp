@@ -28,14 +28,15 @@
 
 namespace oddf::simulator::common::backend::blocks {
 
-DelayStartingPoint::DelayStartingPoint() :
-	SimulatorBlockBase(0, 1)
+DelayStartingPoint::DelayStartingPoint(design::blocks::backend::IDesignBlock const *originalDesignBlock) :
+	SimulatorBlockBase(0, 1),
+	m_originalDesignBlock(originalDesignBlock)
 {
 }
 
-std::string DelayStartingPoint::DebugString() const
+std::string DelayStartingPoint::GetDesignPathHint() const
 {
-	return "DelayStartingPoint";
+	return m_originalDesignBlock->GetPath() + ":StartingPoint";
 }
 
 } // namespace oddf::simulator::common::backend::blocks

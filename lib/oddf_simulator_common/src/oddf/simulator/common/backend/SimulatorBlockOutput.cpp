@@ -30,7 +30,7 @@
 
 namespace oddf::simulator::common::backend {
 
-SimulatorBlockOutput::SimulatorBlockOutput(SimulatorBlockBase const &owningBlock, size_t index) :
+SimulatorBlockOutput::SimulatorBlockOutput(SimulatorBlockBase &owningBlock, size_t index) :
 	m_owningBlock(owningBlock),
 	m_targets(),
 	m_index(index)
@@ -46,14 +46,19 @@ SimulatorBlockOutput::SimulatorBlockOutput(SimulatorBlockOutput &&other) :
 	throw oddf::Exception(oddf::ExceptionCode::Unexpected);
 }
 
+size_t SimulatorBlockOutput::GetIndex() const
+{
+	return m_index;
+}
+
 SimulatorBlockBase const &SimulatorBlockOutput::GetOwningBlock() const
 {
 	return m_owningBlock;
 }
 
-size_t SimulatorBlockOutput::GetIndex() const
+SimulatorBlockBase &SimulatorBlockOutput::GetOwningBlock()
 {
-	return m_index;
+	return m_owningBlock;
 }
 
 utility::CollectionView<SimulatorBlockInput const &> SimulatorBlockOutput::GetTargetsCollection() const

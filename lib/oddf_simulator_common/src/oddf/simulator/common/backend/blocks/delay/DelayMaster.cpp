@@ -33,9 +33,9 @@ DelayMaster::DelayMaster(design::blocks::backend::IDesignBlock const &designBloc
 {
 }
 
-std::string DelayMaster::DebugString() const
+std::string DelayMaster::GetDesignPathHint() const
 {
-	return "DelayMaster";
+	return GetDesignBlockReference()->GetPath();
 }
 
 void DelayMaster::Elaborate(ISimulatorElaborationContext &context)
@@ -59,7 +59,7 @@ void DelayMaster::Elaborate(ISimulatorElaborationContext &context)
 	// The new starting point of the delay
 	//
 
-	auto startingPoint = context.AddSimulatorBlock<DelayStartingPoint>();
+	auto startingPoint = context.AddSimulatorBlock<DelayStartingPoint>(GetDesignBlockReference());
 
 	auto masterOutputTargets = GetOutputsList().GetFirst().GetTargetsCollection();
 	auto &startingPointOutput = startingPoint->GetOutputsList().GetFirst();
@@ -75,7 +75,7 @@ void DelayMaster::Elaborate(ISimulatorElaborationContext &context)
 	// The new endpoint of the delay
 	//
 
-	auto endpoint = context.AddSimulatorBlock<DelayEndpoint>();
+	auto endpoint = context.AddSimulatorBlock<DelayEndpoint>(GetDesignBlockReference());
 
 	auto &masterInput = GetInputsList().GetFirst();
 

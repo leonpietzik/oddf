@@ -34,15 +34,20 @@ namespace oddf::simulator::common::backend {
 
 class SimulatorComponent {
 
-private:
+public:
 
 	std::list<SimulatorBlockBase *> m_blocks;
 
-public:
+	SimulatorComponent();
+	SimulatorComponent(SimulatorComponent const &) = default;
+	SimulatorComponent(SimulatorComponent &&) = default;
 
 	void AddBlock(SimulatorBlockBase &block);
 	void MoveAppendFromOther(SimulatorComponent &other);
 	void MovePrependFromOther(SimulatorComponent &other);
+
+	bool IsEmpty() const;
+	size_t GetSize() const;
 };
 
 } // namespace oddf::simulator::common::backend

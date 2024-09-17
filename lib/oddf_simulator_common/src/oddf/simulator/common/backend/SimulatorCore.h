@@ -52,7 +52,7 @@ private:
 	std::map<design::blocks::backend::DesignBlockClass, std::unique_ptr<ISimulatorBlockFactory>> m_simulatorBlockFactories;
 
 	// List of all simulator components. Components are independent lists of simulator operations that can execute in parallel.
-	std::vector<SimulatorComponent> m_components;
+	std::list<SimulatorComponent> m_components;
 
 	// Registers simulator block factories for all standard ODDF design blocks.
 	void RegisterDefaultBlockFactories();

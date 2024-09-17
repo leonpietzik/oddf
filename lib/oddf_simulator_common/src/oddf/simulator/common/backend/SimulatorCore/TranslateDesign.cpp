@@ -26,6 +26,9 @@
 
 #include "../SimulatorCore.h"
 
+#include "../SimulatorBlockInternals.h"
+
+#include <cassert>
 #include <iostream>
 
 namespace oddf::simulator::common::backend {
@@ -46,64 +49,73 @@ void SimulatorCore::TranslateDesign(design::IDesign const &design)
 
 	BuildComponents();
 
-	for (auto const &block : m_blocks) {
+	size_t componentIndex = 0;
 
-		if (!block) {
+	for (auto &component : m_components) {
 
-			std::cout << "[block was removed]\n\n";
-			continue;
-		}
+		std::cout << "\n-- Component " << componentIndex++ << " --\n\n";
 
-		std::cout << "<" << block.get() << ">: " << block->DebugString() << "\n";
+		for (auto const &block : component.m_blocks) {
 
-		auto inputsList = block->GetInputsList();
+			if (!block) {
 
-		for (size_t i = 0; i < inputsList.GetSize(); ++i) {
-
-			auto const &input = inputsList[i];
-
-			std::cout << "  input[" << i << "]: ";
-
-			if (input.IsConnected()) {
-
-				auto *drivingBlock = &input.GetDriver().GetOwningBlock();
-				std::cout << "driven by <" << drivingBlock << ">: " << drivingBlock->DebugString();
+				std::cout << "[block was removed]\n\n";
+				continue;
 			}
-			else {
 
-				std::cout << "unconnected";
+			assert(block->m_internals->m_component == &component);
+
+			std::cout << "<" << block << ">: " << block->GetDesignPathHint() << "\n";
+
+			auto inputsList = block->GetInputsList();
+
+			for (size_t i = 0; i < inputsList.GetSize(); ++i) {
+
+				auto const &input = inputsList[i];
+
+				std::cout << "  input[" << i << "]: ";
+
+				if (input.IsConnected()) {
+
+					auto *drivingBlock = &input.GetDriver().GetOwningBlock();
+					std::cout << "driven by <" << drivingBlock << ">: " << drivingBlock->GetDesignPathHint();
+				}
+				else {
+
+					std::cout << "unconnected";
+				}
+
+				std::cout << "\n";
+			}
+
+			auto outputsList = block->GetOutputsList();
+
+			for (size_t i = 0; i < outputsList.GetSize(); ++i) {
+
+				auto const &output = outputsList[i];
+
+				std::cout << "  output[" << i << "]: ";
+
+				auto targetsCollection = output.GetTargetsCollection();
+
+				if (targetsCollection.GetSize() > 0) {
+
+					std::cout << "driving inputs of";
+					auto targetsEnumerator = targetsCollection.GetEnumerator();
+					targetsEnumerator.Reset();
+					while (targetsEnumerator.MoveNext())
+						std::cout << " <" << &targetsEnumerator.GetCurrent().GetOwningBlock() << ">";
+				}
+				else {
+
+					std::cout << "unconnected";
+				}
+
+				std::cout << "\n";
 			}
 
 			std::cout << "\n";
 		}
-
-		auto outputsList = block->GetOutputsList();
-
-		for (size_t i = 0; i < outputsList.GetSize(); ++i) {
-
-			auto const &output = outputsList[i];
-
-			std::cout << "  output[" << i << "]: ";
-
-			auto targetsCollection = output.GetTargetsCollection();
-
-			if (targetsCollection.GetSize() > 0) {
-
-				std::cout << "driving inputs of";
-				auto targetsEnumerator = targetsCollection.GetEnumerator();
-				targetsEnumerator.Reset();
-				while (targetsEnumerator.MoveNext())
-					std::cout << " <" << &targetsEnumerator.GetCurrent().GetOwningBlock() << ">";
-			}
-			else {
-
-				std::cout << "unconnected";
-			}
-
-			std::cout << "\n";
-		}
-
-		std::cout << "\n";
 	}
 
 	/*

@@ -41,21 +41,15 @@
 
 namespace oddf::simulator::common::backend {
 
-class SimulatorCore;
-
 /*
     Base class to all simulator blocks.
 */
 class SimulatorBlockBase {
 
-private:
-
-	friend SimulatorCore;
+public:
 
 	class Internals;
 	std::unique_ptr<Internals> m_internals;
-
-public:
 
 	// Constructs the simulator block based on the given design block.
 	SimulatorBlockBase(design::blocks::backend::IDesignBlock const &designBlock);
@@ -63,7 +57,10 @@ public:
 	// Constructs the simulator block with given numbers of inputs and outputs.
 	SimulatorBlockBase(size_t numberOfInputs, size_t numberOfOutputs);
 
-	~SimulatorBlockBase();
+	virtual ~SimulatorBlockBase();
+
+	// If the block was created based on a design block, will return a pointer to that design block, or nullptr otherwise.
+	design::blocks::backend::IDesignBlock const *GetDesignBlockReference() const;
 
 	// Returns a ListView into the list of inputs of this block.
 	utility::ListView<SimulatorBlockInput const &> GetInputsList() const;
@@ -86,8 +83,8 @@ public:
 	// Elaborates the block. Default implementation does nothing.
 	virtual void Elaborate(ISimulatorElaborationContext &context);
 
-	// Returns a short, descriptive string. Used during debugging print outs.
-	virtual std::string DebugString() const = 0;
+	// Returns a descriptive string (similar to a resource path) that hints at the origin of this simulator block in the original design.
+	virtual std::string GetDesignPathHint() const = 0;
 };
 
 } // namespace oddf::simulator::common::backend

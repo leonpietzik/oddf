@@ -29,6 +29,7 @@
 #include <oddf/simulator/common/backend/SimulatorBlockBase.h>
 
 #include "ISimulatorBlockMapping.h"
+#include "SimulatorComponent.h"
 
 #include <vector>
 
@@ -37,6 +38,9 @@ namespace oddf::simulator::common::backend {
 class SimulatorBlockBase::Internals {
 
 public:
+
+	SimulatorComponent *m_component;
+	bool m_visiting;
 
 	// Pointer to the original design block, if the constructor accepting a design block reference was used. `nullptr` otherwise.
 	design::blocks::backend::IDesignBlock const *const m_designBlockReference;
@@ -47,8 +51,12 @@ public:
 	// Vector of block outputs. Initialised by `InitialiseInputsAndOutputs()`. Reallocations must not occur afterwards.
 	std::vector<SimulatorBlockOutput> m_outputs;
 
+	Internals(Internals const &) = delete;
+
 	Internals(SimulatorBlockBase &owningBlock, design::blocks::backend::IDesignBlock const &designBlock);
 	Internals(SimulatorBlockBase &owningBlock, size_t numberOfInputs, size_t numberOfOutputs);
+
+	void operator=(Internals const &) = delete;
 
 	// Initialises members `m_inputs` and `m_outputs`.
 	void InitialiseInputsAndOutputs(SimulatorBlockBase &owningBlock, size_t numberOfInputs, size_t numberOfOutputs);

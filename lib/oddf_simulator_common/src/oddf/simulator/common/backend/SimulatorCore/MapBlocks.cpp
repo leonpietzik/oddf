@@ -40,6 +40,11 @@ class BlockMapping : public ISimulatorBlockMapping {
 
 public:
 
+	BlockMapping() :
+		m_blockMapping()
+	{
+	}
+
 	void AddBlockMapping(design::blocks::backend::IDesignBlock const &fromDesignBlock, SimulatorBlockBase &toSimulatorBlock)
 	{
 		assert(m_blockMapping.find(&fromDesignBlock) == m_blockMapping.end());

@@ -49,6 +49,11 @@ SimulatorBlockBase::~SimulatorBlockBase()
 {
 }
 
+design::blocks::backend::IDesignBlock const *SimulatorBlockBase::GetDesignBlockReference() const
+{
+	return m_internals->m_designBlockReference;
+}
+
 utility::ListView<SimulatorBlockInput const &> SimulatorBlockBase::GetInputsList() const
 {
 	return utility::MakeListView<SimulatorBlockInput const &>(m_internals->m_inputs);

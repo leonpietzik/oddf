@@ -40,7 +40,7 @@ public:
 
 	DelayMaster(design::blocks::backend::IDesignBlock const &designBlock);
 
-	virtual std::string DebugString() const override;
+	virtual std::string GetDesignPathHint() const override;
 
 	virtual void Elaborate(ISimulatorElaborationContext &context) override;
 };
@@ -51,13 +51,19 @@ public:
 
 class DelayStartingPoint : public SimulatorBlockBase {
 
+private:
+
+	design::blocks::backend::IDesignBlock const *m_originalDesignBlock;
+
 public:
 
-	DelayStartingPoint();
+	DelayStartingPoint(design::blocks::backend::IDesignBlock const *originalDesignBlock);
 
-	virtual std::string DebugString() const override;
+	DelayStartingPoint(DelayStartingPoint const &) = delete;
+	void operator=(DelayStartingPoint const &) = delete;
+
+	virtual std::string GetDesignPathHint() const override;
 };
-
 
 //
 // DelayEndpoint
@@ -65,12 +71,18 @@ public:
 
 class DelayEndpoint : public SimulatorBlockBase {
 
+private:
+
+	design::blocks::backend::IDesignBlock const *m_originalDesignBlock;
+
 public:
 
-	DelayEndpoint();
+	DelayEndpoint(design::blocks::backend::IDesignBlock const *originalDesignBlock);
 
-	virtual std::string DebugString() const override;
+	DelayEndpoint(DelayEndpoint const &) = delete;
+	void operator=(DelayEndpoint const &) = delete;
+
+	virtual std::string GetDesignPathHint() const override;
 };
-
 
 } // namespace oddf::simulator::common::backend::blocks
