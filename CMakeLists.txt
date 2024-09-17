@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.10)
 project(oddf)
 
 if(MSVC)
-  add_compile_options(/W4)
+  add_compile_options(/W4 /w15038)
 else()
-  add_compile_options(-Wall -Wextra -Wpedantic)
+  add_compile_options(-Wall -Wextra -Wpedantic -Weffc++)
 
   # Enforce C++17 to ensure we are not using features from later standards
   #add_compile_options(-std=c++17)
