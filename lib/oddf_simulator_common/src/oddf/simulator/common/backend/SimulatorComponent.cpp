@@ -44,36 +44,40 @@ void SimulatorComponent::AddBlock(SimulatorBlockBase &block)
 	m_blocks.push_back(&block);
 }
 
-void SimulatorComponent::MoveAppendFromOther(SimulatorComponent &other)
+void SimulatorComponent::MoveAppendFromOther(SimulatorComponent *other)
 {
-	for (auto *block : other.m_blocks) {
+	assert(other);
 
-		assert(block->m_internals->m_component == &other);
+	for (auto *block : other->m_blocks) {
+
+		assert(block->m_internals->m_component == other);
 		block->m_internals->m_component = this;
 	}
 
-	m_blocks.splice(m_blocks.end(), other.m_blocks);
+	m_blocks.splice(m_blocks.end(), other->m_blocks);
 
 	for (auto *block : m_blocks)
 		assert(block->m_internals->m_component == this);
 
-	assert(other.IsEmpty());
+	assert(other->IsEmpty());
 }
 
-void SimulatorComponent::MovePrependFromOther(SimulatorComponent &other)
+void SimulatorComponent::MovePrependFromOther(SimulatorComponent *other)
 {
-	for (auto *block : other.m_blocks) {
+	assert(other);
 
-		assert(block->m_internals->m_component == &other);
+	for (auto *block : other->m_blocks) {
+
+		assert(block->m_internals->m_component == other);
 		block->m_internals->m_component = this;
 	}
 
-	m_blocks.splice(m_blocks.begin(), other.m_blocks);
+	m_blocks.splice(m_blocks.begin(), other->m_blocks);
 
 	for (auto *block : m_blocks)
 		assert(block->m_internals->m_component == this);
 
-	assert(other.IsEmpty());
+	assert(other->IsEmpty());
 }
 
 size_t SimulatorComponent::GetSize() const

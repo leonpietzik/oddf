@@ -4,6 +4,7 @@ add_library(oddf_simulator_common
 	src/oddf/simulator/common/backend/blocks/delay/DelayEndpoint.cpp
 	src/oddf/simulator/common/backend/blocks/delay/DelayMaster.cpp
 	src/oddf/simulator/common/backend/blocks/delay/DelayStartingPoint.cpp
+	src/oddf/simulator/common/backend/blocks/not/NotMaster.cpp
 	src/oddf/simulator/common/backend/blocks/probe/ProbeMaster.cpp
 	src/oddf/simulator/common/backend/SimulatorCore/BuildComponents.cpp
 	src/oddf/simulator/common/backend/SimulatorCore/ElaborateBlocks.cpp

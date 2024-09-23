@@ -8,7 +8,7 @@ else()
   add_compile_options(-Wall -Wextra -Wpedantic -Weffc++)
 
   # Enforce C++17 to ensure we are not using features from later standards
-  #add_compile_options(-std=c++17)
+  add_compile_options(-std=c++17)
 endif()
 
 add_subdirectory(lib/oddf)

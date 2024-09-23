@@ -30,6 +30,7 @@
 
 #include "../blocks/Constant.h"
 #include "../blocks/Delay.h"
+#include "../blocks/Not.h"
 #include "../blocks/Probe.h"
 
 namespace oddf::simulator::common::backend {
@@ -40,6 +41,7 @@ void SimulatorCore::RegisterDefaultBlockFactories()
 
 	RegisterSimulatorBlockFactory(DesignBlockClass("constant"), MakeSimulatorBlockFactory<blocks::ConstantMaster>());
 	RegisterSimulatorBlockFactory(DesignBlockClass("delay"), MakeSimulatorBlockFactory<blocks::DelayMaster>());
+	RegisterSimulatorBlockFactory(DesignBlockClass("not"), MakeSimulatorBlockFactory<blocks::NotMaster>());
 	RegisterSimulatorBlockFactory(DesignBlockClass("probe"), MakeSimulatorBlockFactory<blocks::ProbeMaster>());
 }
 

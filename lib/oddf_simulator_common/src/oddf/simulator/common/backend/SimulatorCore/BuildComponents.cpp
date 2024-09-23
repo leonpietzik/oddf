@@ -34,28 +34,40 @@
 #include <cassert>
 #include <iostream>
 #include <set>
+#include <random>
+#include <algorithm>
 
 namespace oddf::simulator::common::backend {
 
 namespace {
 
+/*
+    Methods of class `ComponentBuilder` build the components of the simulator
+    execution graph by traversing the simulator blocks according to their
+    connectivity.
+*/
 class ComponentBuilder {
 
 private:
 
+	// Reference to the list of components of the `SimulatorCore` class instance.
 	std::list<SimulatorComponent> &m_components;
-	std::list<SimulatorComponent *> m_staleComponents;
 
+	// List of pointers to released, empty components. They can be reused and speed up the memory management.
+	std::list<SimulatorComponent *> m_releasedComponents;
+
+	// Pointer to the component that is currently being built.
 	SimulatorComponent *m_currentComponent;
 
+	// Returns a pointer to a new, empty component.
 	SimulatorComponent *NewComponent()
 	{
 		SimulatorComponent *component = nullptr;
 
-		if (!m_staleComponents.empty()) {
+		if (!m_releasedComponents.empty()) {
 
-			component = m_staleComponents.back();
-			m_staleComponents.pop_back();
+			component = m_releasedComponents.back();
+			m_releasedComponents.pop_back();
 		}
 		else {
 
@@ -68,14 +80,16 @@ private:
 		return component;
 	}
 
+	// Releases an empty component so it can be reused or freed later on.
 	void ReleaseComponent(SimulatorComponent *component)
 	{
 		assert(component);
 		assert(component->IsEmpty());
 
-		m_staleComponents.push_back(component);
+		m_releasedComponents.push_back(component);
 	}
 
+	// Returns the set of blocks that have outputs that drive `block`.
 	auto GetDrivingBlocks(SimulatorBlockBase &block)
 	{
 		std::set<SimulatorBlockBase *> drivingBlocks;
@@ -93,29 +107,42 @@ private:
 		return drivingBlocks;
 	}
 
-	SimulatorBlockBase const *VisitBlock(SimulatorBlockBase &e)
+	// Builds a component by Visiting `block` and recursively all blocks that drive it.
+	SimulatorBlockBase const *VisitBlock(SimulatorBlockBase &block)
 	{
-		if (e.m_internals->m_component) {
+		if (block.m_internals->m_component) {
 
-			assert(!e.m_internals->m_visiting);
+			assert(!block.m_internals->m_visiting);
 
-			SimulatorComponent *otherComponent = e.m_internals->m_component;
+			SimulatorComponent *otherComponent = block.m_internals->m_component;
 
 			if (otherComponent != m_currentComponent) {
 
-				// Entities from 'otherComponent' and 'm_currentComponent' must be
-				// merged. Since entities from 'otherComponent' had already been
-				// visited, they need to be placed before elements from 'm_currentComponent'.
+				/*
+				    Blocks from 'otherComponent' and 'm_currentComponent' must
+				    be merged. Since blocks from 'otherComponent' had already
+				    been visited, they need to be placed before elements from
+				    'm_currentComponent'.
+
+				    TODO
+
+				    Confirm these cases are really visited and that they work
+				    properly by activating block shuffling below.
+
+				    Is the size of m_currentComponent always non-zero?
+				*/
+
+				assert(m_currentComponent->GetSize() == 0); // Is GetSize ever different from 0?
 
 				if (m_currentComponent->GetSize() < otherComponent->GetSize()) {
 
-					otherComponent->MoveAppendFromOther(*m_currentComponent);
+					otherComponent->MoveAppendFromOther(m_currentComponent);
 					ReleaseComponent(m_currentComponent);
 					m_currentComponent = otherComponent;
 				}
 				else {
 
-					m_currentComponent->MovePrependFromOther(*otherComponent);
+					m_currentComponent->MovePrependFromOther(otherComponent);
 					ReleaseComponent(otherComponent);
 				}
 			}
@@ -123,54 +150,53 @@ private:
 			return nullptr;
 		}
 
-		if (e.m_internals->m_visiting) {
+		if (block.m_internals->m_visiting) {
 
-			// Messages::Info("A loop was detected in the execution graph starting at block '%s'...", e->mBlock.GetFullName().c_str());
-			std::cout << "INFO: A loop was detected in the execution graph starting at block '" << e.GetDesignPathHint() << "'\n";
-			return &e;
+			std::cout << "INFO: A loop was detected in the execution graph starting at block '" << block.GetDesignPathHint() << "'\n";
+			return &block;
 		}
 
-		e.m_internals->m_visiting = true;
+		block.m_internals->m_visiting = true;
 
-		auto drivingBlocks = GetDrivingBlocks(e);
+		auto drivingBlocks = GetDrivingBlocks(block);
 
 		for (auto *drivingBlock : drivingBlocks) {
 
 			auto *loop = VisitBlock(*drivingBlock);
 			if (loop) {
 
-				if (loop != &e) {
+				if (loop != &block) {
 
-					std::cout << "INFO: ... going through block '" << e.GetDesignPathHint() << "' ...\n";
+					std::cout << "INFO: ... going through block '" << block.GetDesignPathHint() << "' ...\n";
 					return loop;
 				}
 				else {
 
-					std::cout << "INFO: ... and returning to block '" << e.GetDesignPathHint() << "' again.\n";
+					std::cout << "INFO: ... and returning to block '" << block.GetDesignPathHint() << "' again.\n";
 					throw oddf::Exception(oddf::ExceptionCode::Fail);
 				}
 			}
 		}
 
-		e.m_internals->m_visiting = false;
+		block.m_internals->m_visiting = false;
 
-		m_currentComponent->AddBlock(e);
+		m_currentComponent->AddBlock(block);
 		return nullptr;
 	}
 
 public:
 
-	ComponentBuilder(ComponentBuilder const &) = delete;
-
 	ComponentBuilder(std::list<SimulatorComponent> &components) :
 		m_components(components),
-		m_staleComponents(),
+		m_releasedComponents(),
 		m_currentComponent()
 	{
 	}
 
+	ComponentBuilder(ComponentBuilder const &) = delete;
 	void operator=(ComponentBuilder const &) = delete;
 
+	// Build all graph components by visiting all simulator blocks.
 	void BuildComponents(std::vector<std::unique_ptr<SimulatorBlockBase>> &blocks)
 	{
 		for (auto &block : blocks) {
@@ -191,6 +217,17 @@ void SimulatorCore::BuildComponents()
 	std::cout << "\n";
 	std::cout << "-- Building components --\n";
 	std::cout << "\n";
+
+	/*
+
+	    // Shuffle the blocks to debug our component generation algorithm.
+
+	    std::random_device rd;
+	    std::mt19937 g(rd());
+
+	    std::shuffle(m_blocks.begin(), m_blocks.end(), g);
+
+	*/
 
 	auto componentBuilder = ComponentBuilder(m_components);
 	componentBuilder.BuildComponents(m_blocks);

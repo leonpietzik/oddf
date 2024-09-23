@@ -93,7 +93,7 @@ int main()
 
 #endif
 
-	b::Probe(b::Delay(b::Delay(b::Constant(true))));
+	b::Probe(b::Delay(!!b::Delay(b::Constant(true))));
 
 	/*
 	    dfx::Simulator simulator(design);

@@ -32,21 +32,39 @@
 
 namespace oddf::simulator::common::backend {
 
+/*
+    Class `SimulatorComponent` supports the creation of the component of the
+    simulator execution graph. Member `m_blocks` is the list of simulator
+    blocks belonging to the component. All components of the execution graph
+    are disjoint and can execute independently and therefore in parallel.
+*/
 class SimulatorComponent {
 
 public:
 
+	// Blocks in this component.
 	std::list<SimulatorBlockBase *> m_blocks;
 
 	SimulatorComponent();
-	SimulatorComponent(SimulatorComponent const &) = default;
-	SimulatorComponent(SimulatorComponent &&) = default;
+	SimulatorComponent(SimulatorComponent const &) = delete;
+	void operator=(SimulatorComponent const &) = delete;
 
+	// Adds `block` to the current component.
 	void AddBlock(SimulatorBlockBase &block);
-	void MoveAppendFromOther(SimulatorComponent &other);
-	void MovePrependFromOther(SimulatorComponent &other);
 
+	// Moves blocks from `other` into the component by appending them at the end
+	// of the list of blocks. After the call `other` will be an empty component.
+	void MoveAppendFromOther(SimulatorComponent *other);
+
+	// Moves blocks from `other` into the component by prepending them at the
+	// beginning of the list of blocks. After the call `other` will be an empty
+	// component.
+	void MovePrependFromOther(SimulatorComponent *other);
+
+	// Returns whether the component is empty.
 	bool IsEmpty() const;
+
+	// Returns the number of blocks in this component.
 	size_t GetSize() const;
 };
 
