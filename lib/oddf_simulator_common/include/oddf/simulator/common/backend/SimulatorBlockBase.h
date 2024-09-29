@@ -36,6 +36,7 @@
 
 #include <oddf/utility/ListView.h>
 
+#include <initializer_list>
 #include <memory>
 #include <string>
 
@@ -55,7 +56,7 @@ public:
 	SimulatorBlockBase(design::blocks::backend::IDesignBlock const &designBlock);
 
 	// Constructs the simulator block with given numbers of inputs and outputs.
-	SimulatorBlockBase(size_t numberOfInputs, size_t numberOfOutputs);
+	SimulatorBlockBase(size_t numberOfInputs, std::initializer_list<design::NodeType> outputNodeTypes);
 
 	virtual ~SimulatorBlockBase();
 

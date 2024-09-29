@@ -1,27 +1,27 @@
 /*
 
-	ODDF - Open Digital Design Framework
-	Copyright Advantest Corporation
-	
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 3 of the License, or
-	(at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-	
-	You should have received a copy of the GNU General Public License
-	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+    ODDF - Open Digital Design Framework
+    Copyright Advantest Corporation
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
 /*
 
-	Constructors for sfix and ufix. Helper functions and trait types for
-	the data types supported by the framework.
+    Constructors for sfix and ufix. Helper functions and trait types for
+    the data types supported by the framework.
 
 */
 
@@ -32,13 +32,16 @@
 #include <cstdint>
 #include <algorithm>
 
+#include <oddf/design/NodeType.h>
+
 namespace dfx {
 
 //
 // fixed-point support
 //
 
-template<typename InputIt> inline dynfix dynfix::CommonRepresentation(InputIt first, InputIt last)
+template<typename InputIt>
+inline dynfix dynfix::CommonRepresentation(InputIt first, InputIt last)
 {
 	// If any of the operands is signed, the result will also be signed.
 	bool isSigned = std::any_of(first, last, [](dynfix const &x) { return x.IsSigned(); });
@@ -48,11 +51,10 @@ template<typename InputIt> inline dynfix dynfix::CommonRepresentation(InputIt fi
 	for (auto it = std::next(first); it != last; ++it)
 		fraction = std::max(fraction, it->GetFraction());
 
-	// Compute the word width of the result. 
-	// Unsigned operands need an extra sign bit, if the result is signed. 
+	// Compute the word width of the result.
+	// Unsigned operands need an extra sign bit, if the result is signed.
 	// Fractional part must be padded to the fractional length of the result.
 	auto wordWidthFunction = [=](dynfix const &x) {
-
 		return x.GetWordWidth()
 			+ (isSigned && !x.IsSigned() ? 1 : 0)
 			+ (fraction - x.GetFraction());
@@ -66,30 +68,18 @@ template<typename InputIt> inline dynfix dynfix::CommonRepresentation(InputIt fi
 	return dynfix(isSigned, wordWidth, fraction);
 }
 
-
 //
 // sfix
 //
 
-template<int wordWidthArg, int fractionArg> inline sfix<wordWidthArg, fractionArg>::sfix() :
+template<int wordWidthArg, int fractionArg>
+inline sfix<wordWidthArg, fractionArg>::sfix() :
 	dynfix(true, wordWidthArg, fractionArg)
 {
 }
 
-template<int wordWidthArg, int fractionArg> inline sfix<wordWidthArg, fractionArg>::sfix(std::int32_t value) :
-	dynfix(true, wordWidthArg, fractionArg)
-{
-	dynfix temp(value);
-	int align = GetFraction() - temp.GetFraction();
-	if (align >= 0)
-		temp.CopyShiftLeft(*this, align);
-	else
-		temp.CopyShiftRight(*this, -align);
-
-	OverflowWrapAround();
-}
-
-template<int wordWidthArg, int fractionArg> inline sfix<wordWidthArg, fractionArg>::sfix(std::int64_t value) :
+template<int wordWidthArg, int fractionArg>
+inline sfix<wordWidthArg, fractionArg>::sfix(std::int32_t value) :
 	dynfix(true, wordWidthArg, fractionArg)
 {
 	dynfix temp(value);
@@ -102,7 +92,8 @@ template<int wordWidthArg, int fractionArg> inline sfix<wordWidthArg, fractionAr
 	OverflowWrapAround();
 }
 
-template<int wordWidthArg, int fractionArg> inline sfix<wordWidthArg, fractionArg>::sfix(double value) :
+template<int wordWidthArg, int fractionArg>
+inline sfix<wordWidthArg, fractionArg>::sfix(std::int64_t value) :
 	dynfix(true, wordWidthArg, fractionArg)
 {
 	dynfix temp(value);
@@ -115,30 +106,32 @@ template<int wordWidthArg, int fractionArg> inline sfix<wordWidthArg, fractionAr
 	OverflowWrapAround();
 }
 
+template<int wordWidthArg, int fractionArg>
+inline sfix<wordWidthArg, fractionArg>::sfix(double value) :
+	dynfix(true, wordWidthArg, fractionArg)
+{
+	dynfix temp(value);
+	int align = GetFraction() - temp.GetFraction();
+	if (align >= 0)
+		temp.CopyShiftLeft(*this, align);
+	else
+		temp.CopyShiftRight(*this, -align);
+
+	OverflowWrapAround();
+}
 
 //
 // ufix
 //
 
-template<int wordWidthArg, int fractionArg> inline ufix<wordWidthArg, fractionArg>::ufix() :
+template<int wordWidthArg, int fractionArg>
+inline ufix<wordWidthArg, fractionArg>::ufix() :
 	dynfix(false, wordWidthArg, fractionArg)
 {
 }
 
-template<int wordWidthArg, int fractionArg> inline ufix<wordWidthArg, fractionArg>::ufix(std::int32_t value) :
-	dynfix(false, wordWidthArg, fractionArg)
-{
-	dynfix temp(value);
-	int align = GetFraction() - temp.GetFraction();
-	if (align >= 0)
-		temp.CopyShiftLeft(*this, align);
-	else
-		temp.CopyShiftRight(*this, -align);
-
-	OverflowWrapAround();
-}
-
-template<int wordWidthArg, int fractionArg> inline ufix<wordWidthArg, fractionArg>::ufix(std::int64_t value) :
+template<int wordWidthArg, int fractionArg>
+inline ufix<wordWidthArg, fractionArg>::ufix(std::int32_t value) :
 	dynfix(false, wordWidthArg, fractionArg)
 {
 	dynfix temp(value);
@@ -151,7 +144,8 @@ template<int wordWidthArg, int fractionArg> inline ufix<wordWidthArg, fractionAr
 	OverflowWrapAround();
 }
 
-template<int wordWidthArg, int fractionArg> inline ufix<wordWidthArg, fractionArg>::ufix(double value) :
+template<int wordWidthArg, int fractionArg>
+inline ufix<wordWidthArg, fractionArg>::ufix(std::int64_t value) :
 	dynfix(false, wordWidthArg, fractionArg)
 {
 	dynfix temp(value);
@@ -164,9 +158,21 @@ template<int wordWidthArg, int fractionArg> inline ufix<wordWidthArg, fractionAr
 	OverflowWrapAround();
 }
 
+template<int wordWidthArg, int fractionArg>
+inline ufix<wordWidthArg, fractionArg>::ufix(double value) :
+	dynfix(false, wordWidthArg, fractionArg)
+{
+	dynfix temp(value);
+	int align = GetFraction() - temp.GetFraction();
+	if (align >= 0)
+		temp.CopyShiftLeft(*this, align);
+	else
+		temp.CopyShiftRight(*this, -align);
+
+	OverflowWrapAround();
+}
 
 namespace types {
-
 
 //
 // type description
@@ -204,10 +210,11 @@ public:
 	explicit TypeDescription(Class typeClass);
 	explicit TypeDescription(Class typeClass, bool isSigned, int wordLength, int fraction);
 
-	bool operator ==(TypeDescription const &rhs) const;
-	bool operator !=(TypeDescription const &rhs) const;
-};
+	bool operator==(TypeDescription const &rhs) const;
+	bool operator!=(TypeDescription const &rhs) const;
 
+	oddf::design::NodeType ToNodeType() const;
+};
 
 //
 // type traits
@@ -217,7 +224,8 @@ template<typename T>
 struct TypeTraits;
 
 // bool
-template<> struct TypeTraits<bool> {
+template<>
+struct TypeTraits<bool> {
 
 	using valueType = bool;
 	using internalType = bool;
@@ -254,7 +262,8 @@ template<> struct TypeTraits<bool> {
 };
 
 // int32
-template<> struct TypeTraits<std::int32_t> {
+template<>
+struct TypeTraits<std::int32_t> {
 
 	using valueType = std::int32_t;
 	using internalType = std::int32_t;
@@ -291,7 +300,8 @@ template<> struct TypeTraits<std::int32_t> {
 };
 
 // int64
-template<> struct TypeTraits<std::int64_t> {
+template<>
+struct TypeTraits<std::int64_t> {
 
 	using valueType = std::int64_t;
 	using internalType = std::int64_t;
@@ -328,7 +338,8 @@ template<> struct TypeTraits<std::int64_t> {
 };
 
 // double
-template<> struct TypeTraits<double> {
+template<>
+struct TypeTraits<double> {
 
 	using valueType = double;
 	using internalType = double;
@@ -365,7 +376,8 @@ template<> struct TypeTraits<double> {
 };
 
 // dynfix
-template<> struct TypeTraits<dynfix> {
+template<>
+struct TypeTraits<dynfix> {
 
 	using valueType = dynfix;
 	using internalType = dynfix;
@@ -402,7 +414,8 @@ template<> struct TypeTraits<dynfix> {
 };
 
 // sfix
-template<int wordWidth, int fraction> struct TypeTraits<sfix<wordWidth, fraction>> {
+template<int wordWidth, int fraction>
+struct TypeTraits<sfix<wordWidth, fraction>> {
 
 	using valueType = sfix<wordWidth, fraction>;
 	using internalType = dynfix;
@@ -434,7 +447,8 @@ template<int wordWidth, int fraction> struct TypeTraits<sfix<wordWidth, fraction
 };
 
 // ufix
-template<int wordWidth, int fraction> struct TypeTraits<ufix<wordWidth, fraction>> {
+template<int wordWidth, int fraction>
+struct TypeTraits<ufix<wordWidth, fraction>> {
 
 	using valueType = ufix<wordWidth, fraction>;
 	using internalType = dynfix;
@@ -465,7 +479,8 @@ template<int wordWidth, int fraction> struct TypeTraits<ufix<wordWidth, fraction
 	}
 };
 
-template<typename T> using nodeType = typename dfx::types::TypeTraits<T>::internalType;
+template<typename T>
+using nodeType = typename dfx::types::TypeTraits<T>::internalType;
 
 template<typename T>
 bool IsInitialised(T const &value)
@@ -504,5 +519,5 @@ bool IsCompatible(T const &lhs, T const &rhs)
 	return TypeTraits<T>::IsCompatible(lhs, rhs);
 }
 
-}
-}
+} // namespace types
+} // namespace dfx

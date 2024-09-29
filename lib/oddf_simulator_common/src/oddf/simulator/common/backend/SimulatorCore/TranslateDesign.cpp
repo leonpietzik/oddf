@@ -49,6 +49,8 @@ void SimulatorCore::TranslateDesign(design::IDesign const &design)
 
 	BuildComponents();
 
+	AllocateNets();
+
 	size_t componentIndex = 0;
 
 	for (auto &component : m_components) {
@@ -94,7 +96,7 @@ void SimulatorCore::TranslateDesign(design::IDesign const &design)
 
 				auto const &output = outputsList[i];
 
-				std::cout << "  output[" << i << "]: ";
+				std::cout << "  output[" << i << "]: " + outputsList[i].GetType().ToString() << ": ";
 
 				auto targetsCollection = output.GetTargetsCollection();
 
@@ -133,37 +135,6 @@ void SimulatorCore::TranslateDesign(design::IDesign const &design)
 	    - Speicher für outputs von Blöcken
 	    - Speicher für interne knoten wiederverwenden können?
 	    - Was ist mit Speicher für delay, memory --> landet in ComponentObjects
-
-	*/
-
-	/*
-
-	AllocateNets
-	------------
-
-	Dies geschieht automatisch, die Blöcke selbst werden nicht involviert.
-
-	Zunächst werden keine Adressen vergeben, da nicht bekannt ist, wie viele
-	man braucht. Das läuft erst über Indizes, diese beschreiben einen
-	Byte-Offset ab dem Beginn des Speicherblockes, der dann am Schluss
-	reserviert wird. Abschließend werden alle Blöcke nochmals durchgegangen
-	und die Indizes durch Addressen ersetzt.
-
-	Addressen müssen aligned sein. Wenn Adressen übersprungen werden müssen,
-	so werden diese als freie Adressen in anderen Listen vermerkt.
-
-	Zum Beispiel: Es wurde ein Byte reserviert und dann ein Double. Die sieben
-	freien Plätze werden vermerkt als
-	    1 Byte mit Alignment 1, 1 Wort mit Alignnent 2 und 1 Dopplewort mit
-	    Alignment 4
-
-	Referenzzählung implementieren --> Addressen wiederverwenden.
-
-
-	SimulatorOutput::DeclareExclusiveAccess() --> Es wird eine exklusive
-	Addresse für den Output reserviert, sodass auch außerhalb des normelen
-	Execution-Flows Werte dort abgefragt bzw. gesetzt werden können.
-	 - Auch für Konstanten verwendbar?
 
 	*/
 
@@ -227,7 +198,10 @@ void SimulatorCore::TranslateDesign(design::IDesign const &design)
 
 	        Logging
 	        Forcing
-	        Assertions
+	        Assertions / Evaluations
+				--> C++ functions that execute on the values of simulation nodes (Leon equalise bug evaluation)
+				--> Logging could also apply functions to nodes before logging the result
+				--> Nodes must be named in the design (inputs, outputs, labels)
 	        Memory
 	        Sink
 	        Source

@@ -29,7 +29,7 @@
 namespace oddf::simulator::common::backend::blocks {
 
 DelayStartingPoint::DelayStartingPoint(design::blocks::backend::IDesignBlock const *originalDesignBlock) :
-	SimulatorBlockBase(0, 1),
+	SimulatorBlockBase(0, { design::NodeType::Undefined() }),
 	m_originalDesignBlock(originalDesignBlock)
 {
 }

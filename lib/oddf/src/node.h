@@ -221,6 +221,7 @@ public:
 	}
 
 	virtual bool IsConnected() const = 0;
+
 	virtual types::TypeDescription GetType() const = 0;
 
 	std::string GetName() const
@@ -282,6 +283,11 @@ public:
 
 	bool IsConnected() const override;
 	types::TypeDescription GetType() const override;
+
+	virtual oddf::design::NodeType oddf::design::blocks::backend::IDesignBlockOutput::GetNodeType() const override
+	{
+		return GetType().ToNodeType();
+	}
 
 	OutputPin(OutputPin<T> const &) = delete;
 	OutputPin(OutputPin<T> &&) = delete;

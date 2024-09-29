@@ -32,6 +32,7 @@
 #include "SimulatorComponent.h"
 
 #include <vector>
+#include <initializer_list>
 
 namespace oddf::simulator::common::backend {
 
@@ -54,12 +55,12 @@ public:
 	Internals(Internals const &) = delete;
 
 	Internals(SimulatorBlockBase &owningBlock, design::blocks::backend::IDesignBlock const &designBlock);
-	Internals(SimulatorBlockBase &owningBlock, size_t numberOfInputs, size_t numberOfOutputs);
+	Internals(SimulatorBlockBase &owningBlock, size_t numberOfInputs, std::initializer_list<design::NodeType> outputNodeTypes);
 
 	void operator=(Internals const &) = delete;
 
 	// Initialises members `m_inputs` and `m_outputs`.
-	void InitialiseInputsAndOutputs(SimulatorBlockBase &owningBlock, size_t numberOfInputs, size_t numberOfOutputs);
+	void InitialiseInputsAndOutputs(SimulatorBlockBase &owningBlock, size_t numberOfInputs, utility::CollectionView<design::NodeType const &> const &outputNodeTypes);
 
 	// Will map the connections to other blocks if the block was created from a design block.
 	void MapConnections(ISimulatorBlockMapping const &blockMapping);

@@ -30,20 +30,33 @@
 
 namespace oddf::simulator::common::backend {
 
-SimulatorBlockOutput::SimulatorBlockOutput(SimulatorBlockBase &owningBlock, size_t index) :
+SimulatorBlockOutput::SimulatorBlockOutput(SimulatorBlockBase &owningBlock, design::NodeType const &nodeType, size_t index) :
 	m_owningBlock(owningBlock),
+	m_nodeType(nodeType),
+	m_index(index),
 	m_targets(),
-	m_index(index)
+	m_refCount(),
+	m_netIndex(),
+	m_netAddress()
 {
 }
 
 SimulatorBlockOutput::SimulatorBlockOutput(SimulatorBlockOutput &&other) :
 	m_owningBlock(other.m_owningBlock),
+	m_nodeType(),
+	m_index(0),
 	m_targets(),
-	m_index(0)
+	m_refCount(),
+	m_netIndex(),
+	m_netAddress()
 {
 	// Since the address of an output object must never change, it must not be moved.
 	throw oddf::Exception(oddf::ExceptionCode::Unexpected);
+}
+
+design::NodeType SimulatorBlockOutput::GetType() const
+{
+	return m_nodeType;
 }
 
 size_t SimulatorBlockOutput::GetIndex() const
@@ -77,6 +90,19 @@ void SimulatorBlockOutput::DisconnectAll()
 
 	while (!targets.IsEmpty())
 		targets.GetFirst().Disconnect();
+}
+
+void SimulatorBlockOutput::DeclareExclusiveAccess()
+{
+	m_refCount = 1;
+}
+
+void *SimulatorBlockOutput::GetAddress()
+{
+	if (!m_refCount || !m_netAddress)
+		throw oddf::Exception(oddf::ExceptionCode::IllegalMethodCall);
+
+	return m_netAddress;
 }
 
 } // namespace oddf::simulator::common::backend

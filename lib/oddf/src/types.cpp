@@ -547,7 +547,7 @@ dynfix::operator std::int64_t() const
 }
 
 //
-// TypeDesc
+// TypeDescription
 //
 
 namespace types {
@@ -641,27 +641,27 @@ std::string TypeDescription::ToString() const
 {
 	switch (GetClass()) {
 
-	case Unknown:
-		return "<unknown>";
+		case Unknown:
+			return "<unknown>";
 
-	case Boolean:
-		return "bool";
+		case Boolean:
+			return "bool";
 
-	case Double:
-		return "double";
+		case Double:
+			return "double";
 
-	case Int32:
-		return "int32";
+		case Int32:
+			return "int32";
 
-	case Int64:
-		return "int64";
+		case Int64:
+			return "int64";
 
-	case FixedPoint:
+		case FixedPoint:
 
-		if (IsSigned())
-			return "sfix<" + std::to_string(GetWordWidth()) + ", " + std::to_string(GetFraction()) + ">";
-		else
-			return "ufix<" + std::to_string(GetWordWidth()) + ", " + std::to_string(GetFraction()) + ">";
+			if (IsSigned())
+				return "sfix<" + std::to_string(GetWordWidth()) + ", " + std::to_string(GetFraction()) + ">";
+			else
+				return "ufix<" + std::to_string(GetWordWidth()) + ", " + std::to_string(GetFraction()) + ">";
 	}
 
 	assert(false);
@@ -676,6 +676,34 @@ bool TypeDescription::operator==(TypeDescription const &rhs) const
 bool TypeDescription::operator!=(TypeDescription const &rhs) const
 {
 	return !(*this == rhs);
+}
+
+oddf::design::NodeType TypeDescription::ToNodeType() const
+{
+	using oddf::design::NodeType;
+
+	switch (GetClass()) {
+
+		case Unknown:
+			return NodeType::Undefined();
+
+		case Boolean:
+			return NodeType::Boolean();
+
+		case Double:
+			return NodeType::Real();
+
+		case Int32:
+		case Int64:
+			return NodeType::Integer();
+
+		case FixedPoint:
+
+			return NodeType::FixedPoint(IsSigned(), GetWordWidth(), GetFraction());
+	}
+
+	assert(false);
+	return NodeType::Undefined();
 }
 
 } // namespace types

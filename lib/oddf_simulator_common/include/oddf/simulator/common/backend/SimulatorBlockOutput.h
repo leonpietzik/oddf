@@ -26,6 +26,7 @@
 
 #pragma once
 
+#include <oddf/design/NodeType.h>
 #include <oddf/utility/CollectionView.h>
 
 #include <list>
@@ -45,14 +46,22 @@ private:
 	friend SimulatorBlockBase;
 
 	SimulatorBlockBase &m_owningBlock;
-	std::list<SimulatorBlockInput *> m_targets;
+	design::NodeType m_nodeType;
 	size_t m_index;
+
+	std::list<SimulatorBlockInput *> m_targets;
+
+	ptrdiff_t m_refCount;
+	size_t m_netIndex;
+	void *m_netAddress;
 
 public:
 
-	SimulatorBlockOutput(SimulatorBlockBase &owningBlock, size_t index);
+	SimulatorBlockOutput(SimulatorBlockBase &owningBlock, design::NodeType const &nodeType, size_t index);
 	SimulatorBlockOutput(SimulatorBlockOutput const &) = delete;
 	SimulatorBlockOutput(SimulatorBlockOutput &&);
+
+	design::NodeType GetType() const;
 
 	// Returns the index of this output within the list of outputs of the owning block.
 	size_t GetIndex() const;
@@ -71,6 +80,11 @@ public:
 
 	// Disconnects all targets driven by this output.
 	void DisconnectAll();
+
+	// Declares that the address for storing the value of this output must not be reused for a different output.
+	void DeclareExclusiveAccess();
+
+	void *GetAddress();
 };
 
 } // namespace oddf::simulator::common::backend

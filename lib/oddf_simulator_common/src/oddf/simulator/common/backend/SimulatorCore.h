@@ -69,6 +69,9 @@ private:
 	// Builds the simulator components.
 	void BuildComponents();
 
+	// Builds the simulator components.
+	void AllocateNets();
+
 public:
 
 	SimulatorCore();

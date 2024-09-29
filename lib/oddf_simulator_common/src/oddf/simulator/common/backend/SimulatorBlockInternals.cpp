@@ -28,7 +28,8 @@
 
 #include <oddf/Exception.h>
 
-#include <iostream>
+#include <vector>
+#include <utility>
 
 namespace oddf::simulator::common::backend {
 
@@ -39,31 +40,66 @@ SimulatorBlockBase::Internals::Internals(SimulatorBlockBase &owningBlock, design
 	m_inputs(),
 	m_outputs()
 {
+
+	/*
+	    TODO
+
+	    The following code goes though the outputs of the design block to copy
+	    their `NodeType` to a temporary vector that is then converted to a
+	    `ListView` which can then be passed to `InitialiseInputsAndOutputs`.
+
+	    Seems cumbersome. Can be implement some sort of 'transform' function
+	    for `ListView`, where elements become transformed in place?
+
+	    Would this be possible despite InitialiseInputsAndOutputs requiring a
+	    `ListView` of const references?
+
+	    cf. https://stackoverflow.com/questions/11560339/returning-temporary-object-and-binding-to-const-reference
+	*/
+
+	auto designBlockOutputsList = designBlock.GetOutputsList();
+
+	std::vector<design::NodeType> designBlockOutputNodeTypes;
+	designBlockOutputNodeTypes.reserve(designBlockOutputsList.GetSize());
+
+	auto outputsEnum = designBlockOutputsList.GetEnumerator();
+	for (outputsEnum.Reset(); outputsEnum.MoveNext();)
+		designBlockOutputNodeTypes.push_back(outputsEnum.GetCurrent().GetNodeType());
+
 	InitialiseInputsAndOutputs(
 		owningBlock,
 		designBlock.GetInputsList().GetSize(),
-		designBlock.GetOutputsList().GetSize());
+		utility::MakeCollectionView(std::as_const(designBlockOutputNodeTypes)));
 }
 
-SimulatorBlockBase::Internals::Internals(SimulatorBlockBase &owningBlock, size_t numberOfInputs, size_t numberOfOutputs) :
+SimulatorBlockBase::Internals::Internals(SimulatorBlockBase &owningBlock, size_t numberOfInputs, std::initializer_list<design::NodeType> outputNodeTypes) :
 	m_component(nullptr),
 	m_visiting(false),
 	m_designBlockReference(nullptr),
 	m_inputs(),
 	m_outputs()
 {
-	InitialiseInputsAndOutputs(owningBlock, numberOfInputs, numberOfOutputs);
+	InitialiseInputsAndOutputs(owningBlock, numberOfInputs, utility::MakeCollectionView(outputNodeTypes));
 }
 
-void SimulatorBlockBase::Internals::InitialiseInputsAndOutputs(SimulatorBlockBase &owningBlock, size_t numberOfInputs, size_t numberOfOutputs)
+void SimulatorBlockBase::Internals::InitialiseInputsAndOutputs(SimulatorBlockBase &owningBlock, size_t numberOfInputs,
+	utility::CollectionView<design::NodeType const &> const &outputNodeTypes)
 {
 	m_inputs.reserve(numberOfInputs);
 	for (size_t i = 0; i < numberOfInputs; ++i)
 		m_inputs.emplace_back(owningBlock, i);
 
+	auto numberOfOutputs = outputNodeTypes.GetSize();
 	m_outputs.reserve(numberOfOutputs);
-	for (size_t i = 0; i < numberOfOutputs; ++i)
-		m_outputs.emplace_back(owningBlock, i);
+
+	auto outputNodeTypesEnum = outputNodeTypes.GetEnumerator();
+	outputNodeTypesEnum.Reset();
+
+	for (size_t i = 0; i < numberOfOutputs; ++i) {
+
+		outputNodeTypesEnum.MoveNext();
+		m_outputs.emplace_back(owningBlock, outputNodeTypesEnum.GetCurrent(), i);
+	}
 }
 
 void SimulatorBlockBase::Internals::MapConnections(ISimulatorBlockMapping const &blockMapping)
@@ -92,7 +128,7 @@ void SimulatorBlockBase::Internals::MapConnections(ISimulatorBlockMapping const 
 			}
 			else {
 
-				std::cout << "Block '" << m_designBlockReference->GetPath().ToString() << "': driving block '" << designDrivingBlock.GetPath().ToString() << "' not found\n";
+				throw Exception(ExceptionCode::Fail, "Block '" + m_designBlockReference->GetPath().ToString() + "': driving block '" + designDrivingBlock.GetPath().ToString() + "' not found.");
 			}
 		}
 

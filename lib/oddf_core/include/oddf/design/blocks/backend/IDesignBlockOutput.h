@@ -27,6 +27,8 @@
 
 #pragma once
 
+#include "../../NodeType.h"
+
 namespace oddf::design::blocks::backend {
 
 class IDesignBlock;
@@ -42,6 +44,9 @@ public:
 
 	// Returns a reference to the owning design block.
 	virtual IDesignBlock const &GetOwningBlock() const = 0;
+
+	// Returns the `NodeType` of this output.
+	virtual NodeType GetNodeType() const = 0;
 
 	// Returns the index of this output in the list of outputs of the owning
 	// design block.
