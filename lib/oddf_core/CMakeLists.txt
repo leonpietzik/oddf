@@ -1,5 +1,6 @@
 add_library(oddf_core
 	src/oddf/Uid.cpp
+	src/oddf/design/NodeType.cpp
 )
 
 target_include_directories(oddf_core PUBLIC include)
