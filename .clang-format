@@ -1,7 +1,7 @@
 # https://clang.llvm.org/docs/ClangFormatStyleOptions.html
 
 Standard: Latest
-BasedOnStyle: WebKit 
+BasedOnStyle: WebKit
 
 UseTab: AlignWithSpaces
 TabWidth: 4
@@ -30,9 +30,10 @@ EmptyLineAfterAccessModifier: Always
 BreakConstructorInitializers: AfterColon
 PointerAlignment: Right
 
+IndentCaseLabels: true
+
 BreakBeforeBraces: Custom
 BraceWrapping:
   BeforeElse: true
   AfterFunction: true
   BeforeCatch: true
-  
