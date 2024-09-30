@@ -53,6 +53,14 @@ public:
 	{
 	}
 
+	StdEnumeratorImplementation<referenceT, iteratorT> operator=(StdEnumeratorImplementation<referenceT, iteratorT> const &other)
+	{
+		m_begin = other.m_begin;
+		m_end = other.m_end;
+		m_current = other.m_current;
+		m_beforeBegin = other.m_beforeBegin;
+	}
+
 	virtual std::unique_ptr<AbstractEnumeratorImplementation<referenceT>> Clone() const
 	{
 		return std::make_unique<StdEnumeratorImplementation<referenceT, iteratorT>>(*this);

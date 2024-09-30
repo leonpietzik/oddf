@@ -52,11 +52,10 @@ public:
 	// Vector of block outputs. Initialised by `InitialiseInputsAndOutputs()`. Reallocations must not occur afterwards.
 	std::vector<SimulatorBlockOutput> m_outputs;
 
-	Internals(Internals const &) = delete;
-
 	Internals(SimulatorBlockBase &owningBlock, design::blocks::backend::IDesignBlock const &designBlock);
 	Internals(SimulatorBlockBase &owningBlock, size_t numberOfInputs, std::initializer_list<design::NodeType> outputNodeTypes);
 
+	Internals(Internals const &) = delete;
 	void operator=(Internals const &) = delete;
 
 	// Initialises members `m_inputs` and `m_outputs`.

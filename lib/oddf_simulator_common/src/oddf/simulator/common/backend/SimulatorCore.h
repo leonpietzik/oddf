@@ -69,7 +69,7 @@ private:
 	// Builds the simulator components.
 	void BuildComponents();
 
-	// Builds the simulator components.
+	// Allocates memory for nets on the components.
 	void AllocateNets();
 
 public:

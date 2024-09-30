@@ -61,6 +61,13 @@ void DelayMaster::Elaborate(ISimulatorElaborationContext &context)
 
 	auto startingPoint = context.AddSimulatorBlock<DelayStartingPoint>(GetDesignBlockReference());
 
+	/*
+	    TODO: we need to put this into some sort of simulator helper function
+	    that also checks that the type of the driver does not change.
+
+	    e.g. ReconnectOutput(fromOutput, toOutput);
+	*/
+
 	auto masterOutputTargets = GetOutputsList().GetFirst().GetTargetsCollection();
 	auto &startingPointOutput = startingPoint->GetOutputsList().GetFirst();
 
@@ -74,6 +81,13 @@ void DelayMaster::Elaborate(ISimulatorElaborationContext &context)
 	//
 	// The new endpoint of the delay
 	//
+
+	/*
+	    TODO: we need to put this into some sort of simulator helper function.
+
+	    e.g. ReconnectInput(fromInput, toInput);
+	*/
+
 
 	auto endpoint = context.AddSimulatorBlock<DelayEndpoint>(GetDesignBlockReference());
 

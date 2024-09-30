@@ -35,8 +35,8 @@ SimulatorBlockOutput::SimulatorBlockOutput(SimulatorBlockBase &owningBlock, desi
 	m_nodeType(nodeType),
 	m_index(index),
 	m_targets(),
-	m_refCount(),
-	m_netIndex(),
+	m_netRefCount(),
+	m_netIndex(EmptyNetIndex),
 	m_netAddress()
 {
 }
@@ -46,8 +46,8 @@ SimulatorBlockOutput::SimulatorBlockOutput(SimulatorBlockOutput &&other) :
 	m_nodeType(),
 	m_index(0),
 	m_targets(),
-	m_refCount(),
-	m_netIndex(),
+	m_netRefCount(),
+	m_netIndex(EmptyNetIndex),
 	m_netAddress()
 {
 	// Since the address of an output object must never change, it must not be moved.
@@ -94,12 +94,12 @@ void SimulatorBlockOutput::DisconnectAll()
 
 void SimulatorBlockOutput::DeclareExclusiveAccess()
 {
-	m_refCount = 1;
+	m_netRefCount = 1;
 }
 
 void *SimulatorBlockOutput::GetAddress()
 {
-	if (!m_refCount || !m_netAddress)
+	if (!m_netRefCount || !m_netAddress)
 		throw oddf::Exception(oddf::ExceptionCode::IllegalMethodCall);
 
 	return m_netAddress;

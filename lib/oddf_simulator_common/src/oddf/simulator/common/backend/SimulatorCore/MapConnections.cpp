@@ -25,7 +25,6 @@
 */
 
 #include "../SimulatorCore.h"
-
 #include "../SimulatorBlockInternals.h"
 
 #include <cassert>

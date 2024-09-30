@@ -26,7 +26,7 @@
 
 #include "../SimulatorCore.h"
 
-#include "../SimulatorBlockInternals.h"
+#include "../SimulatorBlockInternals.h" // TODO: delete if not required anymore.
 
 #include <cassert>
 #include <iostream>
