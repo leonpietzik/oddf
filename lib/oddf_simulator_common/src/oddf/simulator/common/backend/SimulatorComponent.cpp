@@ -33,7 +33,8 @@
 namespace oddf::simulator::common::backend {
 
 SimulatorComponent::SimulatorComponent() :
-	m_blocks()
+	m_blocks(),
+	m_netsBase()
 {
 }
 

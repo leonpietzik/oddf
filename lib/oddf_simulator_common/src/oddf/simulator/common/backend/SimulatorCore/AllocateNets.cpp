@@ -76,8 +76,10 @@ void SimulatorCore::AllocateNets()
 
 	private:
 
+		// Reference to the component managed by this instance.
 		SimulatorComponent &m_component;
 
+		// Index of the next available net address.
 		size_t m_nextNetIndex;
 
 		std::pair<size_t, size_t> SizeAndAlignmentForNodeType(design::NodeType const &nodeType)
@@ -93,6 +95,9 @@ void SimulatorCore::AllocateNets()
 			throw Exception(ExceptionCode::Unexpected, "Type '" + nodeType.ToString() + "' cannot be handled by the simulator.");
 		}
 
+		// Returns an index of an available net address either by allocating a
+		// new address or by returning one that has been release by a call to
+		// `ReleaseNetIndex()`.
 		size_t AllocateNetIndex(design::NodeType const &nodeType)
 		{
 			size_t size, alignment;
@@ -116,9 +121,9 @@ void SimulatorCore::AllocateNets()
 		void ReleaseNetIndex(size_t /* address */, design::NodeType const & /* nodeType */)
 		{
 			/*
-			    Put the address and and the size in a array sorted by size.
-			    `AllocateNetIndex` goes through the array until it finds an
-			    address of appropriate size and alignment.
+			    TODO: Put the address and and the size in a array sorted by
+				size. `AllocateNetIndex()` goes through the array until it
+				finds an address of appropriate size and alignment.
 
 			    TODO: remember the skipped addresses above.
 			*/
@@ -141,17 +146,26 @@ void SimulatorCore::AllocateNets()
 				ReleaseNetIndex(output.m_netIndex, output.GetType());
 		}
 
+		// Calls `AcquireOutput()` on all outputs of `block`.
 		void AcquireBlockOutputs(SimulatorBlockBase &block)
 		{
 			for (auto &output : block.m_internals->m_outputs)
 				AcquireOutput(output);
 		}
 
+		// Calls `ReleaseOutput()` on outputs driving `block`.
 		void ReleaseBlockInputs(SimulatorBlockBase &block)
 		{
 			for (auto &input : block.m_internals->m_inputs)
 				if (input.IsConnected())
 					ReleaseOutput(input.GetDriver());
+		}
+
+		// Converts `m_netIndex` to `m_netAddress`.
+		void SetBlockNetAddresses(SimulatorBlockBase &block, char *netsBase)
+		{
+			for (auto &output : block.m_internals->m_outputs)
+				output.m_netAddress = netsBase + output.m_netIndex;
 		}
 
 	public:
@@ -164,14 +178,55 @@ void SimulatorCore::AllocateNets()
 
 		void AllocateNets()
 		{
+			/*
+			    Addresses becomes allocated by going to the blocks in the order
+			    of their execution. Nets are managed by the output that drives
+			    the net. Reference counting is implemented so addresses can be
+			    reused.
+			*/
+
 			for (auto *block : m_component.m_blocks) {
 
 				assert(block);
+
+				/*
+				    First, the reference counts of all outputs consumed by this
+				    block's inputs become decremented.
+				*/
+
 				ReleaseBlockInputs(*block);
+
+				/*
+				    Then, new addresses becomes allocated on all outputs of the
+				    block. Addresses released by the previous call to
+				    `ReleaseBlockInputs()` may become reassigned to this block's
+				    outputs.
+
+				    IMPORTANT: Therefore, during execution, outputs must not be
+				    written to unless all input data has been processed and can
+				    be safely overwritten.
+				*/
+
 				AcquireBlockOutputs(*block);
 			}
+
+			/*
+				The previous loop collected the actual amount of memory
+				required. Now we assign the actual addresses.
+			*/
+
+			m_component.m_netsBase.reset(new char[m_nextNetIndex]);
+			for (auto *block : m_component.m_blocks)
+				SetBlockNetAddresses(*block, m_component.m_netsBase.get());
 		}
 	};
+
+	/*
+
+	    Every component has its own contiguous block of memory used for
+	    storing the values on the nets on the component during code execution.
+
+	*/
 
 	for (auto &component : m_components) {
 

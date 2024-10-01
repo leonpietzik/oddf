@@ -66,6 +66,15 @@ void DelayMaster::Elaborate(ISimulatorElaborationContext &context)
 	    that also checks that the type of the driver does not change.
 
 	    e.g. ReconnectOutput(fromOutput, toOutput);
+
+	    #####
+		Vielleicht sollte diese Funktion Teil von `ISimulatorElaborationContext`
+	    sein. Vielleicht brauchen die Simulator-Objekte dann keinen
+		Schreibzugriff auf die Inputs und Outputs. Das würde vermeiden, dass
+		die Blöcke aus Versehen strukturell am Design etwas kaputt machen
+		können.
+		#####
+
 	*/
 
 	auto masterOutputTargets = GetOutputsList().GetFirst().GetTargetsCollection();
@@ -87,7 +96,6 @@ void DelayMaster::Elaborate(ISimulatorElaborationContext &context)
 
 	    e.g. ReconnectInput(fromInput, toInput);
 	*/
-
 
 	auto endpoint = context.AddSimulatorBlock<DelayEndpoint>(GetDesignBlockReference());
 

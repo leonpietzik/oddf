@@ -45,6 +45,9 @@ public:
 	// Blocks in this component.
 	std::list<SimulatorBlockBase *> m_blocks;
 
+	// Base pointer to the storage for the component's nets.
+	std::unique_ptr<char[]> m_netsBase;
+
 	SimulatorComponent();
 	SimulatorComponent(SimulatorComponent const &) = delete;
 	void operator=(SimulatorComponent const &) = delete;
