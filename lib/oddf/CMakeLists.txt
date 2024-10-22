@@ -57,7 +57,7 @@ add_library(oddf
 	src/modules/throttled_source.cpp
 )
 
-target_include_directories(oddf PUBLIC include)
+target_include_directories(oddf PUBLIC src)
 
 target_compile_features(oddf PUBLIC cxx_std_17)
 
